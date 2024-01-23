@@ -21,7 +21,7 @@ export default function Sidebar() {
             >
                 <AiOutlineMenuUnfold className='text-2xl' />
             </div>
-            <aside className='main_sidebar h-screen flex flex-col bg-gray-100 border-r border-gray-300 min-w-[250px] p-4 md:sticky fixed top-0 bottom-0 md:left-0 left-[-40%] duration-300 transition-all z-10'>
+            <aside className='main_sidebar h-screen flex flex-col bg-gray-100 border-r border-gray-300 min-w-[250px] p-4 md:sticky fixed top-0 bottom-0 md:left-0 left-[-100%] duration-300 transition-all z-10'>
                 <div className='flex items-center space-x-2 justify-between mb-8'>
                     <Link href='/' className="bg-black select-none rounded-sm px-3 py-2 text-2xl font-semibold text-white">LAB</Link>
                     <div
