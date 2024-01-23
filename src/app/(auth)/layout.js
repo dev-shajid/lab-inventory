@@ -1,5 +1,5 @@
 import { Inter } from "next/font/google";
-// import "./globals.css";
+import "../globals.css";
 import NextUiProvider from "@/components/NextUiProvider";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -13,11 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${inter.className}`}>
-        <NextUiProvider>
-          <main className="min-h-[100vh] flex justify-center items-center">
-            {children}
-          </main>
-        </NextUiProvider>
+        {children}
       </body>
     </html>
   );

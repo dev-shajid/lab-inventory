@@ -1,5 +1,5 @@
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "../../app/globals.css";
 import NextUiProvider from "@/components/NextUiProvider";
 import Sidebar from "@/components/Sidebar";
 
@@ -13,7 +13,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${inter.className}`}>
+      <body className={`${inter.className} w-full`}>
         <NextUiProvider>
           <main className="bg-light min-h-[100vh] flex md:flex-row flex-col w-full relative">
             <Sidebar />

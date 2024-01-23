@@ -51,13 +51,15 @@ export default function Sidebar() {
                             <Avatar className='rounded-full border border-gray-300' src={0 ? '' : "/images/avatar.jpg"}></Avatar>
                             <span className='text'>{user?.userName && user?.userName}</span>
                         </Link>
-                        <Button
-                            isIconOnly
-                            variant='none'
-                            className='text-xl text-black'
-                        >
-                            <IoIosLogOut />
-                        </Button>
+                        <Link href='/signin'>
+                            <Button
+                                isIconOnly
+                                variant='none'
+                                className='text-xl text-black'
+                            >
+                                <IoIosLogOut />
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </aside>
