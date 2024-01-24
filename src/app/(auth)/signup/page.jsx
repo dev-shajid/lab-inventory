@@ -1,5 +1,6 @@
 import { Button, input } from '@nextui-org/react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation';
 import React from 'react'
 import { FcGoogle } from "react-icons/fc";
 
@@ -7,12 +8,13 @@ export default async function SignUp() {
     return (
         <section className="container">
             <div className="flex flex-col items-center justify-center mx-auto mt-8">
-                <div className="w-full bg-light rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-dark dark:border-bdark-1">
+                <div className="w-full md:bg-light rounded-lg md:shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-dark dark:border-bdark-1">
                     <div className="space-y-4 md:space-y-6 sm:p-8 px-4 py-8">
                         <h1 className="text-xl font-bold text-center leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                             Create a new account
                         </h1>
-                        <form className="space-y-4 md:space-y-6" action="#">
+                        <form className="space-y-4 md:space-y-6"
+                        >
                             <div>
                                 <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your name</label>
                                 <input

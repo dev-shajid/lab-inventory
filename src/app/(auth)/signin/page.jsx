@@ -1,19 +1,26 @@
-import { Button, input } from '@nextui-org/react'
+'use client'
+
+import { Button } from '@nextui-org/react'
 import Link from 'next/link'
 import React from 'react'
 import { FcGoogle } from "react-icons/fc";
 
 export default async function SigIn() {
     return (
-        
+
         <section className="container">
             <div className="flex flex-col items-center justify-center mx-auto mt-8">
-                <div className="w-full bg-light rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-dark dark:border-bdark-1">
+                <div className="w-full md:bg-light md:shadow rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-dark dark:border-bdark-1">
                     <div className="space-y-4 md:space-y-6 sm:p-8 px-4 py-8">
                         <h1 className="text-xl font-bold text-center leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                            Log in to your account
+                            Log in
                         </h1>
-                        <form className="space-y-4 md:space-y-6" action="#">
+                        <form
+                            className="space-y-4 md:space-y-6"
+                            onSubmit={(e) => {
+                                e.preventDefault()
+                            }}
+                        >
                             <div>
                                 <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
                                 <input
@@ -34,6 +41,8 @@ export default async function SigIn() {
                                 />
                             </div>
                             <Button
+                                as={Link}
+                                href='/'
                                 type='submit'
                                 className='w-full rounded-md'
                                 color='primary'

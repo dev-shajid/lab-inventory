@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${inter.className} w-full`}>
         <NextUiProvider>
-          <main className="bg-light min-h-[100vh] flex md:flex-row flex-col w-full relative">
+          <main className="bg-light min-h-[100vh] flex md:flex-row flex-col md:gap-y-0 gap-y-4 w-full relative">
             <Sidebar />
             <div className="flex-1 max-w-full overflow-hidden">
               {children}
