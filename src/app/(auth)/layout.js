@@ -12,7 +12,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} flex justify-center items-center`}>
+      <body className={`${inter.className} flex justify-center items-center pb-16`}>
         {children}
       </body>
     </html>

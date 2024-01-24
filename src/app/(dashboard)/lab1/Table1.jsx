@@ -353,10 +353,10 @@ export default function Table1() {
                     />
                     <div className='space-x-2'>
                         <Button color="primary" size="sm" onPress={onOpen3}>
-                            Request Item
+                            Request for newItem
                         </Button>
                         <Button size="sm" onPress={onOpen2}>
-                            Add Item
+                            Add new Item
                         </Button>
                     </div>
                 </div>
@@ -408,11 +408,11 @@ export default function Table1() {
                                                 <DropdownItem
                                                     onPress={() => {
                                                         onOpen()
-                                                        setSelectedItem({ ...item, title: "Request for Item", id: 1 })
+                                                        setSelectedItem({ ...item, title: "Request for Restock", id: 1 })
                                                     }}
                                                     className="rounded-md"
                                                 >
-                                                    Request For Item
+                                                    Request For Restock
                                                 </DropdownItem>
                                                 <DropdownItem
                                                     onPress={() => {

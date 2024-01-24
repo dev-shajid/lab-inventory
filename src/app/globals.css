@@ -97,7 +97,10 @@ section {
   @apply px-6 py-3 font-medium text-gray-900 whitespace-nowrap;
 }
 
-.info_table table tr {
+.info_table table tr,
+.event_table table tr td,
+.event_table table tr th
+{
   @apply px-6 py-3;
 }
 
@@ -120,4 +123,20 @@ form label{
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+.chip{
+  @apply bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 inline-block rounded;
+}
+
+.chip.a{
+  @apply bg-green-100 text-green-800;
+}
+
+.chip.p{
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+.chip.r{
+  @apply bg-red-100 text-red-800;
 }

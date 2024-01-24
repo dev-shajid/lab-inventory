@@ -11,7 +11,7 @@ import { usePathname } from 'next/navigation'
 export default function Sidebar() {
     const user = { userName: "Lab Assistant" }
     const pathname = usePathname()
-    const sidebarRef=useRef()
+    const sidebarRef = useRef()
 
     function openSidebar() {
         document.querySelector('body')?.classList.add('active_sidebar')
@@ -21,8 +21,8 @@ export default function Sidebar() {
         document.querySelector('body')?.classList.remove('active_sidebar')
     }
 
-    useEffect(()=>{
-        document.documentElement.addEventListener('click', function(e){
+    useEffect(() => {
+        document.documentElement.addEventListener('click', function (e) {
             if (sidebarRef.current && !sidebarRef.current.contains(e.target)) closeSidebar()
         })
     })
@@ -87,6 +87,16 @@ const MenuItems = [
         name: 'Dashboard',
         icon: <RxDashboard />,
         link: '/'
+    },
+    {
+        name: 'Event Book',
+        icon: <RxDashboard />,
+        link: '/event-book'
+    },
+    {
+        name: 'Main Inventory',
+        icon: <RxDashboard />,
+        link: '/main-inventory'
     },
     {
         name: 'Lab 1',
