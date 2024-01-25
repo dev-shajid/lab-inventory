@@ -164,8 +164,8 @@ button.size-sm{
   backdrop-filter: blur(6px) !important;
 }
 
-[type=button], [type=reset], [type=submit], button {
-  -webkit-appearance: button;
-  background-color: unset;
+[type=button], [type=reset], [type=submit] {
+  -webkit-appearance: inherit !important;
+  background-color: inherit;
   background-image: unset;
 }

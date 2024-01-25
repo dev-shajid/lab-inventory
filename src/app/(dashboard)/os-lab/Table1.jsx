@@ -316,6 +316,22 @@ export default function Table1() {
                                                     >
                                                         Request For Repair
                                                     </Menu.Item>
+                                                    <Menu.Item
+                                                        onClick={() => {
+                                                            openActionModal()
+                                                            setSelectedItem({ ...item, title: "Request for Repair", id: 2 })
+                                                        }}
+                                                    >
+                                                        Edit Item
+                                                    </Menu.Item>
+                                                    <Menu.Item
+                                                        onClick={() => {
+                                                            openActionModal()
+                                                            setSelectedItem({ ...item, title: "Request for Repair", id: 2 })
+                                                        }}
+                                                    >
+                                                        Delete Item
+                                                    </Menu.Item>
                                                 </Menu.Dropdown>
                                             </Menu>
                                         </>
