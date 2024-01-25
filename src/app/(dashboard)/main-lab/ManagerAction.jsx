@@ -1,16 +1,14 @@
 'use client'
 
 import React, { useCallback, useMemo, useState } from "react";
-import { HiOutlineDotsVertical, HiPlus, HiSearch } from "react-icons/hi";
-import BlurImage from "@/components/BlurImage";
-import { ActionIcon, Autocomplete, Button, Menu, Modal, NumberInput, TextInput } from "@mantine/core";
+import { HiSearch } from "react-icons/hi";
+import { Autocomplete, Button, Modal, NumberInput, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Products from "@/components/Products";
 
 export default function ManagerAction() {
     const [openedReqNewItemModal, { open: openReqNewItemModal, close: closeReqNewItemModal }] = useDisclosure(false);
     const [openedAddNewItemModal, { open: openAddNewItemModal, close: closeAddNewItemModal }] = useDisclosure(false);
-    const [selectedItem, setSelectedItem] = useState({})
     const [filterValue, setFilterValue] = useState("");
     const [filterLists, setFilterLists] = useState(products);
 

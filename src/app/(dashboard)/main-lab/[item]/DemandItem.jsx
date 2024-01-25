@@ -72,7 +72,7 @@ export default function DemandItem() {
     return (
         <>
             <Button
-                className='size-sm'
+                className='size-sm '
                 onClick={() => {
                     openReqNewItemModal()
                 }}
