@@ -1,8 +1,8 @@
 import { Inter } from "next/font/google";
-import "../../app/globals.css";
 import Sidebar from "@/components/Sidebar";
 import { MantineProvider } from "@mantine/core";
 import '@mantine/core/styles.css';
+import "../../app/globals.css";
 // import Provider from "@/context/AuthContext";
 // import { Toaster } from 'react-hot-toast';
 
