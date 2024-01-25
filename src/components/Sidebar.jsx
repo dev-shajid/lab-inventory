@@ -52,8 +52,8 @@ export default function Sidebar() {
                     <div className="sidebar-menu space-y-1">
                         {
                             MenuItems.map((item, i) => (
-                                <Link onClick={closeSidebar} key={i} href={item.link} className={`flex items-center text-base px-3 py-2 rounded-md space-x-3 transition-all 
-                                ${'/' + pathname.split('/')[1] == item.link ? 'bg-gray-700 text-white' : 'md:hover:bg-gray-400'}
+                                <Link onClick={closeSidebar} key={i} href={item.link} className={`flex items-center text px-3 py-2 rounded-md space-x-3 transition-all 
+                                ${'/' + pathname.split('/')[1] == item.link ? 'bg-gray-700 text-white' : 'md:hover:bg-gray-300'}
                             `}>
                                     <span>{item.icon}</span>
                                     <span>{item.name}</span>
@@ -89,14 +89,14 @@ const MenuItems = [
         link: '/'
     },
     {
-        name: 'Event Book',
-        icon: <RxDashboard />,
-        link: '/event-book'
-    },
-    {
         name: 'Main Inventory',
         icon: <RxDashboard />,
         link: '/main-inventory'
+    },
+    {
+        name: 'Event Book',
+        icon: <RxDashboard />,
+        link: '/event-book'
     },
     {
         name: 'Lab 1',

@@ -6,8 +6,8 @@ export default function Lab1() {
     <section className="container overflow-hidden h-[200vh] space-y-6">
       <div className=''>
         <div className='title'>Info</div>
-        <div className='info_table'>
-          <table className="text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <div className='info_table overflow-x-auto'>
+          <table className="text-sm max-w-[400px] overflow-hidden text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <tbody>
               <tr>
                 <th>Fullname</th>

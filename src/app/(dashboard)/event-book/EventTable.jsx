@@ -10,24 +10,30 @@ export default function EventTable() {
         <div className="space-y-2">
 
             <div className="event_table max-w-[1000px] overflow-x-auto max-w-fulls mx-auto rounded-md border border-blight-1">
-                <table className="w-full min-w-[400px] rounded-md overflow-hidden text-sm text-left rtl:text-right text-gray-500">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-200">
+                <table className="w-full m-0 min-w-[400px] rounded-md overflow-hidden text-sm text-left rtl:text-right text-gray-600">
+                    <thead className="text-xs text-gray-800 uppercase bg-gray-300">
                         <tr>
+                            <th>SL NO.</th>
                             <th>Name</th>
                             <th>Description</th>
                             <th>Demand</th>
-                            <th>Provide</th>
+                            <th>Supply</th>
+                            <th>Name of Lab</th>
+                            <th>Date</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         {
                             lists.map((item, i) => (
-                                <tr key={i} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                <tr key={i} className="odd:bg-white even:bg-gray-100 border-b">
+                                    <td>{i+1}</td>
                                     <td>{item.name}</td>
                                     <td>{item.description}</td>
                                     <td>{item.demand}</td>
-                                    <td>{item.provide}</td>
+                                    <td>{item.supply}</td>
+                                    <td>{item.lab}</td>
+                                    <td>{item.date}</td>
                                     <td>
                                         <p className={`chip ${item.status}`}>
                                             {
@@ -55,21 +61,27 @@ const lists = [
         name: 'PC',
         description: 'This is a very long text that describes the item.',
         demand: 5,
-        provide: 5,
+        supply: 5,
         status: 'a',
+        lab: 'OS Lab',
+        date: new Date(1703323232323).toLocaleString(),
     },
     {
         name: 'UPS',
         description: 'This is a very long text that describes the item.',
         demand: 6,
-        provide: 6,
+        supply: 6,
         status: 'r',
+        lab: 'OS Lab',
+        date: new Date(1703323232323).toLocaleString(),
     },
     {
         name: 'Monitor',
         description: 'This is a very long text that describes the item.',
         demand: 3,
-        provide: 3,
+        supply: 3,
         status: 'p',
+        lab: 'OS Lab',
+        date: new Date(1703323232323).toLocaleString(),
     },
 ]

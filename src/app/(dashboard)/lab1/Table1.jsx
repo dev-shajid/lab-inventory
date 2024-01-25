@@ -3,6 +3,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button, useDisclosure, Modal, ModalContent, Input, Autocomplete, AutocompleteItem } from "@nextui-org/react";
 import { HiOutlineDotsVertical, HiPlus, HiSearch } from "react-icons/hi";
+import BlurImage from "@/components/BlurImage";
 
 export default function Table1() {
     const [selectedItem, setSelectedItem] = useState({})
@@ -62,7 +63,7 @@ export default function Table1() {
                                             // isRequired
                                             label="Name"
                                             value={formValue.name}
-                                            onInputChange={(val) => setFormValue(prev=>({...prev, name:val}))}
+                                            onInputChange={(val) => setFormValue(prev => ({ ...prev, name: val }))}
                                             placeholder="Search an item"
                                             defaultItems={animals}
                                             labelPlacement="outside"
@@ -333,9 +334,9 @@ export default function Table1() {
     }
 
 
-    const topContent = useMemo(() => {
+    const TopContent = useMemo(() => {
         return (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 sticky left-0">
                 <div className="flex justify-between gap-3 md:flex-row flex-col items-center">
                     <Input
                         isClearable
@@ -352,6 +353,7 @@ export default function Table1() {
                         onValueChange={onSearchChange}
                     />
                     <div className='space-x-2'>
+                        <button varient='border' sizes="sm" color='#000' className='bg-indigo-200 text-indigo-700 border-indigo-700 tap-highlight-transparent'>Request for Item</button>
                         <Button color="primary" size="sm" onPress={onOpen3}>
                             Request for newItem
                         </Button>
@@ -374,14 +376,16 @@ export default function Table1() {
     return (
         <div className="space-y-2">
 
-            <div className="rounded-md overflow-x-auto max-w-full border border-blight-1">
+            <div className="rounded-md overflow-x-auto max-w-full border border-blight-1 relative">
+                {/* <TopContent/> */}
                 <Table
-                    topContent={topContent}
+                    topContent={TopContent}
                     radius="none"
                     aria-label="Table"
                     className="w-full overflow-hidden rounded-md"
                 >
                     <TableHeader>
+                        <TableColumn>Image</TableColumn>
                         <TableColumn>Name</TableColumn>
                         <TableColumn>Description</TableColumn>
                         <TableColumn>Available</TableColumn>
@@ -392,8 +396,13 @@ export default function Table1() {
                         {
                             filterLists.map((item, i) => (
                                 <TableRow key={i}>
+                                    <TableCell className="min-w-[60px] max-w-[60px]">
+                                        <div className={'overflow-hidden min-w-min'}>
+                                            <BlurImage src={item.image} alt='item image' />
+                                        </div>
+                                    </TableCell>
                                     <TableCell>{item.name}</TableCell>
-                                    <TableCell>{item.description}</TableCell>
+                                    <TableCell className="min-w-[200px]">{item.description}</TableCell>
                                     <TableCell>{item.available}</TableCell>
                                     <TableCell>{item.damaged}</TableCell>
                                     <TableCell>
@@ -443,12 +452,14 @@ export default function Table1() {
 
 const lists = [
     {
+        image: '/lab1/pc.jpeg',
         name: 'PC',
         description: 'This is a very long text that describes the item.',
         available: 12,
         damaged: 3,
     },
     {
+        image: '/lab1/ups.png',
         name: 'UPS',
         description: 'This is a very long text that describes the item.',
         available: 15,

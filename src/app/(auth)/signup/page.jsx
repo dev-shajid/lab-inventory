@@ -5,6 +5,61 @@ import React from 'react'
 import { FcGoogle } from "react-icons/fc";
 
 export default async function SignUp() {
+    // const [overlayLoading, setOverlay] = useState(false);
+    // const [isLoading, setLoading] = useState(true);
+    // const router = useRouter()
+    // const { data: session, status } = useSession()
+
+    // const form = useForm({
+    //     initialValues: {
+    //         name: 'shajid',
+    //         email: 'sajidislam729@gmail.com',
+    //         password: 'shajib786',
+    //     },
+    //     validate: {
+    //         name: (value) => (value.length < 2 ? 'name is too short' : null),
+    //         email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid Email"),
+    //         password: (value) => (value.length < 5 ? 'Password length should be atleast 5' : null),
+    //     },
+    // });
+
+    // const handleSubmit = async (values) => {
+    //     setOverlay(true)
+    //     let loadingPromise = toast.loading("Loading...")
+    //     try {
+    //         await new Promise(res => setTimeout(res, 2000));
+
+    //         const res = await fetch('/api/register', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify(values)
+    //         })
+    //         const data = await res.json()
+    //         console.log(data);
+    //         if (!res.ok) {
+    //             toast.error(data?.error || "Some error arised", { id: loadingPromise })
+    //         } else {
+    //             toast.success("Successfully Registered...", { id: loadingPromise })
+    //             router.push('/login')
+    //         }
+    //     } catch (error) {
+    //         toast.error(error?.message || "Some error arised", { id: loadingPromise })
+    //     }
+    //     setOverlay(false)
+    // }
+
+    // useEffect(() => {
+    //     setLoading(true)
+    //     if (status === "unauthenticated") {
+    //         setLoading(false)
+    //     } else if (status === "authenticated") {
+    //         router.push(searchParams.callback || "/");
+    //     }
+    // }, [status]);
+
+    // if (isLoading) return <div className='text-2xl text-center'>Loading...</div>
     return (
         <section className="container">
             <div className="flex flex-col items-center justify-center mx-auto mt-8">
