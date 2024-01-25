@@ -1,9 +1,5 @@
 'use client'
 
-import React, { useCallback, useMemo, useState } from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button, useDisclosure, Modal, ModalContent, Input, Autocomplete, AutocompleteItem } from "@nextui-org/react";
-import { HiOutlineDotsVertical, HiPlus, HiSearch } from "react-icons/hi";
-
 export default function EventTable() {
 
     return (

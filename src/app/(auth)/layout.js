@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "../globals.css";
-import NextUiProvider from "@/components/NextUiProvider";
+import { MantineProvider } from "@mantine/core";
+import '@mantine/core/styles.css';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,8 +14,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${inter.className} flex justify-center items-center pb-16`}>
-        {children}
+        <MantineProvider>
+          {children}
+        </MantineProvider>
       </body>
     </html>
-);
+  );
 }

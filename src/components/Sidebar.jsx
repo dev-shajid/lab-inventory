@@ -1,12 +1,12 @@
 'use client'
 
-import { Avatar, Button, Divider } from '@nextui-org/react'
 import Link from 'next/link'
 import React, { useEffect, useRef } from 'react'
 import { RxCross1, RxDashboard } from 'react-icons/rx'
 import { AiOutlineMenuUnfold } from 'react-icons/ai'
 import { IoIosLogOut } from 'react-icons/io'
 import { usePathname } from 'next/navigation'
+import { ActionIcon, Avatar, Button } from '@mantine/core'
 
 export default function Sidebar() {
     const user = { userName: "Lab Assistant" }
@@ -53,7 +53,7 @@ export default function Sidebar() {
                         {
                             MenuItems.map((item, i) => (
                                 <Link onClick={closeSidebar} key={i} href={item.link} className={`flex items-center text px-3 py-2 rounded-md space-x-3 transition-all 
-                                ${'/' + pathname.split('/')[1] == item.link ? 'bg-gray-700 text-white' : 'md:hover:bg-gray-300'}
+                                ${'/' + pathname.split('/')[1] == item.link ? 'bg-gray-700 text-white' : 'md:hover:bg-gray-300 text-black'}
                             `}>
                                     <span>{item.icon}</span>
                                     <span>{item.name}</span>
@@ -61,19 +61,22 @@ export default function Sidebar() {
                             ))
                         }
                     </div>
-                    <div className='flex justify-between items-center space-x-2'>
+                    <div className='flex justify-between text-black items-center space-x-2'>
                         <Link onClick={closeSidebar} href='/' className={`flex flex-1 items-center rounded-md space-x-1 transition-all `}>
-                            <Avatar className='rounded-full border border-gray-300' src={0 ? '' : "/images/avatar.jpg"}></Avatar>
+                            <Avatar
+                                className='rounded-full border border-gray-300'
+                                src={0 ? '' : "/images/avatar.jpg"}
+                            />
                             <span className='text'>{user?.userName && user?.userName}</span>
                         </Link>
                         <Link href='/signin'>
-                            <Button
-                                isIconOnly
-                                variant='none'
-                                className='text-xl text-black'
+                            <ActionIcon
+                                variant='transparent'
+                                className='text-xl'
+                                color='#000'
                             >
-                                <IoIosLogOut />
-                            </Button>
+                                <IoIosLogOut size={20} />
+                            </ActionIcon>
                         </Link>
                     </div>
                 </div>
@@ -89,9 +92,9 @@ const MenuItems = [
         link: '/'
     },
     {
-        name: 'Main Inventory',
+        name: 'Main Lab',
         icon: <RxDashboard />,
-        link: '/main-inventory'
+        link: '/main-lab'
     },
     {
         name: 'Event Book',
@@ -99,18 +102,18 @@ const MenuItems = [
         link: '/event-book'
     },
     {
-        name: 'Lab 1',
+        name: 'Os Lab',
         icon: <RxDashboard />,
-        link: '/lab1'
+        link: '/os-lab'
     },
     {
-        name: 'Lab 2',
+        name: 'Microprocessor Lab',
         icon: <RxDashboard />,
-        link: '/lab2'
+        link: '/microprocessor-lab'
     },
     {
-        name: 'Lab 3',
+        name: 'Computer Lab',
         icon: <RxDashboard />,
-        link: '/lab3'
+        link: '/computer-lab'
     },
 ]

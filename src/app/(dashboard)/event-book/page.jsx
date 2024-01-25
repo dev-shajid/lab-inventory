@@ -1,4 +1,3 @@
-import { Button } from '@nextui-org/react';
 import EventTable from './EventTable'
 
 export default function Lab1() {

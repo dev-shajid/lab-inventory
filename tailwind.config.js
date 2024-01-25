@@ -1,13 +1,12 @@
 /** @type {import('tailwindcss').Config} */
-const { nextui } = require("@nextui-org/react");
 
 module.exports = {
-  darkMode: ["class"],
+  darkMode: ["light"],
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
+    "node_modules/@mantine/core/styles.css",
   ],
   theme: {
     container: {
@@ -44,5 +43,5 @@ module.exports = {
       },
     },
   },
-  plugins: [nextui()],
+  plugins: [],
 };

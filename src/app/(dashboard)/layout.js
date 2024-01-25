@@ -1,7 +1,8 @@
 import { Inter } from "next/font/google";
 import "../../app/globals.css";
-import NextUiProvider from "@/components/NextUiProvider";
 import Sidebar from "@/components/Sidebar";
+import { MantineProvider } from "@mantine/core";
+import '@mantine/core/styles.css';
 // import Provider from "@/context/AuthContext";
 // import { Toaster } from 'react-hot-toast';
 
@@ -17,18 +18,18 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${inter.className} w-full`}>
         {/* <Provider> */}
-          <NextUiProvider>
-            {/* <Toaster
+        <MantineProvider>
+          {/* <Toaster
               position="top-center"
               reverseOrder={false}
             /> */}
-            <main className="bg-light min-h-[100vh] flex md:flex-row flex-col md:gap-y-0 gap-y-4 w-full relative">
-              <Sidebar />
-              <div className="flex-1 max-w-full overflow-hidden">
-                {children}
-              </div>
-            </main>
-          </NextUiProvider>
+          <main className="bg-light min-h-[100vh] flex md:flex-row flex-col md:gap-y-0 gap-y-4 w-full relative">
+            <Sidebar />
+            <div className="flex-1 max-w-full overflow-hidden">
+              {children}
+            </div>
+          </main>
+        </MantineProvider>
         {/* </Provider> */}
       </body>
     </html>
