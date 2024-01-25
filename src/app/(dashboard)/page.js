@@ -1,6 +1,6 @@
 export default function Home() {
   return (
-    <section className="container w-full">
+    <section className="container">
       Dashboard
     </section>
   );

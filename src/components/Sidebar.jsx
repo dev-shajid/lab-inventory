@@ -92,6 +92,11 @@ const MenuItems = [
         link: '/'
     },
     {
+        name: 'Admin',
+        icon: <RxDashboard />,
+        link: '/admin'
+    },
+    {
         name: 'Main Lab',
         icon: <RxDashboard />,
         link: '/main-lab'
