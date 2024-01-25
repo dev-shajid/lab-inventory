@@ -3,10 +3,10 @@
 module.exports = {
   darkMode: ["light"],
   content: [
+    "node_modules/@mantine/core/styles.css",
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    "node_modules/@mantine/core/styles.css",
   ],
   theme: {
     container: {
