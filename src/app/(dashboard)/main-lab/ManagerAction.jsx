@@ -180,7 +180,7 @@ export default function ManagerAction() {
                                 size="xs"
                                 onClick={openReqNewItemModal}
                             >
-                                Reques for New Item
+                                Request for New Item
                             </Button>
                             <Button
                                 size="xs"

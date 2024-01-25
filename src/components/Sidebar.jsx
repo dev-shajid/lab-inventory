@@ -97,14 +97,14 @@ const MenuItems = [
         link: '/admin'
     },
     {
-        name: 'Main Lab',
+        name: 'Lab Inventory',
         icon: <RxDashboard />,
         link: '/main-lab'
     },
     {
-        name: 'Event Book',
+        name: 'Request Management Index',
         icon: <RxDashboard />,
-        link: '/event-book'
+        link: '/request-management-index'
     },
     {
         name: 'OS Lab',

@@ -14,6 +14,7 @@ export default function EventTable() {
                             <th>Description</th>
                             <th>Demand</th>
                             <th>Supply</th>
+                            <th>Request Type</th>
                             <th>Name of Lab</th>
                             <th>Date</th>
                             <th>Status</th>
@@ -28,6 +29,7 @@ export default function EventTable() {
                                     <td>{item.description}</td>
                                     <td>{item.demand}</td>
                                     <td>{item.supply}</td>
+                                    <td>{item.type}</td>
                                     <td>{item.lab}</td>
                                     <td>{item.date}</td>
                                     <td>
@@ -59,6 +61,7 @@ const lists = [
         demand: 5,
         supply: 5,
         status: 'a',
+        type: 'Repair',
         lab: 'OS Lab',
         date: new Date(1703323232323).toLocaleString(),
     },
@@ -69,6 +72,7 @@ const lists = [
         supply: 6,
         status: 'r',
         lab: 'OS Lab',
+        type: 'Restock',
         date: new Date(1703323232323).toLocaleString(),
     },
     {
@@ -77,6 +81,7 @@ const lists = [
         demand: 3,
         supply: 3,
         status: 'p',
+        type: 'Purchase',
         lab: 'OS Lab',
         date: new Date(1703323232323).toLocaleString(),
     },

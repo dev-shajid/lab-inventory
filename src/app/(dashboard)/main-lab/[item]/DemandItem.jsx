@@ -8,7 +8,7 @@ export default function DemandItem() {
     const [openedReqNewItemModal, { open: openReqNewItemModal, close: closeReqNewItemModal }] = useDisclosure(false);
 
     const ReqNewItemModal = () => {
-        const [formValue, setFormValue] = useState({ name: selectedItem.name, description: selectedItem.description, available: selectedItem.available, damaged: selectedItem.damaged, req_item: undefined })
+        const [formValue, setFormValue] = useState({ name: selectedItem.name, description: selectedItem.description, available: selectedItem.available, lab: selectedItem.lab, damaged: selectedItem.damaged, req_item: undefined })
 
         const handleChange = (e) => {
             setFormValue((prev) => ({ ...prev, req_item: e }))
@@ -17,12 +17,12 @@ export default function DemandItem() {
         const handleSubmit = (e) => {
             e.preventDefault()
             alert(JSON.stringify(formValue, null, 2))
-            setFormValue({ name: '', description: '', available: '', damaged: '', req_item: null })
+            setFormValue({ name: '', description: '', available: '', damaged: '', lab: '', req_item: undefined })
             closeReqNewItemModal()
         }
 
         return (
-            <Modal opened={openedReqNewItemModal} onClose={closeReqNewItemModal} title={<div className="title mt-6">Request new Item</div>}>
+            <Modal opened={openedReqNewItemModal} onClose={closeReqNewItemModal} title={<div className="title mt-6">Request this Item</div>}>
 
                 <form
                     className="space-y-4"
@@ -37,6 +37,11 @@ export default function DemandItem() {
                         label="Description"
                         readOnly
                         value={formValue.description}
+                    />
+                    <TextInput
+                        label="Lab"
+                        readOnly
+                        value={formValue.lab}
                     />
                     <TextInput
                         label="Available"
@@ -56,7 +61,7 @@ export default function DemandItem() {
                         value={formValue.req_item}
                         withAsterisk
                         required
-                        min={1}
+                        min={0}
                     // error={errors.email}
                     />
                     <div className="flex items-center justify-center gap-4">
@@ -88,5 +93,6 @@ const selectedItem={
     name: 'PC',
     description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad, eligendi?',
     available: 18,
+    lab: "OS Lab",
     damaged: 4,
 }
