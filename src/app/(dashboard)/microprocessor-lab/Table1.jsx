@@ -335,7 +335,7 @@ export default function Table1() {
 
 const lists = [
     {
-        image: '/micro/3.JPG',
+        image: '/micro/3.jpg',
         name: 'Breadboard',
         description: 'This is a very long text that describes the item.',
         available: 12,
