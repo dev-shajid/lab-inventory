@@ -168,7 +168,7 @@ export default function Table1() {
         const [formValue, setFormValue] = useState({ name: selectedItem.name, description: selectedItem.description, available: selectedItem.available, damaged: selectedItem.damaged, req_item: undefined })
 
         const handleChange = (e) => {
-            setFormValue((prev) => ({ ...prev, [e.target.name]: e.target.value.trim() }))
+            setFormValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
         }
 
         const handleSubmit = (e) => {
@@ -191,30 +191,39 @@ export default function Table1() {
                     />
                     <TextInput
                         label="Description"
-                        readOnly
+                        name="description"
+                        placeholder='Enter description of item'
+                        onChange={handleChange}
+                        withAsterisk
                         value={formValue.description}
                     />
                     <TextInput
                         label="Available"
-                        readOnly
+                        name="available"
+                        placeholder='Amount of available item'
+                        onChange={handleChange}
+                        withAsterisk
                         value={formValue.available}
                     />
                     <TextInput
                         label="Damaged"
-                        readOnly
+                        name="damaged"
+                        placeholder='Amount of damaged items'
+                        onChange={handleChange}
+                        withAsterisk
                         value={formValue.damaged}
                     />
-                    <TextInput
+                    {selectedItem.id!=3 && <TextInput
                         label="Amount"
                         name="req_item"
                         placeholder='Amount of request items'
                         onChange={handleChange}
-                        value={formValue.req_item}
                         withAsterisk
-                    // error={errors.email}
-                    />
+                        value={formValue.req_item}
+                        // error={errors.email}
+                    />}
                     <div className="flex items-center justify-center gap-4">
-                        <Button fullWidth>Submit</Button>
+                        <Button type="submit" fullWidth>Submit</Button>
                         <Button onClick={closeActionModal} fullWidth variant="outline" color="red">Cancel</Button>
                     </div>
                 </form>
@@ -316,18 +325,20 @@ export default function Table1() {
                                                     >
                                                         Request For Repair
                                                     </Menu.Item>
+                                                    <Menu.Divider />
                                                     <Menu.Item
+                                                        color="blue"
                                                         onClick={() => {
                                                             openActionModal()
-                                                            setSelectedItem({ ...item, title: "Request for Repair", id: 2 })
+                                                            setSelectedItem({ ...item, title: "Edit", id: 3 })
                                                         }}
                                                     >
                                                         Edit Item
                                                     </Menu.Item>
                                                     <Menu.Item
+                                                        color="red"
                                                         onClick={() => {
-                                                            openActionModal()
-                                                            setSelectedItem({ ...item, title: "Request for Repair", id: 2 })
+                                                            alert("Item delted!")
                                                         }}
                                                     >
                                                         Delete Item
