@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from "react";
-import { ActionIcon, Autocomplete, Button, Menu, Modal, NumberInput, TextInput } from "@mantine/core";
+import { Button, Modal, NumberInput, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
 export default function DemandItem() {
