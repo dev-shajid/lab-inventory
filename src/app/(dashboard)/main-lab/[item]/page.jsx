@@ -26,7 +26,7 @@ export default function Item({ params }) {
     }
 
     return (
-      <Modal opened={openedEditNewItemModal} onClose={closeEditNewItemModal} title={<div className="title mt-6">Request new Item</div>}>
+      <Modal opened={openedEditNewItemModal} onClose={closeEditNewItemModal} title={<div className="title mt-6">Edit Item</div>}>
 
         <form
           className="space-y-4"

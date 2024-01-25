@@ -107,7 +107,7 @@ const MenuItems = [
         link: '/event-book'
     },
     {
-        name: 'Os Lab',
+        name: 'OS Lab',
         icon: <RxDashboard />,
         link: '/os-lab'
     },

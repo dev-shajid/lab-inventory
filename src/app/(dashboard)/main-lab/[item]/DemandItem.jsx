@@ -77,7 +77,7 @@ export default function DemandItem() {
                     openReqNewItemModal()
                 }}
             >
-                Demand for Item
+                Demand this Item
             </Button>
             <ReqNewItemModal />
         </>
