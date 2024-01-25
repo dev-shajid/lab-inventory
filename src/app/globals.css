@@ -163,3 +163,9 @@ button.size-sm{
 .mantine-Modal-overlay	{
   backdrop-filter: blur(6px) !important;
 }
+
+[type=button], [type=reset], [type=submit], button {
+  -webkit-appearance: button;
+  background-color: unset;
+  background-image: unset;
+}

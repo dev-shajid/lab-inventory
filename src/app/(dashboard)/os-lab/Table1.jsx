@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useState } from "react";
 import { HiOutlineDotsVertical, HiPlus, HiSearch } from "react-icons/hi";
 import BlurImage from "@/components/BlurImage";
 import { ActionIcon, Autocomplete, Button, Menu, Modal, NumberInput, TextInput } from "@mantine/core";
