@@ -68,13 +68,13 @@ export async function DELETE(req, ctx) {
 
         await Blog.findByIdAndDelete(id)
 
-        return new Response(JSON.stringify({msg: 'Successfully deleted blog'}), {status: 200})
+        return new Response(JSON.stringify({ msg: 'Successfully deleted blog' }), { status: 200 })
     } catch (error) {
-        return new Response(JSON.stringify(null), { status: 500 }) 
+        return new Response(JSON.stringify(null), { status: 500 })
     }
 }
 
 // blog -> [id] -> like -> route.js
 
 
-// http://localhost:3000/api/blog/someid/like
+// https://lab-inventory.vercel.app/api/blog/someid/like

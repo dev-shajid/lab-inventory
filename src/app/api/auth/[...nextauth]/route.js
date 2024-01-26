@@ -93,7 +93,7 @@ export const authOptions = {
             return session
         },
     },
-    debug: process.env.NODE_ENV === 'development'
+    // debug: process.env.NODE_ENV === 'development'
 }
 
 const handler = NextAuth(authOptions)

@@ -188,3 +188,7 @@ button.size-sm{
 {
 @apply h-screen w-screen !fixed !top-0 left-0;
 }
+
+section{
+  background: white;
+}
