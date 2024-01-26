@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
-    fullName: {
+    name: {
         type: String,
         required: true,
     },
@@ -14,27 +14,23 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    type: {
+    role: {
         type: String,
-        enum: ['user', 'head', 'asistant', 'manager'],
+        enum: ['user', 'admin', 'asistant', 'manager'],
         default: 'user',
         required: true,
     },
-    // provider: {
-    //     type: String,
-    //     enum: ['google','github','email'],
-    //     required:true,
-    // },
     isVerified:{
         type: Boolean,
         default: false,
     },
     phone:{
         type: String,
-        required: true,
+        // required: true,
     },
     image: {
         type: String,
+        default: '/images/avatar.png'
     },
 }, {timestamps: true})
 

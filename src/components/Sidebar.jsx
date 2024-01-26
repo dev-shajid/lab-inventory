@@ -5,11 +5,14 @@ import React, { useEffect, useRef } from 'react'
 import { RxCross1, RxDashboard } from 'react-icons/rx'
 import { AiOutlineMenuUnfold } from 'react-icons/ai'
 import { IoIosLogOut } from 'react-icons/io'
-import { usePathname } from 'next/navigation'
-import { ActionIcon, Avatar } from '@mantine/core'
+import { usePathname, useRouter } from 'next/navigation'
+import { ActionIcon, Avatar, LoadingOverlay } from '@mantine/core'
+import { signOut, useSession } from 'next-auth/react';
+import { useUserContext } from '@/context/ContextProvider'
 
-export default function Sidebar() {
-    const user = { userName: "Lab Assistant" }
+export default function Sidebar({ authUser }) {
+    const { data: session, status } = useSession()
+    const { dispatch, user } = useUserContext()
     const pathname = usePathname()
     const sidebarRef = useRef()
 
@@ -29,7 +32,7 @@ export default function Sidebar() {
 
     return (
         <>
-            <div className="overlay"></div>
+            {/* <LoadingOverlay className='fixed top-0 h-screen w-full' visible={status == 'loading'} loaderProps={{ children:'' }} zIndex={1000} overlayProps={{ blur: 4 }} /> */}
             <div className='container mobile_top_nav border-b border-blight-1 sticky top-0 backdrop-blur-md z-10 md:hidden'>
                 <div
                     onClick={openSidebar}
@@ -38,7 +41,7 @@ export default function Sidebar() {
                     <AiOutlineMenuUnfold className='text-2xl' />
                 </div>
             </div>
-            <aside ref={sidebarRef} className='main_sidebar md:h-screen h-full flex flex-col bg-gray-200 border-r border-gray-300s min-w-[250px] p-4 md:sticky fixed top-0 bottom-0 md:left-0 left-[-100%] duration-300 transition-[.3s ease-linear left] z-[20]'>
+            <aside ref={sidebarRef} className='main_sidebar overflow-y-auto md:h-screen h-full flex flex-col bg-gray-200 border-r border-gray-300s min-w-[250px] p-4 md:sticky fixed top-0 bottom-0 md:left-0 left-[-100%] duration-300 transition-[.3s ease-linear left] z-[20]'>
                 <div className='flex items-center space-x-2 justify-between mb-8'>
                     <Link onClick={closeSidebar} href='/' className="bg-black select-none rounded-sm px-3 py-2 text-2xl font-semibold text-white">LAB</Link>
                     <div
@@ -51,14 +54,17 @@ export default function Sidebar() {
                 <div className="flex flex-1 flex-col justify-between">
                     <div className="sidebar-menu space-y-1">
                         {
-                            MenuItems.map((item, i) => (
-                                <Link onClick={closeSidebar} key={i} href={item.link} className={`flex items-center text px-3 py-2 rounded-md space-x-3 transition-all 
-                                ${'/' + pathname.split('/')[1] == item.link ? 'bg-gray-700 text-white' : 'md:hover:bg-gray-300 text-black'}
-                            `}>
-                                    <span>{item.icon}</span>
-                                    <span>{item.name}</span>
-                                </Link>
-                            ))
+                            MenuItems.map((item, i) => {
+                                if (item.name == 'Admin' && user?.role != 'admin') return
+                                return (
+                                    <Link onClick={closeSidebar} key={i} href={item.link} className={`flex items-center text px-3 py-2 rounded-md space-x-3 transition-all 
+                                    ${'/' + pathname.split('/')[1] == item.link ? 'bg-gray-700 text-white' : 'md:hover:bg-gray-300 text-black'}
+                                `}>
+                                        <span>{item.icon}</span>
+                                        <span>{item.name}</span>
+                                    </Link>
+                                )
+                            })
                         }
                     </div>
                     <div className='flex justify-between text-black items-center space-x-2'>
@@ -67,17 +73,16 @@ export default function Sidebar() {
                                 className='rounded-full border border-gray-300'
                                 src={0 ? '' : "/images/avatar.png"}
                             />
-                            <span className='text'>{user?.userName && user?.userName}</span>
+                            <span className='text'>{'Lab Assistant'}</span>
                         </Link>
-                        <Link href='/signin'>
-                            <ActionIcon
-                                variant='transparent'
-                                className='text-xl'
-                                color='#000'
-                            >
-                                <IoIosLogOut size={20} />
-                            </ActionIcon>
-                        </Link>
+                        <ActionIcon
+                            variant='transparent'
+                            className='text-xl'
+                            color='#000'
+                            onClick={() => signOut()}
+                        >
+                            <IoIosLogOut size={20} />
+                        </ActionIcon>
                     </div>
                 </div>
             </aside>
@@ -107,7 +112,7 @@ const MenuItems = [
         link: '/request-management-index'
     },
     {
-        name: 'Handle Demand',
+        name: 'Demand Control Index',
         icon: <RxDashboard />,
         link: '/handle-demand'
     },

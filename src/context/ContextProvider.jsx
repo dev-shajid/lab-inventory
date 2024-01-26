@@ -3,16 +3,22 @@
 import { createContext, useContext, useReducer } from "react";
 
 const initialState = {
-    user: true,
+    user: null,
+    refetchUserTable1: 0,
+    refetchUserTable2: 0,
 }
 
 
 const Reducer = (state, action) => {
     switch (action.type) {
         case 'ADD_USER':
-            return { ...state, user: true };
+            return { ...state, user: action.payload };
         case 'REMOVE_USER':
-            return { ...state, user: false };
+            return { ...state, user: null };
+        case 'Recfetch_Table_1':
+            return { ...state, refetchUserTable1: state.refetchUserTable1 + 1, refetchUserTable2: state.refetchUserTable2 + 1,  };
+        case 'Recfetch_Table_2':
+            return { ...state, refetchUserTable1: state.refetchUserTable1 + 1, refetchUserTable2: state.refetchUserTable2 + 1 };
         default:
             return state
     }
@@ -20,7 +26,7 @@ const Reducer = (state, action) => {
 
 export let Context = createContext()
 
-export const useUserContext = () => {
+export function useUserContext() {
     return useContext(Context)
 }
 

@@ -1,24 +1,15 @@
 import BlurImage from "@/components/BlurImage";
+import { useUserContext } from "@/context/ContextProvider";
+import getUserSession from "@/helper/getUserSession";
 import { ActionIcon, Button } from "@mantine/core";
 import Link from "next/link";
 import { AiFillEdit } from "react-icons/ai";
 
-export default function Home() {
+export default async function Home() {
+  const session = await getUserSession()
   return (
     <section className="container space-y-6">
-      {/* <div className="grid md:grid-cols-4 grid-col-2 gap-4">
-        {
-          items.map((item, i) => (
-            <div key={i}>
-              <div className="bg-white p-4 inline-flex flex-col justify-center items-center border border-gray-200 shadow-sm rounded-md">
-                <div className="text-gray-500 font-medium text-sm">{item.title}</div>
-                <div className="text-gray-900 font-bold md:text-3xl text-2xl mt-2">{item.total}</div>
-              </div>
-            </div>
-          ))
-        }
-      </div> */}
-
+      <pre>{JSON.stringify(session, null, 2)}</pre>
       <div className="title text-center">Welcome, 👋 {'Shafiqul Islam'}</div>
 
 

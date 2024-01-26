@@ -3,8 +3,13 @@
 import React, { useState } from "react";
 import { HiOutlineDotsVertical, HiPlus, HiSearch } from "react-icons/hi";
 import BlurImage from "@/components/BlurImage";
-import { ActionIcon, Autocomplete, Button, Menu, Modal, NumberInput, TextInput } from "@mantine/core";
+import { ActionIcon, Autocomplete, Button, LoadingOverlay, Menu, Modal, NumberInput, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { validateAddItemManagerForm } from "@/helper/validate";
+import { useFormik } from "formik";
+import { CiCamera } from "react-icons/ci";
+import useImageUpload from "@/components/useImageUpload";
+import toast from "react-hot-toast";
 
 export default function LabTable({ lists }) {
     const [openedActionModal, { open: openActionModal, close: closeActionModal }] = useDisclosure(false);
@@ -13,6 +18,8 @@ export default function LabTable({ lists }) {
     const [selectedItem, setSelectedItem] = useState({})
     const [filterValue, setFilterValue] = useState("");
     const [filterLists, setFilterLists] = useState(lists);
+    const [items, setItems] = useState([])
+    const [overlayLoading, setOverlayLoading] = useState(false)
 
     const onSearchChange = (e) => {
         let value = e.target.value
@@ -27,64 +34,115 @@ export default function LabTable({ lists }) {
 
 
     const AddNewItemModal = () => {
-        const [formValue, setFormValue] = useState({ name: '', description: '', available: '', damaged: '' })
+        const { isImageLoading, handleImageChange, handleImageUpload, imagePreview, imageUrl } = useImageUpload()
+        const [addItemErrors, setAddItemErrors] = useState({})
 
-        const handleChange = (value, name) => {
-            setFormValue((prev) => ({ ...prev, [name]: value }))
+        function handleSubmit(url, values) {
+            let loadingPromise = toast.loading("Loading...")
+            formik.setFieldValue('image', url)
+            fetch('http://localhost:3000/api/item/addItem', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ...values, image: url }),
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setOverlayLoading(false)
+                    if (data) {
+                        toast.success("Item Added!", { id: loadingPromise })
+                        setItems((pre) => [data, ...pre])
+                    }
+                    else toast.error("Error to uploading item!", { id: loadingPromise })
+                    closeAddNewItemModal()
+                })
         }
 
-        const handleSubmit = (e, onClose) => {
-            e.preventDefault()
-            setFilterLists((prev) => [...prev, formValue])
-            setFormValue({ name: '', description: '', available: '', damaged: '' })
-            closeAddNewItemModal()
-        }
+        const formik = useFormik({
+            initialValues: {
+                name: '', description: '', available: '', damaged: '', image: ''
+            },
+            validate: async (values) => {
+                setAddItemErrors(await validateAddItemManagerForm(values))
+            },
+            validateOnBlur: false,
+            validateOnChange: false,
+            onSubmit: async (values) => {
+                setOverlayLoading(true)
+                if (!Object.keys(addItemErrors).length) {
+                    handleImageUpload(handleSubmit, values)
+                }
+            }
+        })
+
         return (
             <Modal opened={openedAddNewItemModal} onClose={closeAddNewItemModal} title={<div className="title mt-6">Add new Item</div>}>
+                <div className="mb-4">
+                    {
+                        isImageLoading ?
+                            <div className="title">Uploading...</div> :
+                            !imagePreview && !formik.values.image ?
+                                <div>
+                                    <Button component="label" htmlFor="open_image" leftSection={<CiCamera size={20} />} size="xs" variant="outline">Select Image</Button>
+                                    <input
+                                        id="open_image"
+                                        className="hidden"
+                                        type="file"
+                                        accept="image/png, image/jpeg, image/jpg, image/webp"
+                                        onChange={handleImageChange}
+                                    />
+                                </div> :
+                                <div className="w-[200px] overflow-hidden">
+                                    {
+                                        formik.values.image || imagePreview && (
+                                            <img className="max-w-full max-h-full object-cover" src={formik.values.image || imagePreview} alt="profileImage" />
+                                        )
+                                    }
+                                </div>
 
+
+                    }
+                </div>
                 <form
                     className="space-y-4"
-                    onSubmit={handleSubmit}
+                    onSubmit={formik.handleSubmit}
                 >
                     <TextInput
                         label="Name"
                         placeholder="Enter item name"
-                        name='name'
-                        value={formValue.name}
-                        onChange={(e) => handleChange(e.target.value, 'name')}
                         withAsterisk
-                        required
-                    // error={errors.email}
+                        {...formik.getFieldProps('name')}
+                        error={addItemErrors.name ? true : false}
+                        helperText={addItemErrors.name}
                     />
                     <TextInput
                         label="Description"
                         placeholder="Enter item description"
-                        value={formValue.description}
-                        name="description"
-                        onChange={(e) => handleChange(e.target.value, 'description')}
-                    // error={errors.email}
+                        {...formik.getFieldProps('description')}
+                        error={addItemErrors.description ? true : false}
+                        helperText={addItemErrors.description}
                     />
                     <NumberInput
                         min={0}
                         label="Available"
                         placeholder="Enter amount of available item"
-                        name="available"
-                        value={formValue.available}
-                        onChange={(e) => handleChange(e, 'available')}
                         withAsterisk
-                        required
-                    // error={errors.email}
+                        value={formik.values.available}
+                        onChange={(e) => formik.setFieldValue('available', e)}
+                        error={addItemErrors.available ? true : false}
+                        helperText={addItemErrors.available}
                     />
                     <NumberInput
                         min={0}
                         label="Damaged"
                         placeholder="Enter amount of damaged item"
-                        name="damaged"
-                        value={formValue.damaged}
-                        onChange={(e) => handleChange(e, 'damaged')}
                         withAsterisk
-                        required
-                    // error={errors.email}
+                        value={formik.values.damaged}
+                        onChange={(e) => formik.setFieldValue('damaged', e)}
+                        error={addItemErrors.damaged ? true : false}
+                        helperText={addItemErrors.damaged}
                     />
                     <div className="flex items-center justify-center gap-4">
                         <Button type="submit" fullWidth>Submit</Button>
@@ -92,7 +150,7 @@ export default function LabTable({ lists }) {
                     </div>
                 </form>
 
-            </Modal>
+            </Modal >
         )
     }
 
@@ -357,6 +415,7 @@ export default function LabTable({ lists }) {
             <ActionModal />
             <ReqNewItemModal />
             <AddNewItemModal />
+            <LoadingOverlay visible={overlayLoading} overlayProps={{ blur: 2 }} loader={<></>} />
         </div>
     );
 }

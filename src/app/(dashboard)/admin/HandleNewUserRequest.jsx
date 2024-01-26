@@ -1,10 +1,32 @@
 'use client'
 
+import { useUserContext } from "@/context/ContextProvider";
 import { ActionIcon } from "@mantine/core";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FaCheck } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
-
 export default function HandleNewUserRequest() {
+    const [users, setUsers] = useState([])
+    const { refetchUserTable1, dispatch } = useUserContext()
+
+    const getNewUser = () => {
+        fetch('http://localhost:3000/api/user/newUser', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(res => res.json())
+            .then(data => {
+                setUsers(data)
+            })
+    }
+
+    useEffect(() => {
+        getNewUser()
+    }, [refetchUserTable1])
 
     return (
         <div className="space-y-2">
@@ -23,7 +45,7 @@ export default function HandleNewUserRequest() {
                     </thead>
                     <tbody>
                         {
-                            lists.map((item, i) => (
+                            users?.map((item, i) => (
                                 <tr key={i} className="odd:bg-white even:bg-gray-100 border-b">
                                     <td>{i + 1}</td>
                                     <td>{item.name}</td>
@@ -35,6 +57,26 @@ export default function HandleNewUserRequest() {
                                             variant="light"
                                             color="indigo"
                                             size="sm"
+                                            onClick={() => {
+                                                let loadingPromise = toast.loading("Loading...")
+                                                fetch('http://localhost:3000/api/user/verifyUser', {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Accept': 'application/json',
+                                                        'Content-Type': 'application/json'
+                                                    },
+                                                    body: JSON.stringify(item._id)
+                                                })
+                                                    .then(res => res.json())
+                                                    .then(data => {
+                                                        if (data) {
+                                                            toast.success("Deleted Successfully!", { id: loadingPromise })
+                                                            dispatch({ type: 'Recfetch_Table_1' })
+                                                        } else {
+                                                            toast.error("Something is wrong!", { id: loadingPromise })
+                                                        }
+                                                    })
+                                            }}
                                         >
                                             <FaCheck size={14} />
                                         </ActionIcon>
@@ -42,6 +84,27 @@ export default function HandleNewUserRequest() {
                                             variant="light"
                                             color="red"
                                             size="sm"
+                                            onClick={() => {
+                                                let loadingPromise = toast.loading("Loading...")
+                                                fetch('http://localhost:3000/api/user/deleteUser', {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Accept': 'application/json',
+                                                        'Content-Type': 'application/json'
+                                                    },
+                                                    body: JSON.stringify(item._id)
+                                                })
+                                                    .then(res => {
+                                                        res.json()
+                                                        if (res.status == 200) {
+                                                            setUsers(users.filter((val) => val._id !== item._id));
+                                                            toast.success("Deleted Successfully!", { id: loadingPromise })
+                                                        }
+                                                        else {
+                                                            toast.error("Something is wrong!", { id: loadingPromise })
+                                                        }
+                                                    })
+                                            }}
                                         >
                                             <ImCross size={12} />
                                         </ActionIcon>

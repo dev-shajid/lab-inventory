@@ -6,8 +6,8 @@ const Auth = async (req) => {
         token: sessionToken,
         secret: process.env.SECRET,
     });
-    if(!sessionToken || !decoded) return null
-    // console.log(decoded);
+    // console.log({decodedsss: decoded});
+    if(!decoded) return null
     return decoded
 }
 

@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
 module.exports = {
-  darkMode: ["light"],
+  darkMode: 'light',
   content: [
     "node_modules/@mantine/core/styles.css",
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',

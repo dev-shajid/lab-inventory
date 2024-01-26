@@ -1,19 +1,43 @@
 'use client'
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { HiSearch } from "react-icons/hi";
-import { Autocomplete, Button, Modal, NumberInput, TextInput } from "@mantine/core";
+import { Autocomplete, Button, LoadingOverlay, Modal, NumberInput, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Products from "@/components/Products";
 import { useFormik } from "formik";
-import { submitAddItemManagerForm } from "@/helper/api";
 import { validateAddItemManagerForm } from "@/helper/validate";
+import { useUserContext } from "@/context/ContextProvider";
+import { CiCamera } from "react-icons/ci";
+import useImageUpload from "@/components/useImageUpload";
+import toast from "react-hot-toast";
 
 export default function ManagerAction() {
     const [openedReqNewItemModal, { open: openReqNewItemModal, close: closeReqNewItemModal }] = useDisclosure(false);
     const [openedAddNewItemModal, { open: openAddNewItemModal, close: closeAddNewItemModal }] = useDisclosure(false);
     const [filterValue, setFilterValue] = useState("");
     const [filterLists, setFilterLists] = useState(products);
+    const [items, setItems] = useState([])
+    const [overlayLoading, setOverlayLoading] = useState(false)
+    const { refetchUserTable1, dispatch } = useUserContext()
+
+    const getAllItems = () => {
+        fetch('http://localhost:3000/api/item', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(res => res.json())
+            .then(data => {
+                setItems(data)
+            })
+    }
+
+    useEffect(() => {
+        getAllItems()
+    }, [])
 
     const onSearchChange = (e) => {
         let value = e.target.value
@@ -26,14 +50,36 @@ export default function ManagerAction() {
         }
     }
 
-
     const AddNewItemModal = () => {
+        const { isImageLoading, handleImageChange, handleImageUpload, imagePreview, imageUrl } = useImageUpload()
         const [addItemErrors, setAddItemErrors] = useState({})
-        const [formValue, setFormValue] = useState({ name: '', description: '', available: '', damaged: '' })
+
+        function handleSubmit(url, values) {
+            let loadingPromise = toast.loading("Loading...")
+            formik.setFieldValue('image', url)
+            fetch('http://localhost:3000/api/item/addItem', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ...values, image: url }),
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setOverlayLoading(false)
+                    if(data){
+                        toast.success("Item Added!", { id: loadingPromise })
+                        setItems((pre) => [data, ...pre])
+                    }
+                    else toast.error("Error to uploading item!", { id: loadingPromise })
+                    closeAddNewItemModal()
+                })
+        }
 
         const formik = useFormik({
             initialValues: {
-                name: '', description: '', available: '', damaged: ''
+                name: '', description: '', available: '', damaged: '', image: ''
             },
             validate: async (values) => {
                 setAddItemErrors(await validateAddItemManagerForm(values))
@@ -41,24 +87,41 @@ export default function ManagerAction() {
             validateOnBlur: false,
             validateOnChange: false,
             onSubmit: async (values) => {
+                setOverlayLoading(true)
                 if (!Object.keys(addItemErrors).length) {
-                    e.preventDefault()
-                    await submitAddItemManagerForm(values)
-                    setFilterLists((prev) => [...prev, formValue])
-                    closeAddNewItemModal()
+                    handleImageUpload(handleSubmit, values)
                 }
             }
         })
 
-        const handleProfile = async (e) => {
-            const base64 = await convertToBase64(e.target.files[0]);
-            formik.setFieldValue('profile', base64);
-            console.log(formik.values.profile);
-        }
-
         return (
             <Modal opened={openedAddNewItemModal} onClose={closeAddNewItemModal} title={<div className="title mt-6">Add new Item</div>}>
+                <div className="mb-4">
+                    {
+                        isImageLoading ?
+                            <div className="title">Uploading...</div> :
+                            !imagePreview && !formik.values.image ?
+                                <div>
+                                    <Button component="label" htmlFor="open_image" leftSection={<CiCamera size={20} />} size="xs" variant="outline">Select Image</Button>
+                                    <input
+                                        id="open_image"
+                                        className="hidden"
+                                        type="file"
+                                        accept="image/png, image/jpeg, image/jpg, image/webp"
+                                        onChange={handleImageChange}
+                                    />
+                                </div> :
+                                <div className="w-[200px] overflow-hidden">
+                                    {
+                                        formik.values.image || imagePreview && (
+                                            <img className="max-w-full max-h-full object-cover" src={formik.values.image || imagePreview} alt="profileImage" />
+                                        )
+                                    }
+                                </div>
 
+
+                    }
+                </div>
                 <form
                     className="space-y-4"
                     onSubmit={formik.handleSubmit}
@@ -68,12 +131,6 @@ export default function ManagerAction() {
                         placeholder="Enter item name"
                         withAsterisk
                         {...formik.getFieldProps('name')}
-                        inputProps={{
-                            autoComplete: 'off',
-                            form: {
-                                autoComplete: 'off',
-                            },
-                        }}
                         error={addItemErrors.name ? true : false}
                         helperText={addItemErrors.name}
                     />
@@ -81,12 +138,6 @@ export default function ManagerAction() {
                         label="Description"
                         placeholder="Enter item description"
                         {...formik.getFieldProps('description')}
-                        inputProps={{
-                            autoComplete: 'off',
-                            form: {
-                                autoComplete: 'off',
-                            },
-                        }}
                         error={addItemErrors.description ? true : false}
                         helperText={addItemErrors.description}
                     />
@@ -95,30 +146,18 @@ export default function ManagerAction() {
                         label="Available"
                         placeholder="Enter amount of available item"
                         withAsterisk
-                        {...formik.getFieldProps('available')}
-                        variant="outlined"
-                        color="red"
-                        inputProps={{
-                            autoComplete: 'off',
-                            form: {
-                                autoComplete: 'off',
-                            },
-                        }}
+                        value={formik.values.available}
+                        onChange={(e) => formik.setFieldValue('available', e)}
                         error={addItemErrors.available ? true : false}
                         helperText={addItemErrors.available}
                     />
                     <NumberInput
+                        min={0}
                         label="Damaged"
                         placeholder="Enter amount of damaged item"
                         withAsterisk
-                        min={0}
-                        {...formik.getFieldProps('damaged')}
-                        inputProps={{
-                            autoComplete: 'off',
-                            form: {
-                                autoComplete: 'off',
-                            },
-                        }}
+                        value={formik.values.damaged}
+                        onChange={(e) => formik.setFieldValue('damaged', e)}
                         error={addItemErrors.damaged ? true : false}
                         helperText={addItemErrors.damaged}
                     />
@@ -128,7 +167,7 @@ export default function ManagerAction() {
                     </div>
                 </form>
 
-            </Modal>
+            </Modal >
         )
     }
 
@@ -227,8 +266,10 @@ export default function ManagerAction() {
                     </div>
                 </div>
 
-                <Products products={filterLists} />
+                <Products products={items} />
+                {/* <Products products={filterLists} /> */}
             </div>
+            <LoadingOverlay visible={overlayLoading} overlayProps={{ blur: 2 }} loader={<></>} />
             <ReqNewItemModal />
             <AddNewItemModal />
         </>

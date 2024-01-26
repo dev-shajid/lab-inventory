@@ -6,10 +6,10 @@ import { NextResponse } from 'next/server'
 
 export async function POST(req) {
     try {
-        await authMiddlware
+        // await authMiddlware
         await db.connect()
-
-        const { name, email, password: pass, phone, image } = await req.json()
+        const { name, email, password: pass, phone, } = await req.json()
+        // console.log({ name, email, pass, phone, })
         if (!name || !email || !pass) {
             return new Response(JSON.stringify({ error: "Fill all the field!" }), { status: 400 })
         }
@@ -27,15 +27,15 @@ export async function POST(req) {
 
         const hashedPassword = await bcrypt.hash(pass, 10)
 
-        const newUser = await User.create({ name, email, password: hashedPassword, phone, image })
+        const newUser = await User.create({ name, email, password: hashedPassword, phone: '01879907444', })
 
         // console.log(newUser);
         const { password, ...user } = newUser._doc
-        
-        console.log({user})
+
+        console.log({ user })
         // const accessToken = signJwtToken(user, { expiresIn: '6d' })
         // return NextResponse.json({ ...user, accessToken }, { status: 200 })
-        return new Response(JSON.stringify({message: "Registered successfully!§ "}), { status: 200 })
+        return new Response(JSON.stringify({ message: "Succesful! Wait until verification" }), { status: 200 })
     } catch (error) {
         console.log({ error: error.message });
         return new Response(JSON.stringify({ error: error.message }), { status: 400 })

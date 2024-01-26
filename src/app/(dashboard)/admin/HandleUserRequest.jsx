@@ -1,11 +1,33 @@
 'use client'
 
+import { useUserContext } from "@/context/ContextProvider";
 import { ActionIcon, Menu } from "@mantine/core";
-import { FaCheck } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import { ImCross } from "react-icons/im";
+
 
 export default function HandleNewUserRequest() {
+    const [users, setUsers] = useState([])
+    const { refetchUserTable2, dispatch } = useUserContext()
+
+    const getNewUser = () => {
+        fetch('http://localhost:3000/api/user', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(res => res.json())
+            .then(data => {
+                setUsers(data)
+            })
+    }
+
+    useEffect(() => {
+        getNewUser()
+    }, [refetchUserTable2])
 
     return (
         <div className="space-y-2">
@@ -24,7 +46,7 @@ export default function HandleNewUserRequest() {
                     </thead>
                     <tbody>
                         {
-                            lists.map((item, i) => (
+                            users.map((item, i) => (
                                 <tr key={i} className="odd:bg-white even:bg-gray-100 border-b">
                                     <td>{i + 1}</td>
                                     <td>{item.name}</td>
@@ -32,7 +54,7 @@ export default function HandleNewUserRequest() {
                                     <td>{item.phone}</td>
                                     <td>{item.role}</td>
                                     <td className="space-x-3 min-w-[110px]">
-                                    <>
+                                        <>
                                             <Menu width={200} shadow="md">
                                                 <Menu.Target>
                                                     <ActionIcon
@@ -65,7 +87,25 @@ export default function HandleNewUserRequest() {
                                                     <Menu.Item
                                                         color="red"
                                                         onClick={() => {
-                                                            alert("Item delted!")
+                                                            let loadingPromise = toast.loading("Loading...")
+                                                            fetch('http://localhost:3000/api/user/deleteUser', {
+                                                                method: 'POST',
+                                                                headers: {
+                                                                    'Accept': 'application/json',
+                                                                    'Content-Type': 'application/json'
+                                                                },
+                                                                body: JSON.stringify(item._id)
+                                                            })
+                                                                .then(res => {
+                                                                    res.json()
+                                                                    if (res.status == 200) {
+                                                                        setUsers(users.filter((val) => val._id !== item._id));
+                                                                        toast.success("Deleted Successfully!", { id: loadingPromise })
+                                                                    }
+                                                                    else {
+                                                                        toast.error("Something is wrong!", { id: loadingPromise })
+                                                                    }
+                                                                })
                                                         }}
                                                     >
                                                         Delete User
