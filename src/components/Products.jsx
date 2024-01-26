@@ -9,7 +9,7 @@ export default function Products({products}) {
     <>
       <div>
         <div className="title">Items Gallery</div>
-        <div style={{ gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))" }} className="grid gap-4 justify-evenly">
+        <div style={{ gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))" }} className="grid sm:gap-4 gap-2 justify-evenly">
           {
             products.map((product, i) => (
               <div key={i} className='max-w-[200px]'>
