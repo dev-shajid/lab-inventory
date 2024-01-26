@@ -21,7 +21,7 @@ export default async function RootLayout({ children }) {
   const session = await getUserSession()
 
   async function getAuthUser() {
-    const res = await fetch("http://localhost:3000/api/authUser", {
+    const res = await fetch("https://lab-inventory.vercel.app/api/authUser", {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -30,7 +30,7 @@ export default async function RootLayout({ children }) {
       body: JSON.stringify(session.user)
     })
     const data = await res.json()
-    if(!data){
+    if (!data) {
       return null;
     }
     return data
