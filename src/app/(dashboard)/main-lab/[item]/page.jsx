@@ -16,10 +16,12 @@ export default function Item({ params }) {
         <div className='flex justify-between sm:items-end sm:flex-row flex-col gap-4'>
           <div>
             <div className="title">Item - {params.item}</div>
-            <div className='chip !text'>Available - 50</div>
-            <div className='chip r !text'>Damaged - 50</div>
+            <div className='gap-4 flex items-center'>
+              <div className='chip px-2 !text'>Available - 50</div>
+              <div className='chip px-2 r !text'>Damaged - 50</div>
+            </div>
           </div>
-          <div className='gap-4 flex '>
+          <div className='gap-4 flex'>
             <ManagerAction />
             <DemandItem />
           </div>

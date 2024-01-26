@@ -5,6 +5,9 @@ import { HiSearch } from "react-icons/hi";
 import { Autocomplete, Button, Modal, NumberInput, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Products from "@/components/Products";
+import { useFormik } from "formik";
+import { submitAddItemManagerForm } from "@/helper/api";
+import { validateAddItemManagerForm } from "@/helper/validate";
 
 export default function ManagerAction() {
     const [openedReqNewItemModal, { open: openReqNewItemModal, close: closeReqNewItemModal }] = useDisclosure(false);
@@ -25,64 +28,99 @@ export default function ManagerAction() {
 
 
     const AddNewItemModal = () => {
+        const [addItemErrors, setAddItemErrors] = useState({})
         const [formValue, setFormValue] = useState({ name: '', description: '', available: '', damaged: '' })
 
-        const handleChange = (value, name) => {
-            setFormValue((prev) => ({ ...prev, [name]: value }))
+        const formik = useFormik({
+            initialValues: {
+                name: '', description: '', available: '', damaged: ''
+            },
+            validate: async (values) => {
+                setAddItemErrors(await validateAddItemManagerForm(values))
+            },
+            validateOnBlur: false,
+            validateOnChange: false,
+            onSubmit: async (values) => {
+                if (!Object.keys(addItemErrors).length) {
+                    e.preventDefault()
+                    await submitAddItemManagerForm(values)
+                    setFilterLists((prev) => [...prev, formValue])
+                    closeAddNewItemModal()
+                }
+            }
+        })
+
+        const handleProfile = async (e) => {
+            const base64 = await convertToBase64(e.target.files[0]);
+            formik.setFieldValue('profile', base64);
+            console.log(formik.values.profile);
         }
 
-        const handleSubmit = (e, onClose) => {
-            e.preventDefault()
-            setFilterLists((prev) => [...prev, formValue])
-            setFormValue({ name: '', description: '', available: '', damaged: '' })
-            closeAddNewItemModal()
-        }
         return (
             <Modal opened={openedAddNewItemModal} onClose={closeAddNewItemModal} title={<div className="title mt-6">Add new Item</div>}>
 
                 <form
                     className="space-y-4"
-                    onSubmit={handleSubmit}
+                    onSubmit={formik.handleSubmit}
                 >
                     <TextInput
                         label="Name"
                         placeholder="Enter item name"
-                        name='name'
-                        value={formValue.name}
-                        onChange={(e) => handleChange(e.target.value, 'name')}
                         withAsterisk
-                        required
-                    // error={errors.email}
+                        {...formik.getFieldProps('name')}
+                        inputProps={{
+                            autoComplete: 'off',
+                            form: {
+                                autoComplete: 'off',
+                            },
+                        }}
+                        error={addItemErrors.name ? true : false}
+                        helperText={addItemErrors.name}
                     />
                     <TextInput
                         label="Description"
                         placeholder="Enter item description"
-                        value={formValue.description}
-                        name="description"
-                        onChange={(e) => handleChange(e.target.value, 'description')}
-                    // error={errors.email}
+                        {...formik.getFieldProps('description')}
+                        inputProps={{
+                            autoComplete: 'off',
+                            form: {
+                                autoComplete: 'off',
+                            },
+                        }}
+                        error={addItemErrors.description ? true : false}
+                        helperText={addItemErrors.description}
                     />
                     <NumberInput
+                        min={0}
                         label="Available"
                         placeholder="Enter amount of available item"
-                        name="available"
-                        value={formValue.available}
-                        onChange={(e) => handleChange(e, 'available')}
                         withAsterisk
-                        required
-                        min={0}
-                    // error={errors.email}
+                        {...formik.getFieldProps('available')}
+                        variant="outlined"
+                        color="red"
+                        inputProps={{
+                            autoComplete: 'off',
+                            form: {
+                                autoComplete: 'off',
+                            },
+                        }}
+                        error={addItemErrors.available ? true : false}
+                        helperText={addItemErrors.available}
                     />
                     <NumberInput
                         label="Damaged"
                         placeholder="Enter amount of damaged item"
-                        name="damaged"
-                        value={formValue.damaged}
-                        onChange={(e) => handleChange(e, 'damaged')}
                         withAsterisk
-                        required
                         min={0}
-                    // error={errors.email}
+                        {...formik.getFieldProps('damaged')}
+                        inputProps={{
+                            autoComplete: 'off',
+                            form: {
+                                autoComplete: 'off',
+                            },
+                        }}
+                        error={addItemErrors.damaged ? true : false}
+                        helperText={addItemErrors.damaged}
                     />
                     <div className="flex items-center justify-center gap-4">
                         <Button type="submit" fullWidth>Submit</Button>
@@ -201,29 +239,131 @@ export default function ManagerAction() {
 
 const products = [
     {
-        image: "/books/1.webp",
-        name: "Wall Frame-Cholo Rober Kache-WF012",
+        image: '/os/1.JPG',
+        name: 'Ethernet cable',
+        description: 'This is a very long text that describes the item.',
+        available: 12,
+        damaged: 3,
     },
     {
-        image: "/books/2.webp",
-        name: "Wall Frame-Bismillah-WF001",
+        image: '/os/2.JPG',
+        name: 'UPS',
+        description: 'This is a very long text that describes the item.',
+        available: 12,
+        damaged: 3,
     },
     {
-        image: "/books/3.webp",
-        name: "Wall Frame-Amader Paotaka-WF018",
+        image: '/os/3.JPG',
+        name: 'CPU',
+        description: 'This is a very long text that describes the item.',
+        available: 12,
+        damaged: 3,
     },
     {
-        image: "/books/4.webp",
-        name: "Wall Frame-Allahu Akbar-WF003",
+        image: '/os/4.JPG',
+        name: 'Monitor',
+        description: 'This is a very long text that describes the item.',
+        available: 12,
+        damaged: 3,
     },
     {
-        image: "/books/5.webp",
-        name: "Wall Frame-Alhamdulillah-WF002",
+        image: '/os/5.JPG',
+        name: 'Mouse',
+        description: 'This is a very long text that describes the item.',
+        available: 12,
+        damaged: 3,
     },
     {
-        image: "/books/6.webp",
-        name: "Wall Frame-Alhamdulillah Calligraphy-WF016",
-    }
+        image: '/os/6.JPG',
+        name: 'Keyboard',
+        description: 'This is a very long text that describes the item.',
+        available: 12,
+        damaged: 3,
+    },
+    {
+        image: '/os/7.JPG',
+        name: 'Gpu',
+        description: 'This is a very long text that describes the item.',
+        available: 12,
+        damaged: 3,
+    },
+    {
+        image: '/os/8.JPG',
+        name: 'Projector',
+        description: 'This is a very long text that describes the item.',
+        available: 12,
+        damaged: 3,
+    },
+    {
+        image: '/os/9.JPG',
+        name: 'Multiplug',
+        description: 'This is a very long text that describes the item.',
+        available: 12,
+        damaged: 3,
+    },
+    {
+        image: '/micro/3.jpg',
+        name: 'Breadboard',
+        description: 'This is a very long text that describes the item.',
+        available: 12,
+        damaged: 3,
+    },
+    {
+        image: '/micro/8.JPG',
+        name: 'Transistor',
+        description: 'This is a very long text that describes the item.',
+        available: 12,
+        damaged: 3,
+    },
+    {
+        image: '/micro/7.JPG',
+        name: 'Capacitor',
+        description: 'This is a very long text that describes the item.',
+        available: 12,
+        damaged: 3,
+    },
+    {
+        image: '/micro/2.JPG',
+        name: 'Resister',
+        description: 'This is a very long text that describes the item.',
+        available: 12,
+        damaged: 3,
+    },
+    {
+        image: '/micro/6.JPG',
+        name: 'Wire',
+        description: 'This is a very long text that describes the item.',
+        available: 12,
+        damaged: 3,
+    },
+    {
+        image: '/micro/1.WEBP',
+        name: 'IC',
+        description: 'This is a very long text that describes the item.',
+        available: 12,
+        damaged: 3,
+    },
+    {
+        image: '/micro/5.JPG',
+        name: 'Seven Segment Display',
+        description: 'This is a very long text that describes the item.',
+        available: 12,
+        damaged: 3,
+    },
+    {
+        image: '/lab1/pc.jpeg',
+        name: 'PC',
+        description: 'This is a very long text that describes the item.',
+        available: 12,
+        damaged: 3,
+    },
+    {
+        image: '/lab1/ups.png',
+        name: 'UPS',
+        description: 'This is a very long text that describes the item.',
+        available: 15,
+        damaged: 2,
+    },
 ]
 
 export const animals = [

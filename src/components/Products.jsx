@@ -15,7 +15,7 @@ export default function Products({products}) {
               <div key={i} className='max-w-[200px]'>
                 <Link href={`/main-lab/${i + 1}`}>
                   <div className='bg-white border border-blight-1 h-full flex flex-col relative rounded-md overflow-hidden shadow-sm md:hover:shadow-md duration-150'>
-                    <div className='h-full min-w-full w-full !aspect-[1/1] bg-gray-300'>
+                    <div className='h-full min-w-full w-full !aspect-[1/1] flex items-center justify-center'>
                       {
                         product.image?
                         <BlurImage src={product.image} alt="Product Image" id={i} /> :

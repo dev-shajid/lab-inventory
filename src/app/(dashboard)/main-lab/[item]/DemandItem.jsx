@@ -42,8 +42,8 @@ export default function DemandItem() {
                         value={formValue.description}
                     />
                     <Select
-                        label="Description"
-                        name="description"
+                        label="Lab"
+                        name="lab"
                         placeholder='Enter description of item'
                         onChange={(e) => handleChange(e, 'lab')}
                         withAsterisk
@@ -103,7 +103,7 @@ export default function DemandItem() {
                     openReqNewItemModal()
                 }}
             >
-                Demand this Item
+                Request this Item
             </Button>
             <ReqNewItemModal />
         </>

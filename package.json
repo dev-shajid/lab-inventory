@@ -12,6 +12,7 @@
     "@mantine/core": "^7.4.2",
     "@mantine/hooks": "^7.4.2",
     "@tanstack/react-table": "^8.11.7",
+    "formik": "^2.4.5",
     "next": "14.1.0",
     "react": "^18",
     "react-awesome-stars-rating": "^0.16.1",

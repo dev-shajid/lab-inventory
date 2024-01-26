@@ -107,6 +107,11 @@ const MenuItems = [
         link: '/request-management-index'
     },
     {
+        name: 'Handle Demand',
+        icon: <RxDashboard />,
+        link: '/handle-demand'
+    },
+    {
         name: 'OS Lab',
         icon: <RxDashboard />,
         link: '/os-lab'
