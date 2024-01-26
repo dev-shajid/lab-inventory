@@ -70,7 +70,7 @@ export default function Home() {
 
 const user_details = [
   {
-    name: "Fullname",
+    name: "Full Name",
     info: 'Shafiqul Islam',
   },
   {

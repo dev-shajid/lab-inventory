@@ -6,7 +6,7 @@ import BlurImage from "@/components/BlurImage";
 import { ActionIcon, Autocomplete, Button, Menu, Modal, NumberInput, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
-export default function LabTable({lists}) {
+export default function LabTable({ lists }) {
     const [openedActionModal, { open: openActionModal, close: closeActionModal }] = useDisclosure(false);
     const [openedReqNewItemModal, { open: openReqNewItemModal, close: closeReqNewItemModal }] = useDisclosure(false);
     const [openedAddNewItemModal, { open: openAddNewItemModal, close: closeAddNewItemModal }] = useDisclosure(false);
@@ -97,7 +97,7 @@ export default function LabTable({lists}) {
     }
 
     const ReqNewItemModal = () => {
-        const [formValue, setFormValue] = useState({ name: '', description: '', available: '', damaged: '' })
+        const [formValue, setFormValue] = useState({ name: '', description: '', req_item: '' })
 
         const handleChange = (value, name) => {
             setFormValue((prev) => ({ ...prev, [name]: value }))
@@ -106,7 +106,7 @@ export default function LabTable({lists}) {
         const handleSubmit = (e) => {
             e.preventDefault()
             alert(JSON.stringify(formValue, null, 2))
-            setFormValue({ name: '', description: '', available: '', damaged: '' })
+            setFormValue({ name: '', description: '', req_item: '' })
             closeReqNewItemModal()
         }
         return (
@@ -137,23 +137,12 @@ export default function LabTable({lists}) {
                     // error={errors.email}
                     />
                     <NumberInput
-                        label="Available"
                         min={0}
-                        placeholder="Enter amount of available item"
+                        label="Request Quantity"
+                        placeholder="Quantity of request item"
                         name="available"
-                        value={formValue.available}
-                        onChange={(e) => handleChange(e, 'available')}
-                        withAsterisk
-                        required
-                    // error={errors.email}
-                    />
-                    <NumberInput
-                        min={0}
-                        label="Damaged"
-                        placeholder="Enter amount of damaged item"
-                        name="damaged"
-                        value={formValue.damaged}
-                        onChange={(e) => handleChange(e, 'damaged')}
+                        value={formValue.req_item}
+                        onChange={(e) => handleChange(e, 'req_item')}
                         withAsterisk
                         required
                     // error={errors.email}
@@ -198,7 +187,7 @@ export default function LabTable({lists}) {
                         label="Description"
                         name="description"
                         placeholder='Enter description of item'
-                        onChange={(e)=>handleChange(e.target.value, 'description')}
+                        onChange={(e) => handleChange(e.target.value, 'description')}
                         withAsterisk
                         required
                         value={formValue.description}
@@ -208,7 +197,7 @@ export default function LabTable({lists}) {
                         label="Available"
                         name="available"
                         placeholder='Amount of available item'
-                        onChange={(e)=>handleChange(e, 'available')}
+                        onChange={(e) => handleChange(e, 'available')}
                         withAsterisk
                         required
                         value={formValue.available}
@@ -218,21 +207,21 @@ export default function LabTable({lists}) {
                         label="Damaged"
                         name="damaged"
                         placeholder='Amount of damaged items'
-                        onChange={(e)=>handleChange(e, 'damaged')}
+                        onChange={(e) => handleChange(e, 'damaged')}
                         withAsterisk
                         required
                         value={formValue.damaged}
                     />
-                    {selectedItem.id!=3 && <NumberInput
+                    {selectedItem.id != 3 && <NumberInput
                         min={0}
                         label="Amount"
                         name="req_item"
                         placeholder='Amount of request items'
-                        onChange={(e)=>handleChange(e, 'req_item')}
+                        onChange={(e) => handleChange(e, 'req_item')}
                         withAsterisk
                         required
                         value={formValue.req_item}
-                        // error={errors.email}
+                    // error={errors.email}
                     />}
                     <div className="flex items-center justify-center gap-4">
                         <Button type="submit" fullWidth>Submit</Button>

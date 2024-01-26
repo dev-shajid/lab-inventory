@@ -39,8 +39,6 @@ export default function DemandItem() {
                         name="description"
                         placeholder='Enter description of item'
                         onChange={(e) => handleChange(e.target.value, 'description')}
-                        withAsterisk
-                        required
                         value={formValue.description}
                     />
                     <Select
@@ -62,6 +60,7 @@ export default function DemandItem() {
                         withAsterisk
                         required
                         value={formValue.available}
+                        readOnly
                     />
                     <NumberInput
                         min={0}
@@ -72,6 +71,7 @@ export default function DemandItem() {
                         withAsterisk
                         required
                         value={formValue.damaged}
+                        readOnly
                     />
                     {selectedItem.id != 3 && <NumberInput
                         min={0}

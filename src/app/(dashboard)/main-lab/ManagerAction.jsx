@@ -70,6 +70,7 @@ export default function ManagerAction() {
                         onChange={(e) => handleChange(e, 'available')}
                         withAsterisk
                         required
+                        min={0}
                     // error={errors.email}
                     />
                     <NumberInput
@@ -80,6 +81,7 @@ export default function ManagerAction() {
                         onChange={(e) => handleChange(e, 'damaged')}
                         withAsterisk
                         required
+                        min={0}
                     // error={errors.email}
                     />
                     <div className="flex items-center justify-center gap-4">
@@ -93,7 +95,7 @@ export default function ManagerAction() {
     }
 
     const ReqNewItemModal = () => {
-        const [formValue, setFormValue] = useState({ name: '', description: '', available: '', damaged: '' })
+        const [formValue, setFormValue] = useState({ name: '', description: '', req_item: '' })
 
         const handleChange = (value, name) => {
             setFormValue((prev) => ({ ...prev, [name]: value }))
@@ -102,7 +104,7 @@ export default function ManagerAction() {
         const handleSubmit = (e) => {
             e.preventDefault()
             alert(JSON.stringify(formValue, null, 2))
-            setFormValue({ name: '', description: '', available: '', damaged: '' })
+            setFormValue({ name: '', description: '', req_item: '' })
             closeReqNewItemModal()
         }
         return (
@@ -133,21 +135,12 @@ export default function ManagerAction() {
                     // error={errors.email}
                     />
                     <NumberInput
-                        label="Available"
-                        placeholder="Enter amount of available item"
+                        min={0}
+                        label="Request Quantity"
+                        placeholder="Quantity of request item"
                         name="available"
-                        value={formValue.available}
-                        onChange={(e) => handleChange(e, 'available')}
-                        withAsterisk
-                        required
-                    // error={errors.email}
-                    />
-                    <NumberInput
-                        label="Damaged"
-                        placeholder="Enter amount of damaged item"
-                        name="damaged"
-                        value={formValue.damaged}
-                        onChange={(e) => handleChange(e, 'damaged')}
+                        value={formValue.req_item}
+                        onChange={(e) => handleChange(e, 'req_item')}
                         withAsterisk
                         required
                     // error={errors.email}
@@ -196,7 +189,7 @@ export default function ManagerAction() {
                     </div>
                 </div>
 
-                <Products products={filterLists}/>
+                <Products products={filterLists} />
             </div>
             <ReqNewItemModal />
             <AddNewItemModal />

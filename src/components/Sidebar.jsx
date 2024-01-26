@@ -97,7 +97,7 @@ const MenuItems = [
         link: '/admin'
     },
     {
-        name: 'Lab Inventory',
+        name: 'LAB Inventory',
         icon: <RxDashboard />,
         link: '/main-lab'
     },

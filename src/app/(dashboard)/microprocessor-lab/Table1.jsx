@@ -65,6 +65,7 @@ export default function Table1() {
                     // error={errors.email}
                     />
                     <NumberInput
+                        min={0}
                         label="Available"
                         placeholder="Enter amount of available item"
                         name="available"
@@ -75,6 +76,7 @@ export default function Table1() {
                     // error={errors.email}
                     />
                     <NumberInput
+                        min={0}
                         label="Damaged"
                         placeholder="Enter amount of damaged item"
                         name="damaged"
@@ -135,6 +137,7 @@ export default function Table1() {
                     // error={errors.email}
                     />
                     <NumberInput
+                        min={0}
                         label="Available"
                         placeholder="Enter amount of available item"
                         name="available"
@@ -145,6 +148,7 @@ export default function Table1() {
                     // error={errors.email}
                     />
                     <NumberInput
+                        min={0}
                         label="Damaged"
                         placeholder="Enter amount of damaged item"
                         name="damaged"
