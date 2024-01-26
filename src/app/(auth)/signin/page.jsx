@@ -44,15 +44,15 @@ export default function Login({ searchParams }) {
         setOverlay(false)
     }
 
-    // useEffect(() => {
-    //     setLoading(true)
-    //     if (status === "unauthenticated") {
-    //         setLoading(false)
-    //     } else if (status === "authenticated") {
-    //         setLoading(false)
-    //         router.push(searchParams.callback || "/");
-    //     }
-    // }, [status]);
+    useEffect(() => {
+        setLoading(true)
+        if (status === "unauthenticated") {
+            setLoading(false)
+        } else if (status === "authenticated") {
+            setLoading(false)
+            router.push(searchParams.callback || "/");
+        }
+    }, [status]);
 
     if (isLoading) return (
         <section className='container py-16 h-screen gap-3 flex justify-center items-center'>
