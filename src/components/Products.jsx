@@ -14,7 +14,7 @@ export default function Products({ products }) {
           {
             products?.map((product, i) => (
               <div key={i} className='max-w-[150px]'>
-                <Link href={`/main-lab/${i + 1}`}>
+                <Link href={`/main-lab/${product._id}`}>
                   <div className='bg-white border border-blight-1 h-full flex flex-col relative rounded-md overflow-hidden shadow-sm md:hover:shadow-md duration-150'>
                     <div className='h-full min-w-full w-full !aspect-[1/1] flex items-center justify-center'>
                       {
