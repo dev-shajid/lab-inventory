@@ -90,7 +90,7 @@ export default function ManagerAction() {
             <>
                 <Menu width={200} shadow="md">
                     <Menu.Target>
-                        <Button className='size-sm'>Action</Button>
+                        <Button size="xs" className='size-sm'>Action</Button>
                     </Menu.Target>
 
                     <Menu.Dropdown>

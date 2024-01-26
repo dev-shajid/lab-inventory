@@ -19,7 +19,7 @@ export default function Item({ params }) {
             <div className='chip !text'>Available - 50</div>
             <div className='chip r !text'>Damaged - 50</div>
           </div>
-          <div className='gap-4 flex items-center justify-center'>
+          <div className='gap-4 flex '>
             <ManagerAction />
             <DemandItem />
           </div>

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from "react";
-import { Button, Modal, NumberInput, TextInput } from "@mantine/core";
+import { Button, Modal, NumberInput, Select, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
 export default function DemandItem() {
@@ -10,8 +10,9 @@ export default function DemandItem() {
     const ReqNewItemModal = () => {
         const [formValue, setFormValue] = useState({ name: selectedItem.name, description: selectedItem.description, available: selectedItem.available, lab: selectedItem.lab, damaged: selectedItem.damaged, req_item: undefined })
 
-        const handleChange = (e) => {
-            setFormValue((prev) => ({ ...prev, req_item: e }))
+        const handleChange = (value, name) => {
+            // console.log({value, name})
+            setFormValue((prev) => ({ ...prev, [name]: value }))
         }
 
         const handleSubmit = (e) => {
@@ -35,35 +36,54 @@ export default function DemandItem() {
                     />
                     <TextInput
                         label="Description"
-                        readOnly
+                        name="description"
+                        placeholder='Enter description of item'
+                        onChange={(e) => handleChange(e.target.value, 'description')}
+                        withAsterisk
+                        required
                         value={formValue.description}
                     />
-                    <TextInput
-                        label="Lab"
-                        readOnly
+                    <Select
+                        label="Description"
+                        name="description"
+                        placeholder='Enter description of item'
+                        onChange={(e) => handleChange(e, 'lab')}
+                        withAsterisk
+                        required
                         value={formValue.lab}
-                    />
-                    <TextInput
-                        label="Available"
-                        readOnly
-                        value={formValue.available}
-                    />
-                    <TextInput
-                        label="Damaged"
-                        readOnly
-                        value={formValue.damaged}
+                        data={['OS Lab', 'Computer Lab', 'Microprocessor Lab']}
                     />
                     <NumberInput
+                        min={0}
+                        label="Available"
+                        name="available"
+                        placeholder='Amount of available item'
+                        onChange={(e) => handleChange(e, 'available')}
+                        withAsterisk
+                        required
+                        value={formValue.available}
+                    />
+                    <NumberInput
+                        min={0}
+                        label="Damaged"
+                        name="damaged"
+                        placeholder='Amount of damaged items'
+                        onChange={(e) => handleChange(e, 'damaged')}
+                        withAsterisk
+                        required
+                        value={formValue.damaged}
+                    />
+                    {selectedItem.id != 3 && <NumberInput
+                        min={0}
                         label="Amount"
                         name="req_item"
                         placeholder='Amount of request items'
-                        onChange={handleChange}
-                        value={formValue.req_item}
+                        onChange={(e) => handleChange(e, 'req_item')}
                         withAsterisk
                         required
-                        min={0}
+                        value={formValue.req_item}
                     // error={errors.email}
-                    />
+                    />}
                     <div className="flex items-center justify-center gap-4">
                         <Button type="submit" fullWidth>Submit</Button>
                         <Button onClick={closeReqNewItemModal} fullWidth variant="outline" color="red">Cancel</Button>
@@ -77,7 +97,8 @@ export default function DemandItem() {
     return (
         <>
             <Button
-                className='size-sm '
+                size="xs"
+                className='size-sm'
                 onClick={() => {
                     openReqNewItemModal()
                 }}
@@ -89,7 +110,7 @@ export default function DemandItem() {
     );
 }
 
-const selectedItem={
+const selectedItem = {
     name: 'PC',
     description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad, eligendi?',
     available: 18,

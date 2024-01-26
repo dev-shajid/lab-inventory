@@ -65,7 +65,7 @@ export default function Sidebar() {
                         <Link onClick={closeSidebar} href='/' className={`flex flex-1 items-center rounded-md space-x-1 transition-all `}>
                             <Avatar
                                 className='rounded-full border border-gray-300'
-                                src={0 ? '' : "/images/avatar.jpg"}
+                                src={0 ? '' : "/images/avatar.png"}
                             />
                             <span className='text'>{user?.userName && user?.userName}</span>
                         </Link>

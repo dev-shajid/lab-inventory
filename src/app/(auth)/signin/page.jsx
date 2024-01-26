@@ -41,17 +41,17 @@ export default async function SigIn() {
                                 component={Link}
                                 href='/'
                                 // type='submit'
-                                className='w-full rounded-md !bg-indigo-500'
+                                className='w-full rounded-md !bg-blue-500'
                             >
                                 Sing in
                             </Button>
                             <div>
                                 <div className="text-center text-sm text-gray-500 gap-x-1 flex items-center justify-center">
                                     <p>Don’t have an account yet?</p>
-                                    <Link href='/signup' className="font-medium text-primary-600 md:hover:underline underline text-indigo-500">Sign up</Link>
+                                    <Link href='/signup' className="font-medium text-primary-600 md:hover:underline underline text-blue-500">Sign up</Link>
                                 </div>
                                 <div className="flex items-center justify-center">
-                                    <a href="#" className="text-sm font-medium text-primary-600 hover:underline text-indigo-500">Forgot password?</a>
+                                    <a href="#" className="text-sm font-medium text-primary-600 hover:underline text-blue-500">Forgot password?</a>
                                 </div>
                             </div>
                         </form>

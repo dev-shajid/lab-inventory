@@ -97,7 +97,7 @@ export default async function SignUp() {
                                 component={Link}
                                 href='/'
                                 // type='submit'
-                                className='w-full rounded-md !bg-indigo-500'
+                                className='w-full rounded-md !bg-blue-500'
                             >
                                 Sing up
                             </Button>
