@@ -12,7 +12,7 @@ export default function Products({products}) {
         <div style={{ gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))" }} className="grid sm:gap-4 gap-2 justify-evenly">
           {
             products.map((product, i) => (
-              <div key={i} className='max-w-[200px]'>
+              <div key={i} className='max-w-[150px]'>
                 <Link href={`/main-lab/${i + 1}`}>
                   <div className='bg-white border border-blight-1 h-full flex flex-col relative rounded-md overflow-hidden shadow-sm md:hover:shadow-md duration-150'>
                     <div className='h-full min-w-full w-full !aspect-[1/1] flex items-center justify-center'>
