@@ -1,17 +1,17 @@
 import { NextResponse } from "next/server";
-import Auth from "./lib/auth";
+import Auth from "./src/lib/auth";
 
 export default async function middleware(req) {
     let decoded = await Auth(req)
 
     let path = req.nextUrl.pathname
-    if (path.startsWith('/signin') || path.startsWith('/signup')) {
+    if (path?.startsWith('/signin') || path?.startsWith('/signup')) {
         if (decoded) {
             return NextResponse.redirect(new URL('/', req.url))
         }
         return NextResponse.next()
     }
-    else if (path.startsWith('/admin')) {
+    else if (path?.startsWith('/admin')) {
         if (decoded && decoded?.role!='admin') {
             return NextResponse.redirect(new URL('/', req.url))
         }
