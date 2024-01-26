@@ -29,7 +29,6 @@ export default function Login({ searchParams }) {
         setOverlay(true)
         try {
             let loadingPromise = toast.loading("Loading...")
-            await new Promise(res => setTimeout(res, 1000));
 
             const data = await signIn('credentials', { ...values, redirect: false })
 

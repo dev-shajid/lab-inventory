@@ -31,7 +31,6 @@ export default function Register({ searchParams }) {
         setOverlay(true)
         let loadingPromise = toast.loading("Loading...")
         try {
-            await new Promise(res => setTimeout(res, 2000));
 
             const res = await fetch('/api/register', {
                 method: 'POST',
