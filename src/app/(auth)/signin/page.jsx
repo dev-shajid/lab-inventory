@@ -49,6 +49,7 @@ export default function Login({ searchParams }) {
         if (status === "unauthenticated") {
             setLoading(false)
         } else if (status === "authenticated") {
+            setLoading(false)
             router.push(searchParams.callback || "/");
         }
     }, [status]);
