@@ -44,15 +44,15 @@ export default function Login({ searchParams }) {
         setOverlay(false)
     }
 
-    useEffect(() => {
-        setLoading(true)
-        if (status === "unauthenticated") {
-            setLoading(false)
-        } else if (status === "authenticated") {
-            setLoading(false)
-            router.push(searchParams.callback || "/");
-        }
-    }, [status]);
+    // useEffect(() => {
+    //     setLoading(true)
+    //     if (status === "unauthenticated") {
+    //         setLoading(false)
+    //     } else if (status === "authenticated") {
+    //         setLoading(false)
+    //         router.push(searchParams.callback || "/");
+    //     }
+    // }, [status]);
 
     if (isLoading) return (
         <section className='container py-16 h-screen gap-3 flex justify-center items-center'>
@@ -62,6 +62,7 @@ export default function Login({ searchParams }) {
     )
     return (
         <section className="container">
+            {JSON.stringify(session, null, 2)}
             <div className="flex flex-col items-center justify-center mx-auto mt-8">
                 <div className="w-full md:bg-light md:shadow rounded-lg md:mt-0 sm:max-w-md xl:p-0">
                     <LoadingOverlay visible={overlayLoading} overlayProps={{blur: 2}} loader={<></>} />
