@@ -6,7 +6,7 @@ import { RxCross1, RxDashboard } from 'react-icons/rx'
 import { AiOutlineMenuUnfold } from 'react-icons/ai'
 import { IoIosLogOut } from 'react-icons/io'
 import { usePathname } from 'next/navigation'
-import { ActionIcon, Avatar, Button } from '@mantine/core'
+import { ActionIcon, Avatar } from '@mantine/core'
 
 export default function Sidebar() {
     const user = { userName: "Lab Assistant" }
