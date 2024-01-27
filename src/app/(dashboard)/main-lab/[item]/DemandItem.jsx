@@ -25,6 +25,7 @@ export default function DemandItem({ item: selectedItem }) {
             let loadingPromise = toast.loading("Loading...")
             let itemObj = {
                 ...formValue,
+                // ...selectedItem,
                 itemId: selectedItem._id,
                 req_type: 'demand',
                 role: user?.role,

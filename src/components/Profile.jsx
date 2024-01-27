@@ -19,10 +19,10 @@ export default function Profile() {
                         className='w-[240px] aspect-square object-cover m-auto rounded-md'
                         src={user?.image} alt="Profle"
                     />
-                    <Button
+                    {/* <Button
                         leftSection={<AiFillEdit size={14} />} variant='filled' size="xs">
                         Edit
-                    </Button>
+                    </Button> */}
                 </div>
                 <div className='ditals'>
                     <div className="user_details grid md:grid-cols-2 gap-4">

@@ -1,7 +1,8 @@
 'use client'
 
 import { useUserContext } from "@/context/ContextProvider";
-import { ActionIcon, Menu, Select } from "@mantine/core";
+import { ActionIcon, Button, Menu, Modal, NumberInput, Select } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import moment from "moment";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -9,9 +10,11 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 
 export default function EventTable() {
+    const [opened, { open, close }] = useDisclosure(false);
     const [isLoading, setIsLoading] = useState(true)
     const [refetchItems, setRefetchItems] = useState(0)
     const [items, setItems] = useState([])
+    const [selectedItem, setSelectedItem] = useState({})
     const { user } = useUserContext()
     const router = useRouter()
 
@@ -23,7 +26,7 @@ export default function EventTable() {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ _id: id, status: value })
+            body: JSON.stringify({ _id: id, status: value, supply: selectedItem?.supply || 0, available: selectedItem?.available - selectedItem?.supply })
         })
             .then(res => res.json())
             .then(data => {
@@ -53,7 +56,6 @@ export default function EventTable() {
         getRequestItems()
     }, [refetchItems])
 
-
     if (user?.role != 'manager') router.push('/')
     return (
         <>
@@ -79,8 +81,10 @@ export default function EventTable() {
                                                             <th className="text-center">Description</th>
                                                             <th className="text-center">Amount</th>
                                                             <th className="text-center">Supply</th>
+                                                            <th className="text-center">Available</th>
+                                                            <th className="text-center">Damaged</th>
                                                             <th className="text-center">Request Type</th>
-                                                            <th className="text-center">Name of Lab</th>
+                                                            <th className="text-center">Lab Name</th>
                                                             <th className="text-center">Date</th>
                                                             <th className="text-center">Status</th>
                                                             {user?.role == 'manager' && <th>Action</th>}
@@ -95,8 +99,15 @@ export default function EventTable() {
                                                                     <td className="text-center">{item.description}</td>
                                                                     <td className="text-center">{item.amount}</td>
                                                                     <td className="text-center">{item.supply}</td>
+                                                                    <td className="text-center">{item.available}</td>
+                                                                    <td className="text-center">{item.damaged}</td>
                                                                     <td className="text-center">{item.req_type}</td>
-                                                                    <td className="text-center">{item.lab}</td>
+                                                                    <td className="text-center">
+                                                                        <div className="flex flex-col gap-1">
+                                                                            <span className="capitalize">{item.role}</span>
+                                                                            {item.lab && <span className="">{`(${item.lab[0].toUpperCase()}${item.lab.slice(1)} Lab)`}</span>}
+                                                                        </div>
+                                                                    </td>
                                                                     <td className="min-w-[140px] flex flex-col items-center">
                                                                         <div>{moment(item.createdAt).format('ll')}</div>
                                                                         <div>{moment(item.createdAt).format('LT')}</div>
@@ -120,7 +131,10 @@ export default function EventTable() {
                                                                                 <Menu.Dropdown>
                                                                                     <Menu.Item
                                                                                         color="green"
-                                                                                        onClick={() => editRequestItems(item._id, 'a')}
+                                                                                        onClick={() => {
+                                                                                            setSelectedItem(item)
+                                                                                            open()
+                                                                                        }}
                                                                                     >
                                                                                         Accepted
                                                                                     </Menu.Item>
@@ -230,7 +244,10 @@ export default function EventTable() {
                                                                     <td className="text-center">{item.supply}</td>
                                                                     <td className="text-center">{item.req_type}</td>
                                                                     <td className="text-center">
-                                                                        <span className="capitalize">{item.role}</span> {item.lab && `(${item.lab})`}
+                                                                        <div className="flex flex-col gap-1">
+                                                                            <span className="capitalize">{item.role}</span>
+                                                                            {item.lab && <span className="">{`(${item.lab[0].toUpperCase()}${item.lab.slice(1)} Lab)`}</span>}
+                                                                        </div>
                                                                     </td>
                                                                     <td className="min-w-[140px] flex flex-col items-center">
                                                                         <div>{moment(item.createdAt).format('ll')}</div>
@@ -252,6 +269,43 @@ export default function EventTable() {
                             <div className="title flex justify-center items-center h-screen gap-4">No Request Found</div>
                     )
             }
+
+            <Modal
+                opened={opened}
+                onClose={close}
+                transitionProps={{ transition: 'fade', duration: 200 }}
+                title={<div className="title mt-6">Supply Amount</div>}
+            >
+                <form className='space-y-4' onSubmit={(e) => {
+                    e.preventDefault()
+                    close()
+                    // setSelectedItem(pre=>({...pre, available:pre.available-pre.supply}))
+                    editRequestItems(selectedItem._id, 'a')
+                }}>
+                    <NumberInput
+                        label="Available"
+                        placeholder="Enter amount of avaiable item"
+                        disabled
+                        value={selectedItem?.available}
+                    />
+                    <NumberInput
+                        min={0}
+                        max={selectedItem.available}
+                        label="Supply"
+                        placeholder="Enter amount of supply item"
+                        withAsterisk
+                        required
+                        value={selectedItem?.supply}
+                        onChange={(e) => setSelectedItem(pre => ({ ...pre, supply: e }))}
+                    />
+                    <Button
+                        type="submit"
+                        fullWidth
+                    >
+                        Submit
+                    </Button>
+                </form>
+            </Modal >
         </>
     );
 }

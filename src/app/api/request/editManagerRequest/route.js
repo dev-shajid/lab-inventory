@@ -5,8 +5,8 @@ export const POST = async (req) => {
     try {
         await db.connect()
         const item = await req.json()
-        console.log(item)
-        const updated = await Request.findOneAndUpdate({ _id: item._id }, { status: item.status })
+        // console.log(item)
+        const updated = await Request.findOneAndUpdate({ _id: item._id }, { status: item.status, supply: item?.supply, available:item?.available })
         return new Response(JSON.stringify(updated), { status: 200 })
     } catch (error) {
         console.log({ Error: error.message })
