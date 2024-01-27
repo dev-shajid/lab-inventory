@@ -475,16 +475,3 @@ export default function LabTable({ lab }) {
         </div>
     );
 }
-
-export const animals = [
-    { label: 'monkey', value: 'Monkey' },
-    { label: 'snake', value: 'Snake' },
-    { label: 'lion', value: 'Lion' },
-    { label: 'tiger', value: 'Tiger' },
-    { label: 'bird', value: 'Bird' },
-    { label: 'fish', value: 'Fish' },
-    { label: 'elephant', value: 'Elephant' },
-    { label: 'cat', value: 'Cat' },
-    { label: 'rabbit', value: 'Rabbit' }
-]
-

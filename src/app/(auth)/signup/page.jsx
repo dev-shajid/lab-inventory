@@ -17,13 +17,15 @@ export default function Register({ searchParams }) {
 
     const form = useForm({
         initialValues: {
-            name: 'Mizan',
-            email: 'mizan@gmail.com',
-            password: 'shajib786',
+            name: '',
+            email: '',
+            phone: '',
+            password: '',
         },
         validate: {
             name: (value) => (value.length < 2 ? 'name is too short' : null),
             email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid Email"),
+            phone: (value) => value.match("(?:\\+88|88)?(01[3-9]\\d{8}$)") ? null : "Invalid Phone Number",
             password: (value) => (value.length < 5 ? 'Password length should be atleast 5' : null),
         },
     });
@@ -41,7 +43,7 @@ export default function Register({ searchParams }) {
                 body: JSON.stringify(values)
             })
             const data = await res.json()
-            console.log(data);
+            // console.log(data);
             if (!res.ok) {
                 toast.error(data?.error || "Some error arised", { id: loadingPromise })
             } else {
@@ -98,6 +100,12 @@ export default function Register({ searchParams }) {
                                 placeholder='Enter your Password'
                                 withAsterisk
                                 {...form.getInputProps('password')}
+                            />
+                            <TextInput
+                                label="Phone"
+                                placeholder='Enter your Phone Number'
+                                withAsterisk
+                                {...form.getInputProps('phone')}
                             />
                             <Button
                                 fullWidth

@@ -45,7 +45,7 @@ export default function HandleNewUserRequest() {
                     (
                         users.length ?
                             <div className="space-y-2">
-                                <div div className="title" > New Entry</div>
+                                <div className="title" > New Entry</div>
                                 <div className="event_table overflow-x-auto max-w-fulls mx-auto rounded-md border border-blight-1">
                                     <table className="w-full m-0 min-w-[400px] rounded-md overflow-hidden text-sm text-left rtl:text-right text-gray-600">
                                         <thead className="text-xs text-gray-800 uppercase bg-gray-300">

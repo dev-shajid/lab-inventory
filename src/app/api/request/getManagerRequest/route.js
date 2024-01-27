@@ -4,7 +4,10 @@ import Request from "@/models/Request";
 export const POST = async (req) => {
     try {
         await db.connect()
-        const newItem = await Request.find({ role: { $not: { $regex: '\W*((?i)manager(?-i))\W*' } } })
+        const newItem = await Request.find({
+            // role: { $not: { $regex: '\W*((?i)manager(?-i))\W*' } },
+            req_type: 'demand',
+        })
         return new Response(JSON.stringify(newItem), { status: 200 })
     } catch (error) {
         console.log({ Error: error.message })

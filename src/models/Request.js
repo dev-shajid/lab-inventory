@@ -43,15 +43,10 @@ const RequestSchema = new mongoose.Schema({
         enum: ['repair', 'restock', 'demand'],
         required: true,
     },
-    status_manager: {
+    status: {
         type: String,
         enum: ['p', 'a', 'r'],
         default: 'p',
-    },
-    status_admin: {
-        type: String,
-        enum: [null, 'p', 'a', 'r'],
-        default: null,
     },
     seen: {
         type: Boolean,

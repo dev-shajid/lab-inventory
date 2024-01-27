@@ -1,16 +1,14 @@
 import BlurImage from "@/components/BlurImage";
-import { useUserContext } from "@/context/ContextProvider";
+import Profile from "@/components/Profile";
 import getUserSession from "@/helper/getUserSession";
-import { ActionIcon, Button } from "@mantine/core";
-import Link from "next/link";
 import { AiFillEdit } from "react-icons/ai";
 
 export default async function Home() {
   const session = await getUserSession()
   return (
     <section className="container space-y-6">
-      <pre>{JSON.stringify(session, null, 2)}</pre>
-      <div className="title text-center">Welcome, 👋 {'Shafiqul Islam'}</div>
+      {/* <pre>{JSON.stringify(session, null, 2)}</pre> */}
+      <div className="title text-center">Welcome, 👋 {session?.user?.name}</div>
 
 
       <div className="bg-white p-4 rounded-md border border-blight-1">
@@ -25,92 +23,16 @@ export default async function Home() {
           <div className="text">
             Chittagong University of Engineering & Technology (Bengali: চট্টগ্রাম প্রকৌশল ও প্রযুক্তি বিশ্ববিদ্যালয়), commonly referred to as CUET, is a public engineering and technological research university in Bangladesh located in Raozan Upazila under Chittagong District. Established in 1968 as Engineering College, Chittagong and gained autonomous graduate school status in 2003, this university is a state funded institution, maintaining special emphasis on teaching and research of engineering, technology, architecture and planning under five faculties and seventeen academic departments.
           </div>
+          <div className="font-medium text-gray-500 text-xs">
+              Developed By- Mehedi Hasan Jony, Mohammad Fayez Ullah, Arat Ibne Golam Mowla
+          </div>
         </div>
       </div>
 
 
-      <div className="bg-white p-4 rounded-md border border-blight-1">
-        <div className="title">Profile</div>
-        <div className="space-y-6">
-          <div className='flex flex-col gap-4 items-center justify-center'>
-            <BlurImage
-              className='w-[240px] aspect-square object-cover m-auto rounded-md'
-              src="/images/avatar.png" alt="Profle"
-            />
-            <Button leftSection={<AiFillEdit size={14} />} variant='filled' size="xs">
-              Edit
-            </Button>
-          </div>
-          <div className='ditals'>
-            <div className="user_details grid md:grid-cols-2 gap-4">
-              {user_details.map((user, i) => (
-                <div key={i} className="item flex flex-col">
-                  <span className='text-sm text-gray-400'>{user.name}</span>
-                  <span className='font-medium dark:text-white'>{user.info}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      <Profile />
 
 
     </section>
   );
 }
-
-const user_details = [
-  {
-    name: "Full Name",
-    info: 'Shafiqul Islam',
-  },
-  {
-    name: "Designation",
-    info: 'Lab Manager',
-  },
-  {
-    name: "Email",
-    info: 'shafiqcuet1980@gmail.com',
-  },
-  {
-    name: "Phone",
-    info: '8801670393288',
-  },
-  {
-    name: "Gender",
-    info: 'Male',
-  },
-  {
-    name: "Date of Birth",
-    info: '12 July, 2001',
-  },
-  {
-    name: "Blood Group",
-    info: 'AB+',
-  },
-  {
-    name: "Religion",
-    info: 'Islam',
-  },
-]
-
-
-
-const items = [
-  {
-    title: 'Total Items',
-    total: 124,
-  },
-  {
-    title: 'Total Lab',
-    total: 3,
-  },
-  {
-    title: 'Total Item',
-    total: 95,
-  },
-  {
-    title: 'Total Damaged',
-    total: 12,
-  },
-]

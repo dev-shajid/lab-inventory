@@ -9,10 +9,10 @@ export default async function Admin() {
   
   return (
     <section className="container space-y-8">
-      <pre>{JSON.stringify(session, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(session, null, 2)}</pre> */}
       <HandleNewUserRequest />
       <HandleUserRequest />
-      <HandleItemRequest />
+      {/* <HandleItemRequest /> */}
     </section>
   );
 }

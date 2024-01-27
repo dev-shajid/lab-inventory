@@ -4,10 +4,10 @@ import Request from "@/models/Request";
 export const POST = async (req) => {
     try {
         await db.connect()
-        const item = await req.json()
-        console.log(item)
-        const updated = await Request.findOneAndUpdate({ _id: item._id }, { status: item.status })
-        return new Response(JSON.stringify(updated), { status: 200 })
+        const newItem = await Request.find({
+            req_type: { $in: ['repair', 'restock'] },
+        })
+        return new Response(JSON.stringify(newItem), { status: 200 })
     } catch (error) {
         console.log({ Error: error.message })
         return new Response(JSON.stringify(null), { status: 500 })

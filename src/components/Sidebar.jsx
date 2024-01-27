@@ -55,7 +55,8 @@ export default function Sidebar({ authUser }) {
                     <div className="sidebar-menu space-y-1">
                         {
                             MenuItems.map((item, i) => {
-                                if (item.name == 'Admin' && user?.role != 'admin') return
+                                if ((item.name == 'Admin' || item.name == 'Request Management Index') && user?.role != 'admin') return
+                                if (item.name == 'Demand Control Index' && user?.role != 'manager') return
                                 return (
                                     <Link onClick={closeSidebar} key={i} href={item.link} className={`flex items-center text px-3 py-2 rounded-md space-x-3 transition-all 
                                     ${'/' + pathname.split('/')[1] == item.link ? 'bg-gray-700 text-white' : 'md:hover:bg-gray-300 text-black'}
