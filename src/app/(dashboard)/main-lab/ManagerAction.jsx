@@ -16,10 +16,10 @@ export default function ManagerAction() {
     const [openedReqNewItemModal, { open: openReqNewItemModal, close: closeReqNewItemModal }] = useDisclosure(false);
     const [openedAddNewItemModal, { open: openAddNewItemModal, close: closeAddNewItemModal }] = useDisclosure(false);
     const [filterValue, setFilterValue] = useState("");
-    const [filterLists, setFilterLists] = useState(products);
+    const [filterLists, setFilterLists] = useState([]);
     const [items, setItems] = useState([])
     const [overlayLoading, setOverlayLoading] = useState(false)
-    const { refetchUserTable1, dispatch } = useUserContext()
+    const { refetchUserTable1, dispatch, user } = useUserContext()
 
     const getAllItems = () => {
         fetch('https://lab-inventory.vercel.app/api/item', {
@@ -32,6 +32,7 @@ export default function ManagerAction() {
             .then(res => res.json())
             .then(data => {
                 setItems(data)
+                setFilterLists(data)
             })
     }
 
@@ -43,10 +44,10 @@ export default function ManagerAction() {
         let value = e.target.value
         if (value) {
             setFilterValue(value);
-            setFilterLists(products.filter(item => item.name.toLocaleLowerCase().includes(value.toLocaleLowerCase())));
+            setFilterLists(items.filter(item => item.name.toLocaleLowerCase().includes(value.toLocaleLowerCase())));
         } else {
             setFilterValue("");
-            setFilterLists(products);
+            setFilterLists(items);
         }
     }
 
@@ -245,7 +246,7 @@ export default function ManagerAction() {
                             value={filterValue}
                             onChange={onSearchChange}
                         />
-                        <div className="space-x-2">
+                        {user.role == 'manager' && <div className="space-x-2">
                             <Button
                                 size="xs"
                                 onClick={openReqNewItemModal}
@@ -259,15 +260,15 @@ export default function ManagerAction() {
                             >
                                 Add New Item
                             </Button>
-                        </div>
+                        </div>}
                     </div>
                     <div className="flex">
                         <span className="text-gray-500 text-xs font-medium">Total {filterLists.length} items</span>
                     </div>
                 </div>
 
-                <Products products={items} />
-                {/* <Products products={filterLists} /> */}
+                {/* <Products products={items} /> */}
+                <Products products={filterLists} />
             </div>
             <LoadingOverlay visible={overlayLoading} overlayProps={{ blur: 2 }} loader={<></>} />
             <ReqNewItemModal />

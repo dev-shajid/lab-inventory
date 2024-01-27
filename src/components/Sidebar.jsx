@@ -73,7 +73,7 @@ export default function Sidebar({ authUser }) {
                                 className='rounded-full border border-gray-300'
                                 src={0 ? '' : "/images/avatar.png"}
                             />
-                            <span className='text'>{'Lab Assistant'}</span>
+                            <span className='text'>{user.name}</span>
                         </Link>
                         <ActionIcon
                             variant='transparent'

@@ -6,7 +6,7 @@ import getUserSession from "@/helper/getUserSession";
 
 export default async function Admin() {
   const session = await getUserSession()
-
+  
   return (
     <section className="container space-y-8">
       <pre>{JSON.stringify(session, null, 2)}</pre>

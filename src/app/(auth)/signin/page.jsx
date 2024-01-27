@@ -48,8 +48,8 @@ export default function Login({ searchParams }) {
         setLoading(true)
         if (status === "unauthenticated") {
             setLoading(false)
-        } else if (status === "authenticated") {
-            setLoading(false)
+        }
+        else if(status === "authenticated") {
             router.push(searchParams.callback || "/");
         }
     }, [status]);
@@ -60,12 +60,13 @@ export default function Login({ searchParams }) {
             <p className='text-base'>Loading...</p>
         </section>
     )
+
     return (
         <section className="container">
-            {JSON.stringify(session, null, 2)}
+            {/* {JSON.stringify(session, null, 2)} */}
             <div className="flex flex-col items-center justify-center mx-auto mt-8">
                 <div className="w-full md:bg-light md:shadow rounded-lg md:mt-0 sm:max-w-md xl:p-0">
-                    <LoadingOverlay visible={overlayLoading} overlayProps={{blur: 2}} loader={<></>} />
+                    <LoadingOverlay visible={overlayLoading} overlayProps={{ blur: 2 }} loader={<></>} />
                     <div className="space-y-4 md:space-y-6 sm:p-8 px-4 py-8">
                         <h1 className="text-xl font-bold text-center leading-tight tracking-tight text-gray-900 md:text-2xl">
                             Log in

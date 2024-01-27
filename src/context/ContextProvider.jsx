@@ -18,7 +18,7 @@ const Reducer = (state, action) => {
         case 'Recfetch_Table_1':
             return { ...state, refetchUserTable1: state.refetchUserTable1 + 1, refetchUserTable2: state.refetchUserTable2 + 1,  };
         case 'Recfetch_Table_2':
-            return { ...state, refetchUserTable1: state.refetchUserTable1 + 1, refetchUserTable2: state.refetchUserTable2 + 1 };
+            return { ...state, refetchUserTable2: state.refetchUserTable2 + 1 };
         default:
             return state
     }

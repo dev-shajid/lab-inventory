@@ -7,34 +7,48 @@ import { Loader } from '@mantine/core'
 import { useUserContext } from '@/context/ContextProvider'
 import { useRouter } from 'next/navigation'
 
-export default function Layout({ children, authUser }) {
+export default function Layout({ children }) {
     const { data: session, status } = useSession()
     const { dispatch, user } = useUserContext()
     const [isLoading, setLoading] = useState(true);
     const router = useRouter()
 
-    useEffect(() => {
-        // console.log(JSON.parse(authUser.value))
-        if (JSON.parse(authUser.value)) dispatch({ type: 'ADD_USER', payload: JSON.parse(authUser.value) })
-        else signOut()
-    }, [])
+    const getNewUser = () => {
+        if (status == 'authenticated') {
+            fetch('https://lab-inventory.vercel.app/api/authUser', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(session?.user)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data) dispatch({ type: 'ADD_USER', payload: data })
+                    else signOut()
+                })
+                .finally(() => setLoading(false))
+        }
+    }
 
     useEffect(() => {
         setLoading(true)
         if (status === "unauthenticated") {
-            signOut()
-            router.push("/signin");
-        } else if (status === "authenticated") {
-            setLoading(false)
+            router.push('/signin');
         }
-    }, [status])
+        else if (status === "authenticated") {
+            getNewUser()
+        }
+    }, [status]);
 
     if (isLoading || status == 'loading') return (
         <section className='container py-16 h-screen gap-3 flex justify-center items-center'>
-            <Loader size='30' aria-label='loader' loaderprops={{ children: 'Loading...' }} />
+            <Loader size='30' aria-label='loader' color='primary' />
             <p className='text-base'>Loading...</p>
         </section>
     )
+
     return (
         <>
             <main className="bg-light min-h-[100vh] flex md:flex-row flex-col md:gap-y-0 gap-y-4 w-full relative">
