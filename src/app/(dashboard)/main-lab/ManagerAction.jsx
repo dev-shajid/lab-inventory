@@ -22,7 +22,7 @@ export default function ManagerAction() {
     const { refetchUserTable1, dispatch, user } = useUserContext()
 
     const getAllItems = () => {
-        fetch('http://localhost:3000/api/item', {
+        fetch('https://lab-inventory.vercel.app/api/item', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -58,7 +58,7 @@ export default function ManagerAction() {
         function handleSubmit(url, values) {
             let loadingPromise = toast.loading("Loading...")
             formik.setFieldValue('image', url)
-            fetch('http://localhost:3000/api/item/addItem', {
+            fetch('https://lab-inventory.vercel.app/api/item/addItem', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',

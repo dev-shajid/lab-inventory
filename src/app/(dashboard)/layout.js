@@ -22,7 +22,7 @@ export default async function RootLayout({ children }) {
 
   // async function getAuthUser() {
   //   if(!session) return null
-  //   const res = await fetch("http://localhost:3000/api/authUser", {
+  //   const res = await fetch("https://lab-inventory.vercel.app/api/authUser", {
   //     method: 'POST',
   //     headers: {
   //       'Accept': 'application/json',

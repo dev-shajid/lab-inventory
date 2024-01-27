@@ -7,7 +7,7 @@ import ManagerAction from './ManagerAction';
 
 export default async function Item({ params }) {
   const getItem = async () => {
-    const res = await fetch('http://localhost:3000/api/item/getItem', {
+    const res = await fetch('https://lab-inventory.vercel.app/api/item/getItem', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"

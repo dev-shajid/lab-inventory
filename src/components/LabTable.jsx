@@ -40,7 +40,7 @@ export default function LabTable({ lists }) {
         function handleSubmit(url, values) {
             let loadingPromise = toast.loading("Loading...")
             formik.setFieldValue('image', url)
-            fetch('http://localhost:3000/api/item/addItem', {
+            fetch('https://lab-inventory.vercel.app/api/item/addItem', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
