@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 export default function Register({ searchParams }) {
     const [overlayLoading, setOverlay] = useState(false);
@@ -57,17 +58,19 @@ export default function Register({ searchParams }) {
         setLoading(true)
         if (status === "unauthenticated") {
             setLoading(false)
-        } else if (status === "authenticated") {
+        }
+        else if (status === "authenticated") {
             router.push(searchParams.callback || "/");
         }
     }, [status]);
 
     if (isLoading) return (
         <section className='container py-16 h-screen gap-3 flex justify-center items-center'>
-            <Loader size='30' aria-label='loader' loaderprops={{ children: 'Loading...' }} />
+            <AiOutlineLoading3Quarters size={28} className='animate-spin' />
             <p className='text-base'>Loading...</p>
         </section>
     )
+
     return (
         <section className="container">
             <div className="flex flex-col items-center justify-center mx-auto mt-8">

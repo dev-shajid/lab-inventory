@@ -6,6 +6,7 @@ import { signOut, useSession } from 'next-auth/react'
 import { Loader } from '@mantine/core'
 import { useUserContext } from '@/context/ContextProvider'
 import { useRouter } from 'next/navigation'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 export default function Layout({ children }) {
     const { data: session, status } = useSession()
@@ -15,7 +16,7 @@ export default function Layout({ children }) {
 
     const getNewUser = () => {
         if (status == 'authenticated') {
-            fetch('https://lab-inventory.vercel.app/api/authUser', {
+            fetch('http://localhost:3000/api/authUser', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -44,7 +45,7 @@ export default function Layout({ children }) {
 
     if (isLoading || status == 'loading') return (
         <section className='container py-16 h-screen gap-3 flex justify-center items-center'>
-            <Loader size='30' aria-label='loader' color='primary' />
+            <AiOutlineLoading3Quarters size={28} className='animate-spin' />
             <p className='text-base'>Loading...</p>
         </section>
     )

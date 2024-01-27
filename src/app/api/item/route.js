@@ -14,7 +14,7 @@ export const GET = async (req) => {
 export const POST = async (req) => {
     try {
         await db.connect()
-        const items = await Items.find()
+        const items = await Items.find().sort({ createdAt: -1 })
         return new Response(JSON.stringify(items), { status: 200 })
     } catch (error) {
         return new Response(JSON.stringify(null), { status: 500 })
