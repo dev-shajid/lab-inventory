@@ -17,21 +17,21 @@ export const authOptions = {
                     }
                     await db.connect()
 
-                    const user = await User.findOne({ email })
+                    const user = await user?.findOne({ email })
                     // console.log(user);
                     if (!user) {
                         throw new Error("User does not exist")
                     }
 
-                    const comparePass = await bcrypt.compare(password, user.password)
+                    const comparePass = await bcrypt.compare(password, user?.password)
 
                     if (!comparePass) {
                         throw new Error("Invalid credentials!")
                     } else {
-                        if (!user.isVerified) {
+                        if (!user?.isVerified) {
                             throw new Error("User is not verified yet!")
                         }
-                        const { password, ...currentUser } = user._doc
+                        const { password, ...currentUser } = user?._doc
                         // console.log({user})
                         const accessToken = signJwtToken(currentUser, { expiresIn: '6d' })
 
@@ -60,7 +60,7 @@ export const authOptions = {
             try {
                 // console.log({ user, account, profile, email, credentials })
                 if (credentials) return user
-                else if (user.email) {
+                else if (user?.email) {
                     return user
                 }
                 return false
@@ -72,11 +72,11 @@ export const authOptions = {
         async jwt({ token, user }) {
             // console.log(token, user);
             if (user) {
-                token.accessToken = user.accessToken
-                token._id = user._id
-                token.role = user.role
-                token.name = user.name
-                token.email = user.email
+                token.accessToken = user?.accessToken
+                token._id = user?._id
+                token.role = user?.role
+                token.name = user?.name
+                token.email = user?.email
             }
 
             return token
@@ -84,11 +84,11 @@ export const authOptions = {
         async session({ session, token }) {
             // console.log({ session, token });
             if (token) {
-                session.user._id = token._id
-                session.user.name = token.name
-                session.user.accessToken = token.accessToken
-                session.user.role = token.role
-                session.user.email = token.email
+                session.user?._id = token._id
+                session.user?.name = token.name
+                session.user?.accessToken = token.accessToken
+                session.user?.role = token.role
+                session.user?.email = token.email
             }
             return session
         },

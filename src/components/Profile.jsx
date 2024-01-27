@@ -28,19 +28,19 @@ export default function Profile() {
                     <div className="user_details grid md:grid-cols-2 gap-4">
                         <div className="item flex flex-col">
                             <span className='text-sm text-gray-400'>Name</span>
-                            <span className='font-medium dark:text-white'>{user.name}</span>
+                            <span className='font-medium dark:text-white'>{user?.name}</span>
                         </div>
                         <div className="item flex flex-col">
                             <span className='text-sm text-gray-400'>Designation</span>
-                            <span className='font-medium dark:text-white'>{user.role}</span>
+                            <span className='font-medium dark:text-white'>{user?.role}</span>
                         </div>
                         <div className="item flex flex-col">
                             <span className='text-sm text-gray-400'>Email</span>
-                            <span className='font-medium dark:text-white'>{user.email}</span>
+                            <span className='font-medium dark:text-white'>{user?.email}</span>
                         </div>
                         <div className="item flex flex-col">
                             <span className='text-sm text-gray-400'>Phone</span>
-                            <span className='font-medium dark:text-white'>{user.phone}</span>
+                            <span className='font-medium dark:text-white'>{user?.phone}</span>
                         </div>
                     </div>
                 </div>

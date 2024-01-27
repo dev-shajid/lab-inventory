@@ -198,7 +198,7 @@ export default function ManagerAction() {
                             value={filterValue}
                             onChange={onSearchChange}
                         />
-                        {user.role == 'manager' &&
+                        {user?.role == 'manager' &&
                             <Button
                                 size="xs"
                                 onClick={openAddNewItemModal}

@@ -36,7 +36,7 @@ export default function HandleNewUserRequest() {
     }, [refetchUserTable2])
 
 
-    if (user.role != 'admin') router.push('/')
+    if (user?.role != 'admin') router.push('/')
     return (
         <>
             {
