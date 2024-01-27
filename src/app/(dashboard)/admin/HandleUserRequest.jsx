@@ -17,7 +17,7 @@ export default function HandleNewUserRequest() {
 
     const getNewUser = () => {
         setIsLoading(true)
-        fetch('https://lab-inventory.vercel.app/api/user', {
+        fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/user`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -89,7 +89,7 @@ export default function HandleNewUserRequest() {
                                                                                     key={i}
                                                                                     onClick={() => {
                                                                                         let loadingPromise = toast.loading("Loading...")
-                                                                                        fetch('https://lab-inventory.vercel.app/api/user/roleLabAsistant', {
+                                                                                        fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/user/roleLabAsistant`, {
                                                                                             method: 'POST',
                                                                                             headers: {
                                                                                                 'Accept': 'application/json',
@@ -115,7 +115,7 @@ export default function HandleNewUserRequest() {
                                                                         <Menu.Item
                                                                             onClick={() => {
                                                                                 let loadingPromise = toast.loading("Loading...")
-                                                                                fetch('https://lab-inventory.vercel.app/api/user/roleLabManager', {
+                                                                                fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/user/roleLabManager`, {
                                                                                     method: 'POST',
                                                                                     headers: {
                                                                                         'Accept': 'application/json',
@@ -141,7 +141,7 @@ export default function HandleNewUserRequest() {
                                                                             color="red"
                                                                             onClick={() => {
                                                                                 let loadingPromise = toast.loading("Loading...")
-                                                                                fetch('https://lab-inventory.vercel.app/api/user/deleteUser', {
+                                                                                fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/user/deleteUser`, {
                                                                                     method: 'POST',
                                                                                     headers: {
                                                                                         'Accept': 'application/json',

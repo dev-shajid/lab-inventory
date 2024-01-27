@@ -16,7 +16,7 @@ export default function Layout({ children }) {
 
     const getNewUser = () => {
         if (status == 'authenticated') {
-            fetch('https://lab-inventory.vercel.app/api/authUser', {
+            fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/authUser`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',

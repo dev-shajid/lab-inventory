@@ -18,7 +18,7 @@ export default function ManagerAction({ item, setItem }) {
     const handleDelete = () => {
         setOverlay(true)
         let loadingPromise = toast.loading("Loading...")
-        fetch('https://lab-inventory.vercel.app/api/item/delete', {
+        fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/item/delete`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -59,7 +59,7 @@ export default function ManagerAction({ item, setItem }) {
                 lab: null,
             }
             // alert(JSON.stringify(itemObj, null, 2))
-            fetch('https://lab-inventory.vercel.app/api/request/addRequest', {
+            fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/request/addRequest`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
@@ -92,7 +92,7 @@ export default function ManagerAction({ item, setItem }) {
                 // lab: user?.lab,
             }
             // alert(JSON.stringify(itemObj, null,2))
-            fetch('https://lab-inventory.vercel.app/api/item/edit', {
+            fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/item/edit`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"

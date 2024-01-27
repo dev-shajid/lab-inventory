@@ -16,7 +16,7 @@ export default function HandleNewUserRequest() {
 
     const getNewUser = () => {
         setIsLoading(true)
-        fetch('https://lab-inventory.vercel.app/api/user/newUser', {
+        fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/user/newUser`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -74,7 +74,7 @@ export default function HandleNewUserRequest() {
                                                                 size="sm"
                                                                 onClick={() => {
                                                                     let loadingPromise = toast.loading("Loading...")
-                                                                    fetch('https://lab-inventory.vercel.app/api/user/verifyUser', {
+                                                                    fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/user/verifyUser`, {
                                                                         method: 'POST',
                                                                         headers: {
                                                                             'Accept': 'application/json',
@@ -101,7 +101,7 @@ export default function HandleNewUserRequest() {
                                                                 size="sm"
                                                                 onClick={() => {
                                                                     let loadingPromise = toast.loading("Loading...")
-                                                                    fetch('https://lab-inventory.vercel.app/api/user/deleteUser', {
+                                                                    fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/user/deleteUser`, {
                                                                         method: 'POST',
                                                                         headers: {
                                                                             'Accept': 'application/json',

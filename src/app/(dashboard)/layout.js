@@ -18,26 +18,6 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
 
-  // const session = await getUserSession()
-
-  // async function getAuthUser() {
-  //   if(!session) return null
-  //   const res = await fetch("https://lab-inventory.vercel.app/api/authUser", {
-  //     method: 'POST',
-  //     headers: {
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify(session?.user)
-  //   })
-  //   const data = await res.json()
-  //   if (!data) {
-  //     return null;
-  //   }
-  //   return data
-  // }
-  // const authUser = getAuthUser()
-
   return (
     <html lang="en">
       <body className={`${inter.className} w-full`}>
