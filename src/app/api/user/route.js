@@ -1,6 +1,4 @@
-import Auth from "@/lib/auth";
 import db from "@/lib/db";
-import { authMiddlware } from "../apiMiddleWare";
 import User from "@/models/User";
 
 export const GET = async (req) => {
@@ -13,7 +11,7 @@ export const GET = async (req) => {
     }
 }
 
-export const POST = authMiddlware(async (req) => {
+export const POST = async (req) => {
     try {
         await db.connect()
         const users = await User.find({ isVerified: true })
@@ -21,4 +19,4 @@ export const POST = authMiddlware(async (req) => {
     } catch (error) {
         return new Response(JSON.stringify(null), { status: 500 })
     }
-})
+}
