@@ -124,9 +124,9 @@ div[data-slot="input-wrapper"] {
   @apply bg-light-1 border border-gray-300 text-gray-900 sm:text-sm rounded-md outline-none focus-within:ring-1 focus-within:ring-blue-400 block w-full p-2.5;
 }
 
-form input:not(div[data-slot="input-wrapper"] input) {
+/* form input:not(div[data-slot="input-wrapper"] input) {
   @apply bg-light-1 border border-gray-300 text-gray-900 sm:text-sm rounded-md outline-none focus:ring-1 focus:ring-blue-400 block w-full p-2.5;
-}
+} */
 
 form label {
   @apply block mb-1 text-sm font-medium text-gray-900;
@@ -191,4 +191,10 @@ button.size-sm{
 
 section{
   background: white;
+  width: 100%;
+}
+
+img{
+  width: auto;
+  height: auto;
 }

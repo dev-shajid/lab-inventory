@@ -1,23 +1,32 @@
 'use client'
 
 import BlurImage from '@/components/BlurImage'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import DemandItem from './DemandItem'
 import ManagerAction from './ManagerAction';
+import { useUserContext } from '@/context/ContextProvider';
 
-export default async function Item({ params }) {
-  const getItem = async () => {
-    const res = await fetch('https://lab-inventory.vercel.app/api/item/getItem', {
+export default function Item({ params }) {
+  const { user } = useUserContext()
+  const [item, setItem] = useState({})
+
+  const getItem = () => {
+    fetch('https://lab-inventory.vercel.app/api/item/getItem', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(params.item)
     })
-    const data = await res.json()
-    return data;
+      .then(res => res.json())
+      .then(data => {
+        setItem(data)
+      })
   }
-  const item = await getItem()
+
+  useEffect(() => {
+    getItem()
+  }, [])
 
   return (
     <section className='container'>
@@ -34,22 +43,14 @@ export default async function Item({ params }) {
             </div>
           </div>
           <div className='gap-4 flex'>
-            <ManagerAction />
-            <DemandItem />
+            {user?.role == 'manager' && <ManagerAction item={item} setItem={setItem} />}
+            {user?.role == 'asistant' && <DemandItem item={item} />}
           </div>
         </div>
 
-        <div className='text'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam delectus non commodi ipsam, veniam adipisci sint cum enim, a repellat quis culpa consequatur quae libero perspiciatis et.</div>
+        <div className='text'>{item.description}</div>
 
       </div>
     </section>
   )
-}
-
-
-const selectedItem = {
-  name: 'PC',
-  description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad, eligendi?',
-  available: 18,
-  damaged: 4,
 }

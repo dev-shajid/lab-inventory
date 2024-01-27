@@ -20,6 +20,11 @@ const UserSchema = new mongoose.Schema({
         default: 'user',
         required: true,
     },
+    lab: {
+        type: String,
+        enum: [null, 'os', 'computer', 'microprocessor'],
+        default: null,
+    },
     isVerified:{
         type: Boolean,
         default: false,

@@ -3,12 +3,17 @@
 import React, { useState } from "react";
 import { Button, Modal, NumberInput, Select, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { useUserContext } from "@/context/ContextProvider";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
-export default function DemandItem() {
+export default function DemandItem({ item: selectedItem }) {
     const [openedReqNewItemModal, { open: openReqNewItemModal, close: closeReqNewItemModal }] = useDisclosure(false);
+    const { user } = useUserContext()
+    const router = useRouter()
 
     const ReqNewItemModal = () => {
-        const [formValue, setFormValue] = useState({ name: selectedItem.name, description: selectedItem.description, available: selectedItem.available, lab: selectedItem.lab, damaged: selectedItem.damaged, req_item: undefined })
+        const [formValue, setFormValue] = useState({ name: selectedItem.name, description: selectedItem.description, available: selectedItem.available, lab: user?.lab, damaged: selectedItem.damaged, amount: undefined })
 
         const handleChange = (value, name) => {
             // console.log({value, name})
@@ -17,9 +22,36 @@ export default function DemandItem() {
 
         const handleSubmit = (e) => {
             e.preventDefault()
-            alert(JSON.stringify(formValue, null, 2))
-            setFormValue({ name: '', description: '', available: '', damaged: '', lab: '', req_item: undefined })
-            closeReqNewItemModal()
+            let loadingPromise = toast.loading("Loading...")
+            let itemObj = {
+                ...formValue,
+                itemId: selectedItem._id,
+                req_type: 'demand',
+                role: user?.role,
+                lab: user?.lab,
+                status_manager: true,
+            }
+            // alert(JSON.stringify(itemObj, null, 2))
+            fetch('https://lab-inventory.vercel.app/api/request/addRequest', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(itemObj)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    // console.log(data)
+                    if (data) {
+                        toast.success("Succesfully sent request!", { id: loadingPromise })
+                        setFormValue({ name: '', description: '', available: '', damaged: '', amount: null })
+                        router.push('/main-lab')
+                        closeReqNewItemModal()
+
+                    } else {
+                        toast.error(data || "Some error arised", { id: loadingPromise })
+                    }
+                })
         }
 
         return (
@@ -31,7 +63,9 @@ export default function DemandItem() {
                 >
                     <TextInput
                         label="Name"
+                        required
                         readOnly
+                        disabled
                         value={formValue.name}
                     />
                     <TextInput
@@ -46,10 +80,15 @@ export default function DemandItem() {
                         name="lab"
                         placeholder='Enter description of item'
                         onChange={(e) => handleChange(e, 'lab')}
-                        withAsterisk
                         required
+                        readOnly
+                        disabled
                         value={formValue.lab}
-                        data={['OS Lab', 'Computer Lab', 'Microprocessor Lab']}
+                        data={[
+                            { value: 'os', label: 'OS Lab' },
+                            { value: 'computer', label: 'Computer Lab' },
+                            { value: 'microprocessor', label: 'Microprocessor Lab' },
+                        ]}
                     />
                     <NumberInput
                         min={0}
@@ -57,10 +96,10 @@ export default function DemandItem() {
                         name="available"
                         placeholder='Amount of available item'
                         onChange={(e) => handleChange(e, 'available')}
-                        withAsterisk
-                        required
                         value={formValue.available}
+                        required
                         readOnly
+                        disabled
                     />
                     <NumberInput
                         min={0}
@@ -68,20 +107,20 @@ export default function DemandItem() {
                         name="damaged"
                         placeholder='Amount of damaged items'
                         onChange={(e) => handleChange(e, 'damaged')}
-                        withAsterisk
-                        required
                         value={formValue.damaged}
+                        required
                         readOnly
+                        disabled
                     />
                     {selectedItem.id != 3 && <NumberInput
                         min={0}
                         label="Amount"
-                        name="req_item"
+                        name="demand"
                         placeholder='Amount of request items'
-                        onChange={(e) => handleChange(e, 'req_item')}
+                        onChange={(e) => handleChange(e, 'demand')}
                         withAsterisk
                         required
-                        value={formValue.req_item}
+                        value={formValue.demand}
                     // error={errors.email}
                     />}
                     <div className="flex items-center justify-center gap-4">
@@ -108,12 +147,4 @@ export default function DemandItem() {
             <ReqNewItemModal />
         </>
     );
-}
-
-const selectedItem = {
-    name: 'PC',
-    description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad, eligendi?',
-    available: 18,
-    lab: "OS Lab",
-    damaged: 4,
 }

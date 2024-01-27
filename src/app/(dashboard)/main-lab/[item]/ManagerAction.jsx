@@ -2,15 +2,45 @@
 
 import React, { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import { ActionIcon, Autocomplete, Button, Menu, Modal, NumberInput, TextInput } from "@mantine/core";
+import { ActionIcon, Autocomplete, Button, LoadingOverlay, Menu, Modal, NumberInput, TextInput } from "@mantine/core";
+import { useUserContext } from "@/context/ContextProvider";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
-export default function ManagerAction() {
+export default function ManagerAction({ item, setItem }) {
+    const [overlayLoading, setOverlay] = useState(false);
     const [openedActionModal, { open: openActionModal, close: closeActionModal }] = useDisclosure(false);
     const [selectedItem, setSelectedItem] = useState(item)
+    const { user } = useUserContext()
+    const router = useRouter()
 
+
+    const handleDelete = () => {
+        setOverlay(true)
+        let loadingPromise = toast.loading("Loading...")
+        fetch('https://lab-inventory.vercel.app/api/item/delete', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(item._id)
+        })
+            .then(res => res.json())
+            .then(data => {
+                setOverlay(false)
+                if (data) {
+                    setItem(data)
+                    toast.success("Succesfully Delted!", { id: loadingPromise })
+                    router.push('/main-lab')
+                } else {
+                    toast.error(data || "Some error arised", { id: loadingPromise })
+                }
+            })
+
+    }
 
     const ActionModal = () => {
-        const [formValue, setFormValue] = useState({ name: selectedItem.name, description: selectedItem.description, available: selectedItem.available, damaged: selectedItem.damaged, req_item: undefined })
+        const [formValue, setFormValue] = useState({ name: selectedItem.name, description: selectedItem.description, available: selectedItem.available, damaged: selectedItem.damaged, amount: undefined })
 
         const handleChange = (value, name) => {
             // console.log({value, name})
@@ -18,17 +48,79 @@ export default function ManagerAction() {
         }
 
         const handleSubmit = (e) => {
+            setOverlay(true)
+            let loadingPromise = toast.loading("Loading...")
             e.preventDefault()
-            alert(JSON.stringify(formValue, null, 2))
-            setFormValue({ name: '', description: '', available: '', damaged: '', req_item: null })
-            closeActionModal()
+            let itemObj = {
+                ...formValue,
+                itemId: item._id,
+                req_type: selectedItem?.id == 1 ? 'restock' : selectedItem?.id == 2 ? 'repair' : 'demand',
+                role: 'manager',
+                lab: null,
+            }
+            // alert(JSON.stringify(itemObj, null, 2))
+            fetch('https://lab-inventory.vercel.app/api/request/addRequest', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(itemObj)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setOverlay(false)
+                    // console.log(data)
+                    if (data) {
+                        toast.success("Succesfully sent request!", { id: loadingPromise })
+                        setFormValue({ name: '', description: '', available: '', damaged: '', amount: null })
+                        closeActionModal()
+                    } else {
+                        toast.error(data || "Some error arised", { id: loadingPromise })
+                    }
+                })
         }
+
+        const handleEdit = (e) => {
+            setOverlay(true)
+            let loadingPromise = toast.loading("Loading...")
+            e.preventDefault()
+            const { amount, ...i } = formValue
+            let itemObj = {
+                ...i,
+                _id: item._id,
+                role: user?.role,
+                // lab: user?.lab,
+            }
+            // alert(JSON.stringify(itemObj, null,2))
+            fetch('https://lab-inventory.vercel.app/api/item/edit', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(itemObj)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setOverlay(false)
+                    // console.log(data)
+                    if (data) {
+                        setItem(data)
+                        toast.success("Succesfully Edited!", { id: loadingPromise })
+                        setFormValue({ name: '', description: '', available: '', damaged: '', amount: null })
+                        closeActionModal()
+                    } else {
+                        toast.error(data || "Some error arised", { id: loadingPromise })
+                    }
+                })
+
+        }
+
         return (
             <Modal opened={openedActionModal} onClose={closeActionModal} title={<div className="title mt-6">{selectedItem.title}</div>}>
 
                 <form
                     className="space-y-4"
-                    onSubmit={handleSubmit}
+                    onSubmit={selectedItem.id ? handleSubmit : handleEdit}
                 >
                     <TextInput
                         label="Name"
@@ -40,8 +132,6 @@ export default function ManagerAction() {
                         name="description"
                         placeholder='Enter description of item'
                         onChange={(e) => handleChange(e.target.value, 'description')}
-                        withAsterisk
-                        required
                         value={formValue.description}
                     />
                     <NumberInput
@@ -64,15 +154,15 @@ export default function ManagerAction() {
                         required
                         value={formValue.damaged}
                     />
-                    {selectedItem.id != 3 && <NumberInput
+                    {selectedItem.id && <NumberInput
                         min={0}
                         label="Amount"
-                        name="req_item"
+                        name="amount"
                         placeholder='Amount of request items'
-                        onChange={(e) => handleChange(e, 'req_item')}
+                        onChange={(e) => handleChange(e, 'amount')}
                         withAsterisk
                         required
-                        value={formValue.req_item}
+                        value={formValue.amount}
                     // error={errors.email}
                     />}
                     <div className="flex items-center justify-center gap-4">
@@ -87,6 +177,7 @@ export default function ManagerAction() {
 
     return (
         <>
+            <LoadingOverlay visible={overlayLoading} overlayProps={{ blur: 2 }} loader={<></>} />
             <>
                 <Menu width={200} shadow="md">
                     <Menu.Target>
@@ -115,16 +206,14 @@ export default function ManagerAction() {
                             color="blue"
                             onClick={() => {
                                 openActionModal()
-                                setSelectedItem({ ...item, title: "Edit Item", id: 3 })
+                                setSelectedItem({ ...item, title: "Edit Item" })
                             }}
                         >
                             Edit Item
                         </Menu.Item>
                         <Menu.Item
                             color="red"
-                            onClick={() => {
-                                alert("Item delted!")
-                            }}
+                            onClick={handleDelete}
                         >
                             Delete Item
                         </Menu.Item>
@@ -134,13 +223,4 @@ export default function ManagerAction() {
             <ActionModal />
         </>
     );
-}
-
-
-const item = {
-    name: 'PC',
-    description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad, eligendi?',
-    available: 18,
-    lab: "OS Lab",
-    damaged: 4,
 }

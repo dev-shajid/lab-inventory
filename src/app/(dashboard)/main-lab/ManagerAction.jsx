@@ -52,31 +52,36 @@ export default function ManagerAction() {
     }
 
     const AddNewItemModal = () => {
-        const { isImageLoading, handleImageChange, handleImageUpload, imagePreview, imageUrl } = useImageUpload()
+        const { isImageLoading, handleImageChange, handleImageUpload, errorImage, imagePreview, imageUrl } = useImageUpload()
         const [addItemErrors, setAddItemErrors] = useState({})
 
         function handleSubmit(url, values) {
-            let loadingPromise = toast.loading("Loading...")
-            formik.setFieldValue('image', url)
-            fetch('https://lab-inventory.vercel.app/api/item/addItem', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ ...values, image: url }),
-            })
-                .then(res => res.json())
-                .then(data => {
-                    setOverlayLoading(false)
-                    if (data) {
-                        toast.success("Item Added!", { id: loadingPromise })
-                        setItems((pre) => [data, ...pre])
-                        setFilterLists((pre) => [data, ...pre])
-                    }
-                    else toast.error("Error to uploading item!", { id: loadingPromise })
-                    closeAddNewItemModal()
+            try {
+                let loadingPromise = toast.loading("Loading...")
+                formik.setFieldValue('image', url)
+                fetch('https://lab-inventory.vercel.app/api/item/addItem', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ ...values, image: url }),
                 })
+                    .then(res => res.json())
+                    .then(data => {
+                        setOverlayLoading(false)
+                        if (data) {
+                            toast.success("Item Added!", { id: loadingPromise })
+                            setItems((pre) => [data, ...pre])
+                            setFilterLists((pre) => [data, ...pre])
+                        }
+                        else toast.error("Error to uploading item!", { id: loadingPromise })
+                        closeAddNewItemModal()
+                    })
+            } catch (error) {
+                toast.error(error.message, { id: loadingPromise })
+                setOverlayLoading(false)
+            }
         }
 
         const formik = useFormik({
@@ -89,12 +94,19 @@ export default function ManagerAction() {
             validateOnBlur: false,
             validateOnChange: false,
             onSubmit: async (values) => {
-                setOverlayLoading(true)
                 if (!Object.keys(addItemErrors).length) {
-                    handleImageUpload(handleSubmit, values)
+                    setOverlayLoading(true)
+                    handleImageUpload(handleSubmit, values, setOverlayLoading)
                 }
             }
         })
+
+
+        useEffect(() => {
+            if (errorImage) {
+                alert("Image is required!")
+            }
+        }, [errorImage])
 
         return (
             <Modal opened={openedAddNewItemModal} onClose={closeAddNewItemModal} title={<div className="title mt-6">Add new Item</div>}>
@@ -173,67 +185,6 @@ export default function ManagerAction() {
         )
     }
 
-    const ReqNewItemModal = () => {
-        const [formValue, setFormValue] = useState({ name: '', description: '', req_item: '' })
-
-        const handleChange = (value, name) => {
-            setFormValue((prev) => ({ ...prev, [name]: value }))
-        }
-
-        const handleSubmit = (e) => {
-            e.preventDefault()
-            alert(JSON.stringify(formValue, null, 2))
-            setFormValue({ name: '', description: '', req_item: '' })
-            closeReqNewItemModal()
-        }
-        return (
-            <Modal opened={openedReqNewItemModal} onClose={closeReqNewItemModal} title={<div className="title mt-6">Request new Item</div>}>
-
-                <form
-                    className="space-y-4"
-                    onSubmit={handleSubmit}
-                >
-                    <Autocomplete
-                        label="Name"
-                        placeholder="Enter item name"
-                        nothingFound="Nothing found"
-                        name='name'
-                        value={formValue.name}
-                        onChange={(e) => handleChange(e, 'name')}
-                        data={animals}
-                        withAsterisk
-                        required
-                    // error={errors.email}
-                    />
-                    <TextInput
-                        label="Description"
-                        placeholder="Enter item description"
-                        value={formValue.description}
-                        name="description"
-                        onChange={(e) => handleChange(e.target.value, 'description')}
-                    // error={errors.email}
-                    />
-                    <NumberInput
-                        min={0}
-                        label="Request Quantity"
-                        placeholder="Quantity of request item"
-                        name="available"
-                        value={formValue.req_item}
-                        onChange={(e) => handleChange(e, 'req_item')}
-                        withAsterisk
-                        required
-                    // error={errors.email}
-                    />
-                    <div className="flex items-center justify-center gap-4">
-                        <Button type="submit" fullWidth>Submit</Button>
-                        <Button onClick={closeReqNewItemModal} fullWidth variant="outline" color="red">Cancel</Button>
-                    </div>
-                </form>
-
-            </Modal>
-        )
-    }
-
     return (
         <>
             <div className="rounded-md space-y-3 overflow-x-auto max-w-full border border-blight-1 relative bg-white p-4">
@@ -247,21 +198,15 @@ export default function ManagerAction() {
                             value={filterValue}
                             onChange={onSearchChange}
                         />
-                        {user.role == 'manager' && <div className="space-x-2">
-                            <Button
-                                size="xs"
-                                onClick={openReqNewItemModal}
-                            >
-                                Request for New Item
-                            </Button>
+                        {user.role == 'manager' &&
                             <Button
                                 size="xs"
                                 onClick={openAddNewItemModal}
-                                color="gray"
+                                color="#000"
                             >
                                 Add New Item
                             </Button>
-                        </div>}
+                        }
                     </div>
                     <div className="flex">
                         <span className="text-gray-500 text-xs font-medium">Total {filterLists.length} items</span>
@@ -272,7 +217,6 @@ export default function ManagerAction() {
                 <Products products={filterLists} />
             </div>
             <LoadingOverlay visible={overlayLoading} overlayProps={{ blur: 2 }} loader={<></>} />
-            <ReqNewItemModal />
             <AddNewItemModal />
         </>
     );
