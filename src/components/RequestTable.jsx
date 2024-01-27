@@ -10,7 +10,7 @@ export default function RequestTable({ lab, role }) {
 
     const getRequestItems = () => {
         // setIsLoading(true)
-        fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/request`, {
+        fetch('https://lab-inventory.vercel.app/api/request', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -29,8 +29,8 @@ export default function RequestTable({ lab, role }) {
     useEffect(() => {
         getRequestItems()
     }, [])
-    console.log(user?.role, role)
-    if (user?.role != role || (user?.role == 'asistant' && user?.lab != lab)) return <></>
+    console.log(user.role, role)
+    if (user.role != role || (user.role == 'asistant' && user.lab != lab)) return <></>
     return (
         <>
             {

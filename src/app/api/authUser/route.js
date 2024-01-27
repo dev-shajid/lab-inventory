@@ -6,7 +6,7 @@ import User from "@/models/User";
 // export const GET = async (req) => {
 //     try {
 //         await db.connect()
-//         const users = await user?.find({ isVerified: true })
+//         const users = await User.find({ isVerified: true })
 //         return new Response(JSON.stringify(users), { status: 200 })
 //     } catch (error) {
 //         return new Response(JSON.stringify(null), { status: 500 })
@@ -20,7 +20,7 @@ export const POST = async (req) => {
     // console.log({ data, params: req.params });
 
     try {
-        const user = await user?.findOne({ _id: data._id })
+        const user = await User.findOne({ _id: data._id })
         // console.log({user})
         return new Response(JSON.stringify(user), { status: 200 })
     } catch (error) {

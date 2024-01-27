@@ -22,7 +22,7 @@ export default function ManagerAction() {
     const { refetchUserTable1, dispatch, user } = useUserContext()
 
     const getAllItems = () => {
-        fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/item`, {
+        fetch('https://lab-inventory.vercel.app/api/item', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -59,7 +59,7 @@ export default function ManagerAction() {
             try {
                 let loadingPromise = toast.loading("Loading...")
                 formik.setFieldValue('image', url)
-                fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/item/addItem`, {
+                fetch('https://lab-inventory.vercel.app/api/item/addItem', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
@@ -198,7 +198,7 @@ export default function ManagerAction() {
                             value={filterValue}
                             onChange={onSearchChange}
                         />
-                        {user?.role == 'manager' &&
+                        {user.role == 'manager' &&
                             <Button
                                 size="xs"
                                 onClick={openAddNewItemModal}

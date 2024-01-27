@@ -16,7 +16,7 @@ export default function HandleNewUserRequest() {
 
     const getNewUser = () => {
         setIsLoading(true)
-        fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/user/newUser`, {
+        fetch('https://lab-inventory.vercel.app/api/user/newUser', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -34,7 +34,7 @@ export default function HandleNewUserRequest() {
         getNewUser()
     }, [refetchUserTable1])
 
-    if (user?.role != 'admin') router.push('/')
+    if (user.role != 'admin') router.push('/')
     return (
         <>
             {
@@ -74,7 +74,7 @@ export default function HandleNewUserRequest() {
                                                                 size="sm"
                                                                 onClick={() => {
                                                                     let loadingPromise = toast.loading("Loading...")
-                                                                    fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/user/verifyUser`, {
+                                                                    fetch('https://lab-inventory.vercel.app/api/user/verifyUser', {
                                                                         method: 'POST',
                                                                         headers: {
                                                                             'Accept': 'application/json',
@@ -101,7 +101,7 @@ export default function HandleNewUserRequest() {
                                                                 size="sm"
                                                                 onClick={() => {
                                                                     let loadingPromise = toast.loading("Loading...")
-                                                                    fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/user/deleteUser`, {
+                                                                    fetch('https://lab-inventory.vercel.app/api/user/deleteUser', {
                                                                         method: 'POST',
                                                                         headers: {
                                                                             'Accept': 'application/json',

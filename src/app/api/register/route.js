@@ -14,7 +14,7 @@ export async function POST(req) {
             return new Response(JSON.stringify({ error: "Fill all the field!" }), { status: 400 })
         }
 
-        const isExisting = await user?.findOne({ email })
+        const isExisting = await User.findOne({ email })
 
         if (isExisting) {
             return new Response(JSON.stringify(
@@ -27,10 +27,10 @@ export async function POST(req) {
 
         const hashedPassword = await bcrypt.hash(pass, 10)
 
-        const newUser = await user?.create({ name, email, password: hashedPassword, phone, })
+        const newUser = await User.create({ name, email, password: hashedPassword, phone, })
 
         // console.log(newUser);
-        const { password, ...user } = newuser?._doc
+        const { password, ...user } = newUser._doc
 
         console.log({ user })
         // const accessToken = signJwtToken(user, { expiresIn: '6d' })

@@ -24,7 +24,7 @@ export default function LabTable({ lab }) {
     const [refetchItems, setRefetchItems] = useState(0)
 
     const getAllItems = () => {
-        fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/${lab}`, {
+        fetch(`https://lab-inventory.vercel.app/api/${lab}`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -46,7 +46,7 @@ export default function LabTable({ lab }) {
     const handleDelete = (id) => {
         setOverlayLoading(true)
         let loadingPromise = toast.loading("Loading...")
-        fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/${lab}/delete`, {
+        fetch(`https://lab-inventory.vercel.app/api/${lab}/delete`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -86,7 +86,7 @@ export default function LabTable({ lab }) {
             let loadingPromise = toast.loading("Loading...")
             try {
                 formik.setFieldValue('image', url)
-                fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/${lab}/addItem`, {
+                fetch(`https://lab-inventory.vercel.app/api/${lab}/addItem`, {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
@@ -231,7 +231,7 @@ export default function LabTable({ lab }) {
                 lab: user?.lab,
             }
             // alert(JSON.stringify(itemObj, null, 2))
-            fetch('${process.env.NEXT_PUBLIC_CLIENT}/api/request/addRequest', {
+            fetch('https://lab-inventory.vercel.app/api/request/addRequest', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
@@ -265,7 +265,7 @@ export default function LabTable({ lab }) {
                 // lab: user?.lab,
             }
             // alert(JSON.stringify(itemObj, null,2))
-            fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/${lab}/edit`, {
+            fetch(`https://lab-inventory.vercel.app/api/${lab}/edit`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
