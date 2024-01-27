@@ -39,7 +39,7 @@ export default function HandleItemRequest() {
                                     <td>{i + 1}</td>
                                     <td>{item.name}</td>
                                     <td>{item.description}</td>
-                                    <td>{item.demand}</td>
+                                    <td>{item.amount}</td>
                                     <td>{item.supply}</td>
                                     <td>{item.type}</td>
                                     <td>{item.lab}</td>

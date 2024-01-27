@@ -1,5 +1,3 @@
-import Products from '@/components/Products';
-import Link from 'next/link';
 import ManagerAction from './ManagerAction';
 import InfoTable from '@/components/InfoTable';
 import RequestTable from '@/components/RequestTable';

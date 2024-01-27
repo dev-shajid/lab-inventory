@@ -2,7 +2,7 @@
 
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://localhost:3000'
+axios.defaults.baseURL = 'https://lab-inventory.vercel.app'
 
 export const submitAddItemManagerForm = async (values) => {
     alert(JSON.stringify(values, null, 2))

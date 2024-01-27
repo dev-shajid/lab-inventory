@@ -114,12 +114,12 @@ export default function DemandItem({ item: selectedItem }) {
                     {selectedItem.id != 3 && <NumberInput
                         min={0}
                         label="Amount"
-                        name="demand"
+                        name="amount"
                         placeholder='Amount of request items'
-                        onChange={(e) => handleChange(e, 'demand')}
+                        onChange={(e) => handleChange(e, 'amount')}
                         withAsterisk
                         required
-                        value={formValue.demand}
+                        value={formValue.amount}
                     // error={errors.email}
                     />}
                     <div className="flex items-center justify-center gap-4">
