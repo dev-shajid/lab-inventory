@@ -29,7 +29,7 @@ export default function DemandItem({ item: selectedItem }) {
                 req_type: 'demand',
                 role: user?.role,
                 lab: user?.lab,
-                status_manager: true,
+                status_manager: 'a',
             }
             // alert(JSON.stringify(itemObj, null, 2))
             fetch('https://lab-inventory.vercel.app/api/request/addRequest', {

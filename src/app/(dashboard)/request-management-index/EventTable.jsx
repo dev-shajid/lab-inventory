@@ -1,154 +1,239 @@
 'use client'
 
-import { Menu, Select } from "@mantine/core";
-import { useState } from "react";
+import { useUserContext } from "@/context/ContextProvider";
+import { ActionIcon, Menu, Select } from "@mantine/core";
+import moment from "moment";
+import { useEffect, useState } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { HiOutlineDotsVertical } from "react-icons/hi";
 
 export default function EventTable() {
-    const [eventLists, setEventLists] = useState(lists)
+    const [isLoading, setIsLoading] = useState(true)
+    const [refetchItems, setRefetchItems] = useState(0)
+    const [items, setItems] = useState([])
+    const { user } = useUserContext()
 
-    const handleEvent = (value, item) => {
-        setEventLists((prev) => prev.map(l =>
-            l._id == item._id
-                ? { ...l, status: value }
-                : l
-        ))
+    const editRequestItems = (id, value) => {
+        setIsLoading(true)
+        fetch('https://lab-inventory.vercel.app/api/request/editManagerRequest', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ _id: id, status: value })
+        })
+            .then(res => res.json())
+            .then(data => {
+                setIsLoading(false)
+                setRefetchItems(e => e + 1)
+            })
     }
 
+    const getRequestItems = () => {
+        setIsLoading(true)
+        fetch('https://lab-inventory.vercel.app/api/request/getManagerRequest', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(res => res.json())
+            .then(data => {
+                setIsLoading(false)
+                // console.log(data)
+                setItems(data)
+            })
+    }
+
+    useEffect(() => {
+        getRequestItems()
+    }, [refetchItems])
+
     return (
-        <div className="space-y-2">
-
-            <div className="event_table overflow-x-auto max-w-fulls mx-auto rounded-md border border-blight-1">
-                <table className="w-full m-0 min-w-[400px] rounded-md overflow-hidden text-sm text-left rtl:text-right text-gray-600">
-                    <thead className="text-xs text-gray-800 uppercase bg-gray-300">
-                        <tr>
-                            <th>SL NO.</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Demand</th>
-                            <th>Supply</th>
-                            <th>Request Type</th>
-                            <th>Name of Lab</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+        <>
+            {
+                isLoading ?
+                    <div className="flex justify-center items-center h-screen gap-4">
+                        <AiOutlineLoading3Quarters size={30} className='animate-spin' />
+                        <p className='text-xl'>Loading...</p>
+                    </div> :
+                    <div className="space-y-8">
                         {
-                            eventLists.map((item, i) => (
-                                <tr key={i} className="odd:bg-white even:bg-gray-100 border-b">
-                                    <td>{i + 1}</td>
-                                    <td>{item.name}</td>
-                                    <td>{item.description}</td>
-                                    <td>{item.demand}</td>
-                                    <td>{item.supply}</td>
-                                    <td>{item.type}</td>
-                                    <td>{item.lab}</td>
-                                    <td>{item.date}</td>
-                                    <td className="min-w-[155px]">
-                                        <Select
-                                            variant="n"
-                                            rightSection={<div className="hidden w-0" />}
-                                            data={
-                                                [
-                                                    { label: 'Accepted', value: 'a' },
-                                                    { label: 'Rejected', value: 'r' },
-                                                    { label: 'Pending', value: 'p' },
-                                                ]
-                                            }
-                                            onChange={(v) => handleEvent(v, item)}
-                                            defaultValue={item.status}
-                                            className={`chip ${item.status}`}
-                                        />
+                            items?.length && items.filter(e => e.status_manager == 'p').length ?
+                                <div className="">
+                                    <div className="title">New Request</div>
+                                    <div className="event_table overflow-x-auto max-w-fulls mx-auto rounded-md ">
+                                        <table className="w-full m-0 min-w-[400px] rounded-md overflow-hidden text-sm text-left rtl:text-right text-gray-600">
+                                            <thead className="text-xs text-gray-800 uppercase bg-gray-300">
+                                                <tr>
+                                                    <th>SL NO.</th>
+                                                    <th className="text-center">Name</th>
+                                                    <th className="text-center">Description</th>
+                                                    <th className="text-center">Amount</th>
+                                                    <th className="text-center">Supply</th>
+                                                    <th className="text-center">Request Type</th>
+                                                    <th className="text-center">Name of Lab</th>
+                                                    <th className="text-center">Date</th>
+                                                    <th className="text-center">Status</th>
+                                                    {user?.role == 'manager' && <th>Action</th>}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    items.filter(e => e.status_manager == 'p').map((item, i) => (
+                                                        <tr key={i} className="odd:bg-white even:bg-gray-100 border-b">
+                                                            <td>{i + 1}</td>
+                                                            <td className="text-center">{item.name}</td>
+                                                            <td className="text-center">{item.description}</td>
+                                                            <td className="text-center">{item.amount}</td>
+                                                            <td className="text-center">{item.supply}</td>
+                                                            <td className="text-center">{item.req_type}</td>
+                                                            <td className="text-center">{item.lab}</td>
+                                                            <td className="min-w-[140px] flex flex-col items-center">
+                                                                <div>{moment(item.createdAt).format('ll')}</div>
+                                                                <div>{moment(item.createdAt).format('LT')}</div>
+                                                            </td>
+                                                            <td className="text-center">
+                                                                <p className="chip p px-2">Pending</p>
+                                                            </td>
+                                                            {user?.role == 'manager' && <td className="text-center">
+                                                                <>
+                                                                    <Menu width={200} shadow="md">
+                                                                        <Menu.Target>
+                                                                            <ActionIcon
+                                                                                variant="transparent"
+                                                                                size='sm'
+                                                                                color="#000"
+                                                                            >
+                                                                                <HiOutlineDotsVertical size={16} />
+                                                                            </ActionIcon>
+                                                                        </Menu.Target>
 
-                                        {/* <p className={`chip ${item.status}`}>
-                                            {
-                                                item.status == 'a' ?
-                                                    'Accepted' :
-                                                    item.status == 'p' ?
-                                                        'Pending' :
-                                                        'Rejected'
-                                            }
-                                        </p> */}
-                                        {/* <>
-                                            <Menu width={200} shadow="md">
-                                                <Menu.Target>
-                                                    <p className={`chip ${item.status}`}>
-                                                        {
-                                                            item.status == 'a' ?
-                                                                'Accepted' :
-                                                                item.status == 'p' ?
-                                                                    'Pending' :
-                                                                    'Rejected'
-                                                        }
-                                                    </p>
-                                                </Menu.Target>
-
-                                                <Menu.Dropdown>
-                                                    <Menu.Divider />
-                                                    <Menu.Item
-                                                        color="blue"
-                                                        onClick={() => {
-                                                            // openActionModal()
-                                                            // setSelectedItem({ ...item, title: "Edit", id: 3 })
-                                                        }}
-                                                    >
-                                                        Edit Item
-                                                    </Menu.Item>
-                                                    <Menu.Item
-                                                        color="red"
-                                                        onClick={() => {
-                                                            alert("Item delted!")
-                                                        }}
-                                                    >
-                                                        Delete Item
-                                                    </Menu.Item>
-                                                </Menu.Dropdown>
-                                            </Menu>
-                                        </> */}
-                                    </td>
-                                </tr>
-                            ))
+                                                                        <Menu.Dropdown>
+                                                                            <Menu.Item
+                                                                                color="green"
+                                                                                onClick={() => editRequestItems(item._id, 'a')}
+                                                                            >
+                                                                                Accepted
+                                                                            </Menu.Item>
+                                                                            <Menu.Item
+                                                                                color="red"
+                                                                                onClick={() => editRequestItems(item._id, 'r')}
+                                                                            >
+                                                                                Rejected
+                                                                            </Menu.Item>
+                                                                        </Menu.Dropdown>
+                                                                    </Menu>
+                                                                </>
+                                                            </td>}
+                                                        </tr>
+                                                    ))
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div> :
+                                <></>
                         }
-                    </tbody>
-                </table>
-            </div>
-        </div>
+
+                        {
+                            items?.length && items.filter(e => e.status_manager == 'a').length ?
+                                <div className="">
+                                    <div className="title">Accepted Request</div>
+                                    <div className="event_table overflow-x-auto max-w-fulls mx-auto rounded-md ">
+                                        <table className="w-full m-0 min-w-[400px] rounded-md overflow-hidden text-sm text-left rtl:text-right text-gray-600">
+                                            <thead className="text-xs text-gray-800 uppercase bg-gray-300">
+                                                <tr>
+                                                    <th>SL NO.</th>
+                                                    <th className="text-center">Name</th>
+                                                    <th className="text-center">Description</th>
+                                                    <th className="text-center">Amount</th>
+                                                    <th className="text-center">Supply</th>
+                                                    <th className="text-center">Request Type</th>
+                                                    <th className="text-center">Name of Lab</th>
+                                                    <th className="text-center">Date</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    items.filter(e => e.status_manager == 'a').map((item, i) => (
+                                                        <tr key={i} className="odd:bg-white even:bg-gray-100 border-b">
+                                                            <td>{i + 1}</td>
+                                                            <td className="text-center">{item.name}</td>
+                                                            <td className="text-center">{item.description}</td>
+                                                            <td className="text-center">{item.amount}</td>
+                                                            <td className="text-center">{item.supply}</td>
+                                                            <td className="text-center">{item.req_type}</td>
+                                                            <td className="text-center">{item.lab}</td>
+                                                            <td className="min-w-[140px] flex flex-col items-center">
+                                                                <div>{moment(item.createdAt).format('ll')}</div>
+                                                                <div>{moment(item.createdAt).format('LT')}</div>
+                                                            </td>
+                                                            <td className="text-center">
+                                                                <p className="chip a px-2">Accepted</p>
+                                                            </td>
+                                                        </tr>
+                                                    ))
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div> :
+                                <></>
+                        }
+
+                        {
+                            items?.length && items.filter(e => e.status_manager == 'r').length ?
+                                <div className="">
+                                    <div className="title">Rejected Request</div>
+                                    <div className="event_table overflow-x-auto max-w-fulls mx-auto rounded-md ">
+                                        <table className="w-full m-0 min-w-[400px] rounded-md overflow-hidden text-sm text-left rtl:text-right text-gray-600">
+                                            <thead className="text-xs text-gray-800 uppercase bg-gray-300">
+                                                <tr>
+                                                    <th>SL NO.</th>
+                                                    <th className="text-center">Name</th>
+                                                    <th className="text-center">Description</th>
+                                                    <th className="text-center">Amount</th>
+                                                    <th className="text-center">Supply</th>
+                                                    <th className="text-center">Request Type</th>
+                                                    <th className="text-center">Name of Lab</th>
+                                                    <th className="text-center">Date</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    items.filter(e => e.status_manager == 'r').map((item, i) => (
+                                                        <tr key={i} className="odd:bg-white even:bg-gray-100 border-b">
+                                                            <td>{i + 1}</td>
+                                                            <td className="text-center">{item.name}</td>
+                                                            <td className="text-center">{item.description}</td>
+                                                            <td className="text-center">{item.amount}</td>
+                                                            <td className="text-center">{item.supply}</td>
+                                                            <td className="text-center">{item.req_type}</td>
+                                                            <td className="text-center">{item.lab}</td>
+                                                            <td className="min-w-[140px] flex flex-col items-center">
+                                                                <div>{moment(item.createdAt).format('ll')}</div>
+                                                                <div>{moment(item.createdAt).format('LT')}</div>
+                                                            </td>
+                                                            <td className="text-center">
+                                                                <p className="chip r px-2">Rejected</p>
+                                                            </td>
+                                                        </tr>
+                                                    ))
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div> :
+                                <></>
+                        }
+
+                    </div >
+            }
+        </>
     );
 }
-
-
-const lists = [
-    {
-        _id: 1,
-        name: 'PC',
-        description: 'This is a very long text that describes the item.',
-        amount: 5,
-        supply: 5,
-        status: 'a',
-        type: 'Repair',
-        lab: 'OS Lab',
-        date: '23/12/2023, 15:20:32',
-    },
-    {
-        _id: 2,
-        name: 'UPS',
-        description: 'This is a very long text that describes the item.',
-        amount: 6,
-        supply: 6,
-        status: 'r',
-        lab: 'OS Lab',
-        type: 'Restock',
-        date: '23/12/2023, 15:20:32',
-    },
-    {
-        _id: 3,
-        name: 'Monitor',
-        description: 'This is a very long text that describes the item.',
-        amount: 3,
-        supply: 3,
-        status: 'p',
-        type: 'Purchase',
-        lab: 'OS Lab',
-        date: '23/12/2023, 15:20:32',
-    },
-]

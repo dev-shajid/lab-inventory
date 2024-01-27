@@ -44,13 +44,19 @@ const RequestSchema = new mongoose.Schema({
         required: true,
     },
     status_manager: {
-        type: Boolean,
-        default: false,
+        type: String,
+        enum: ['p', 'a', 'r'],
+        default: 'p',
     },
     status_admin: {
+        type: String,
+        enum: [null, 'p', 'a', 'r'],
+        default: null,
+    },
+    seen: {
         type: Boolean,
         default: false,
-    },
+    }
 }, { timestamps: true })
 
 export default mongoose?.models?.Request || mongoose.model("Request", RequestSchema)
