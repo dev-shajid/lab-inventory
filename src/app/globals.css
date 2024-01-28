@@ -198,6 +198,6 @@ img {
   height: auto;
 }
 
-table {
-  --_ai-disabled-bg: transparent;
+* {
+  --_ai-disabled-bg: transparent !important;
 }
