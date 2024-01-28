@@ -80,6 +80,7 @@ export default function HandleNewUserRequest() {
                                                                             variant="transparent"
                                                                             size='sm'
                                                                             color="#000"
+                                                                            disabled={item.role=='admin'}
                                                                         >
                                                                             <HiOutlineDotsVertical size={16} />
                                                                         </ActionIcon>
