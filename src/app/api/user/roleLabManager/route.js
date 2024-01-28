@@ -7,7 +7,7 @@ export const POST = async (req) => {
         await db.connect()
         const id=await req.json()
         console.log({id})
-        const user = await User.findOneAndUpdate({ _id:id }, {role: 'manager'})
+        const user = await User.findOneAndUpdate({ _id:id }, {role: 'manager', lab: null})
         return new Response(JSON.stringify(user), { status: 200 })
     } catch (error) {
         return new Response(JSON.stringify(null), { status: 500 })
