@@ -6,7 +6,7 @@ export default function Lab1() {
 
   return (
     <section className="container overflow-hidden h-[200vh] space-y-6">
-      <InfoTable user={userDetails} />
+      <InfoTable lab='os' role='asistant' />
       <LabTable lab={'os'} />
       <RequestTable lab={'os'} role={'asistant'} />
     </section>

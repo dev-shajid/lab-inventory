@@ -5,7 +5,7 @@ import RequestTable from '@/components/RequestTable';
 export default function MainInventory() {
     return (
         <section className="container space-y-4">
-            <InfoTable user={userDetails} />
+            <InfoTable role='manager' />
             <ManagerAction />
             <RequestTable role={'manager'} />
         </section>

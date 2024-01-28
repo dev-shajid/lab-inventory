@@ -1,6 +1,34 @@
-import React from 'react'
+'use client'
 
-export default function InfoTable({user:userDetails}) {
+import React, { useEffect, useState } from 'react'
+
+export default function InfoTable({ role, lab }) {
+    const [userDetails, setUserDetails] = useState()
+
+    const getRequestItems = () => {
+        // setIsLoading(true
+        fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/info`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ role, lab: lab })
+        })
+            .then(res => res.json())
+            .then(data => {
+                // setIsLoading(false)
+                // console.log(data)
+                setUserDetails(data)
+            })
+    }
+
+    useEffect(() => {
+        getRequestItems()
+    }, [])
+
+
+    // if(!userDetails?.name) return <>Loading...</>
     return (
         <div className=''>
             <div className='title'>Info</div>
@@ -9,19 +37,22 @@ export default function InfoTable({user:userDetails}) {
                     <tbody>
                         <tr>
                             <th>Fullname</th>
-                            <td>{userDetails.fullName}</td>
+                            <td>{userDetails?.name}</td>
                         </tr>
                         <tr>
                             <th>Email</th>
-                            <td>{userDetails.email}</td>
+                            <td>{userDetails?.email}</td>
                         </tr>
                         <tr>
                             <th>Phone</th>
-                            <td>{userDetails.phoneNumber}</td>
+                            <td>{userDetails?.phone}</td>
                         </tr>
                         <tr>
                             <th>Designation</th>
-                            <td>{userDetails.designation}</td>
+                            <td className="flex flex-col gap-1">
+                                <span className="capitalize">{userDetails?.role}</span>
+                                {userDetails?.lab && <span className="">{`(${userDetails?.lab[0].toUpperCase()}${userDetails?.lab.slice(1)} Lab)`}</span>}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
