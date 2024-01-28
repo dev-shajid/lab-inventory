@@ -6,7 +6,7 @@
   @tailwind base;
 }
 
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -19,7 +19,7 @@ body {
   width: 100%;
   overflow-x: hidden;
   color: black !important;
-  
+
 }
 
 section {
@@ -154,47 +154,50 @@ form label {
   @apply bg-red-100 !text-red-600 border-red-400;
 }
 
-button.size-sm{
+button.size-sm {
   @apply px-4 py-1.5 sm:text-sm text-xs;
 }
 
 
-.mantine-Modal-overlay	{
+.mantine-Modal-overlay {
   backdrop-filter: blur(6px) !important;
 }
 
-.event_table .mantine-Input-wrapper.mantine-Select-wrapper{
+.event_table .mantine-Input-wrapper.mantine-Select-wrapper {
   --input-height-sm: auto;
 }
 
-.event_table .mantine-Input-input.mantine-Select-input{
+.event_table .mantine-Input-input.mantine-Select-input {
   @apply text-xs text-center py-0.5 w-[120px];
 }
 
-.chip.a .mantine-Input-input.mantine-Select-input{
+.chip.a .mantine-Input-input.mantine-Select-input {
   @apply bg-green-100 text-green-600 border-green-400;
 }
 
-.chip.p .mantine-Input-input.mantine-Select-input{
+.chip.p .mantine-Input-input.mantine-Select-input {
   @apply bg-yellow-100 text-yellow-600 border-yellow-400;
 }
 
-.chip.r .mantine-Input-input.mantine-Select-input{
+.chip.r .mantine-Input-input.mantine-Select-input {
   @apply bg-red-100 !text-red-600 border-red-400;
 }
 
 .mantine-LoadingOverlay-overlay,
-.mantine-LoadingOverlay-root
-{
-@apply h-screen w-screen !fixed !top-0 left-0;
+.mantine-LoadingOverlay-root {
+  @apply h-screen w-screen !fixed !top-0 left-0;
 }
 
-section{
+section {
   background: white;
   width: 100%;
 }
 
-img{
+img {
   width: auto;
   height: auto;
+}
+
+table {
+  --_ai-disabled-bg: transparent;
 }
