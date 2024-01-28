@@ -68,7 +68,10 @@ export default function HandleNewUserRequest() {
                                                         <td>{item.name}</td>
                                                         <td>{item.email}</td>
                                                         <td>{item.phone}</td>
-                                                        <td>{item.role} {item.role == 'asistant' && `(${item?.lab})`}</td>
+                                                        <td className="flex flex-col gap-1">
+                                                            <span className="capitalize">{item?.role}</span>
+                                                            {item?.lab && <span className="">{`(${item?.lab[0].toUpperCase()}${item?.lab.slice(1)} Lab)`}</span>}
+                                                        </td>
                                                         <td className="space-x-3 min-w-[110px]">
                                                             <>
                                                                 <Menu width={200} shadow="md">

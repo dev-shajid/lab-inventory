@@ -7,7 +7,7 @@ export default function InfoTable({ role, lab }) {
 
     const getRequestItems = () => {
         // setIsLoading(true
-        fetch(`${process.env.NEXT_PUBLIC_CLIENT}/api/info`, {
+        fetch(`https://lab-inventory.vercel.app/api/info`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -28,7 +28,7 @@ export default function InfoTable({ role, lab }) {
     }, [])
 
 
-    // if(!userDetails?.name) return <>Loading...</>
+    if(!userDetails?.name) return <></>
     return (
         <div className=''>
             <div className='title'>Info</div>
