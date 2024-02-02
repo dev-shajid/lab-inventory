@@ -12,7 +12,7 @@ export default async function Admin() {
 
   const getUsers = () => {
     setIsLoading(true)
-    fetch('https://lab-inventory.vercel.app/api/user', {
+    fetch('/api/user', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -28,7 +28,7 @@ export default async function Admin() {
 
   const getNewUserRequest = () => {
     setIsLoading(true)
-    fetch('https://lab-inventory.vercel.app/api/user/newUser', {
+    fetch('/api/user/newUser', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

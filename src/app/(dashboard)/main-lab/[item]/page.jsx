@@ -11,7 +11,7 @@ export default function Item({ params }) {
   const [item, setItem] = useState({})
 
   const getItem = () => {
-    fetch('https://lab-inventory.vercel.app/api/item/getItem', {
+    fetch('/api/item/getItem', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"

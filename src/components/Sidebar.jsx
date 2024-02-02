@@ -21,13 +21,13 @@ export default function Sidebar({ authUser }) {
         let loadingPromise = toast.loading("Loading...")
         try {
             setIsLoading(true)
-            const res = await fetch('https://lab-inventory.vercel.app/api/auth/logout')
+            const res = await fetch('/api/auth/logout')
             const data = await res.json()
             // console.log({res, data})
             if (res.status == 200) {
                 router.push('/signin')
                 toast.success(data.message || "Logout Successfully!", { id: loadingPromise })
-                dispatch({ type: 'REMOVE_USER' })
+                // dispatch({ type: 'REMOVE_USER' })
             } else {
                 toast.error(data?.error || "Some error arised", { id: loadingPromise })
             }

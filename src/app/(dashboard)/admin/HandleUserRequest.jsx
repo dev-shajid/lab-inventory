@@ -69,7 +69,7 @@ export default function HandleNewUserRequest({ getUsers, users }) {
                                                                             key={i}
                                                                             onClick={() => {
                                                                                 let loadingPromise = toast.loading("Loading...")
-                                                                                fetch('https://lab-inventory.vercel.app/api/user/roleLabAsistant', {
+                                                                                fetch('/api/user/roleLabAsistant', {
                                                                                     method: 'POST',
                                                                                     headers: {
                                                                                         'Accept': 'application/json',
@@ -95,7 +95,7 @@ export default function HandleNewUserRequest({ getUsers, users }) {
                                                                 <Menu.Item
                                                                     onClick={() => {
                                                                         let loadingPromise = toast.loading("Loading...")
-                                                                        fetch('https://lab-inventory.vercel.app/api/user/roleLabManager', {
+                                                                        fetch('/api/user/roleLabManager', {
                                                                             method: 'POST',
                                                                             headers: {
                                                                                 'Accept': 'application/json',
@@ -121,7 +121,7 @@ export default function HandleNewUserRequest({ getUsers, users }) {
                                                                     color="red"
                                                                     onClick={() => {
                                                                         let loadingPromise = toast.loading("Loading...")
-                                                                        fetch('https://lab-inventory.vercel.app/api/user/deleteUser', {
+                                                                        fetch('/api/user/deleteUser', {
                                                                             method: 'POST',
                                                                             headers: {
                                                                                 'Accept': 'application/json',

@@ -20,7 +20,7 @@ export default function EventTable() {
 
     const editRequestItems = (id, value) => {
         setIsLoading(true)
-        fetch('https://lab-inventory.vercel.app/api/request/editAdminRequest', {
+        fetch('/api/request/editAdminRequest', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -37,7 +37,7 @@ export default function EventTable() {
 
     const getRequestItems = () => {
         setIsLoading(true)
-        fetch('https://lab-inventory.vercel.app/api/request/getAdminRequest', {
+        fetch('/api/request/getAdminRequest', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

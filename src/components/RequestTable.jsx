@@ -10,7 +10,7 @@ export default function RequestTable({ lab, role }) {
 
     const getRequestItems = () => {
         // setIsLoading(true)
-        fetch('https://lab-inventory.vercel.app/api/request', {
+        fetch('/api/request', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

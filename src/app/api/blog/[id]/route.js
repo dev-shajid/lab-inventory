@@ -77,4 +77,4 @@ export async function DELETE(req, ctx) {
 // blog -> [id] -> like -> route.js
 
 
-// https://lab-inventory.vercel.app/api/blog/someid/like
+// /api/blog/someid/like

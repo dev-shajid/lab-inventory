@@ -32,7 +32,7 @@ export default function DemandItem({ item: selectedItem }) {
                 lab: user?.lab,
             }
             // alert(JSON.stringify(itemObj, null, 2))
-            fetch('https://lab-inventory.vercel.app/api/request/addRequest', {
+            fetch('/api/request/addRequest', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"

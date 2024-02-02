@@ -18,7 +18,7 @@ export default function Layout({ children }) {
         // let loadingPromise = toast.loading("Loading...")
         try {
             setIsLoading(true)
-            const res = await fetch('https://lab-inventory.vercel.app/api/auth/authUser')
+            const res = await fetch('/api/auth/authUser')
             const data = await res.json()
             if (res.status == 200) {
                 // console.log(data)

@@ -32,7 +32,7 @@ export default function Login({ searchParams }) {
         let loadingPromise = toast.loading("Loading...")
         try {
 
-            const res = await fetch('https://lab-inventory.vercel.app/api/auth/login', {
+            const res = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -42,8 +42,8 @@ export default function Login({ searchParams }) {
             const data = await res.json()
             // console.log(res, data)
             if (res.status == 200) {
-                dispatch({ type: 'ADD_USER', payload: data.user })
                 router.push(searchParams.callback || '/')
+                // dispatch({ type: 'ADD_USER', payload: data.user })
                 toast.success(data?.message || "Login Successful", { id: loadingPromise })
             } else {
                 toast.error(data?.error || "Some error arised", { id: loadingPromise })

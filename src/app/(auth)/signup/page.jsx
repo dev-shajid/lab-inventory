@@ -34,7 +34,7 @@ export default function Register({ searchParams }) {
         let loadingPromise = toast.loading("Loading...")
         try {
 
-            const res = await fetch('https://lab-inventory.vercel.app/api/auth/register', {
+            const res = await fetch('/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
