@@ -13,7 +13,6 @@ export default function Register({ searchParams }) {
     const [overlayLoading, setOverlay] = useState(false);
     const [isLoading, setLoading] = useState(true);
     const router = useRouter()
-    const { data: session, status } = useSession()
 
     const form = useForm({
         initialValues: {
@@ -35,7 +34,7 @@ export default function Register({ searchParams }) {
         let loadingPromise = toast.loading("Loading...")
         try {
 
-            const res = await fetch('/api/register', {
+            const res = await fetch('https://lab-inventory.vercel.app/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -56,26 +55,10 @@ export default function Register({ searchParams }) {
         setOverlay(false)
     }
 
-    useEffect(() => {
-        setLoading(true)
-        if (status === "unauthenticated") {
-            setLoading(false)
-        }
-        else if (status === "authenticated") {
-            router.push(searchParams.callback || "/");
-        }
-    }, [status]);
-
-    if (isLoading) return (
-        <section className='container py-16 h-screen gap-3 flex justify-center items-center'>
-            <AiOutlineLoading3Quarters size={28} className='animate-spin' />
-            <p className='text-base'>Loading...</p>
-        </section>
-    )
 
     return (
-        <section className="container">
-            <div className="flex flex-col items-center justify-center mx-auto mt-8">
+        <section className="container pb-16 flex justify-center items-center">
+            <div className="flex flex-col items-center justify-center mx-auto mt-8 w-full">
                 <div className="w-full md:bg-light rounded-lg md:shadow darks:border md:mt-0 sm:max-w-md xl:p-0">
                     <LoadingOverlay visible={overlayLoading} overlayProps={{ blur: 2 }} loader={<></>} />
                     <div className="space-y-4 md:space-y-6 sm:p-8 px-4 py-8">

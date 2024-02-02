@@ -7,43 +7,39 @@ import { Loader } from '@mantine/core'
 import { useUserContext } from '@/context/ContextProvider'
 import { useRouter } from 'next/navigation'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import toast from 'react-hot-toast'
 
 export default function Layout({ children }) {
-    const { data: session, status } = useSession()
     const { dispatch, user } = useUserContext()
-    const [isLoading, setLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
     const router = useRouter()
 
-    const getNewUser = () => {
-        if (status == 'authenticated') {
-            fetch('https://lab-inventory.vercel.app/api/authUser', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(session?.user)
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data) dispatch({ type: 'ADD_USER', payload: data })
-                    else signOut()
-                })
-                .finally(() => setLoading(false))
+    async function apiAuthUser() {
+        // let loadingPromise = toast.loading("Loading...")
+        try {
+            setIsLoading(true)
+            const res = await fetch('https://lab-inventory.vercel.app/api/auth/authUser')
+            const data = await res.json()
+            if (res.status == 200) {
+                // console.log(data)
+                // toast.success(data.message || "Authorized Succesfully!", { id: loadingPromise })
+                dispatch({ type: 'ADD_USER', payload: data.user })
+            } else {
+                // toast.error(data?.error || "Not authorized, sign in please!", { id: loadingPromise })
+            }
+        } catch (error) {
+            console.log(error)
+        }
+        finally {
+            setIsLoading(false)
         }
     }
 
     useEffect(() => {
-        setLoading(true)
-        if (status === "unauthenticated") {
-            router.push('/signin');
-        }
-        else if (status === "authenticated") {
-            getNewUser()
-        }
-    }, [status]);
+        if (!user) apiAuthUser()
+    }, [])
 
-    if (isLoading || status == 'loading') return (
+    if (isLoading) return (
         <section className='container py-16 h-screen gap-3 flex justify-center items-center'>
             <AiOutlineLoading3Quarters size={28} className='animate-spin' />
             <p className='text-base'>Loading...</p>
@@ -53,7 +49,7 @@ export default function Layout({ children }) {
     return (
         <>
             <main className="bg-light min-h-[100vh] flex md:flex-row flex-col md:gap-y-0 gap-y-4 w-full relative">
-                <Sidebar session={session} />
+                <Sidebar />
                 <div className="flex-1 max-w-full overflow-hidden">
                     {children}
                 </div>

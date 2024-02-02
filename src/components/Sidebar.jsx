@@ -1,20 +1,43 @@
 'use client'
 
 import Link from 'next/link'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { RxCross1, RxDashboard } from 'react-icons/rx'
 import { AiOutlineMenuUnfold } from 'react-icons/ai'
 import { IoIosLogOut } from 'react-icons/io'
 import { usePathname, useRouter } from 'next/navigation'
 import { ActionIcon, Avatar, LoadingOverlay } from '@mantine/core'
-import { signOut, useSession } from 'next-auth/react';
 import { useUserContext } from '@/context/ContextProvider'
+import toast from 'react-hot-toast'
 
 export default function Sidebar({ authUser }) {
-    const { data: session, status } = useSession()
     const { dispatch, user } = useUserContext()
+    const [isLoading, setIsLoading] = useState(false)
     const pathname = usePathname()
+    const router = useRouter()
     const sidebarRef = useRef()
+
+    async function apiLogout() {
+        let loadingPromise = toast.loading("Loading...")
+        try {
+            setIsLoading(true)
+            const res = await fetch('https://lab-inventory.vercel.app/api/auth/logout')
+            const data = await res.json()
+            // console.log({res, data})
+            if (res.status == 200) {
+                router.push('/signin')
+                toast.success(data.message || "Logout Successfully!", { id: loadingPromise })
+                dispatch({ type: 'REMOVE_USER' })
+            } else {
+                toast.error(data?.error || "Some error arised", { id: loadingPromise })
+            }
+        } catch (error) {
+            console.log(error)
+        }
+        finally {
+            setIsLoading(false)
+        }
+    }
 
     function openSidebar() {
         document.querySelector('body')?.classList.add('active_sidebar')
@@ -32,7 +55,7 @@ export default function Sidebar({ authUser }) {
 
     return (
         <>
-            {/* <LoadingOverlay className='fixed top-0 h-screen w-full' visible={status == 'loading'} loaderProps={{ children:'' }} zIndex={1000} overlayProps={{ blur: 4 }} /> */}
+            <LoadingOverlay visible={isLoading} overlayProps={{ blur: 2 }} loader={<></>} />
             <div className='container mobile_top_nav border-b border-blight-1 sticky top-0 backdrop-blur-md z-10 md:hidden'>
                 <div
                     onClick={openSidebar}
@@ -80,7 +103,7 @@ export default function Sidebar({ authUser }) {
                             variant='transparent'
                             className='text-xl'
                             color='#000'
-                            onClick={() => signOut()}
+                            onClick={apiLogout}
                         >
                             <IoIosLogOut size={20} />
                         </ActionIcon>

@@ -8,7 +8,7 @@ import { useUserContext } from '@/context/ContextProvider'
 
 export default function Profile() {
     const { user } = useUserContext()
-    console.log(user)
+    // console.log(user)
 
     return (
         <div className="bg-white p-4 rounded-md border border-blight-1">

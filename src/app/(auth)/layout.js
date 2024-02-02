@@ -2,8 +2,8 @@ import { Inter } from "next/font/google";
 import { MantineProvider } from "@mantine/core";
 import '@mantine/core/styles.css';
 import "../globals.css";
-import Provider from "@/context/AuthContext";
 import { Toaster } from "react-hot-toast";
+import ContextProvider from "@/context/ContextProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,16 +15,16 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} flex justify-center items-center pb-16`}>
-        <Provider>
-          <Toaster
-            position="top-center"
-            reverseOrder={false}
-          />
-          <MantineProvider>
-            {children}
-          </MantineProvider>
-        </Provider>
+      <body className={`${inter.className}`}>
+          <ContextProvider>
+            <Toaster
+              position="top-center"
+              reverseOrder={false}
+            />
+            <MantineProvider>
+              {children}
+            </MantineProvider>
+          </ContextProvider>
       </body>
     </html>
   );

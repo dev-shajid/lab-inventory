@@ -1,11 +1,8 @@
 import { Inter } from "next/font/google";
-import Sidebar from "@/components/Sidebar";
 import { MantineProvider } from "@mantine/core";
 import '@mantine/core/styles.css';
 import "../../app/globals.css";
-import Provider from "@/context/AuthContext";
 import { Toaster } from "react-hot-toast";
-import getUserSession from "@/helper/getUserSession";
 import ContextProvider from "@/context/ContextProvider";
 import Layout from "@/components/Layout";
 
@@ -18,41 +15,19 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
 
-  // const session = await getUserSession()
-
-  // async function getAuthUser() {
-  //   if(!session) return null
-  //   const res = await fetch("https://lab-inventory.vercel.app/api/authUser", {
-  //     method: 'POST',
-  //     headers: {
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify(session?.user)
-  //   })
-  //   const data = await res.json()
-  //   if (!data) {
-  //     return null;
-  //   }
-  //   return data
-  // }
-  // const authUser = getAuthUser()
-
   return (
     <html lang="en">
       <body className={`${inter.className} w-full`}>
         <ContextProvider>
-          <Provider>
-            <MantineProvider>
-              <Toaster
-                position="top-center"
-                reverseOrder={false}
-              />
-              <Layout >
-                {children}
-              </Layout>
-            </MantineProvider>
-          </Provider>
+          <MantineProvider>
+            <Toaster
+              position="top-center"
+              reverseOrder={false}
+            />
+            <Layout >
+              {children}
+            </Layout>
+          </MantineProvider>
         </ContextProvider>
       </body>
     </html>

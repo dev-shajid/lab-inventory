@@ -8,12 +8,13 @@ import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { useUserContext } from '@/context/ContextProvider';
 
 export default function Login({ searchParams }) {
     const [overlayLoading, setOverlay] = useState(false);
     const [isLoading, setLoading] = useState(true);
     const router = useRouter()
-    const { data: session, status } = useSession()
+    const { dispatch } = useUserContext()
 
     const form = useForm({
         initialValues: {
@@ -28,44 +29,35 @@ export default function Login({ searchParams }) {
 
     const handleSubmit = async (values) => {
         setOverlay(true)
+        let loadingPromise = toast.loading("Loading...")
         try {
-            let loadingPromise = toast.loading("Loading...")
 
-            const data = await signIn('credentials', { ...values, redirect: false })
-
-            if (!data?.error && data?.ok) {
-                toast.success("Login Successful", { id: loadingPromise })
-                router.push(searchParams.callback)
+            const res = await fetch('https://lab-inventory.vercel.app/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(values)
+            })
+            const data = await res.json()
+            // console.log(res, data)
+            if (res.status == 200) {
+                dispatch({ type: 'ADD_USER', payload: data.user })
+                router.push(searchParams.callback || '/')
+                toast.success(data?.message || "Login Successful", { id: loadingPromise })
             } else {
                 toast.error(data?.error || "Some error arised", { id: loadingPromise })
             }
         } catch (error) {
+            // toast.error(error?.message || "Some error arised", { id: loadingPromise })
             console.log(error)
         }
         setOverlay(false)
     }
 
-    useEffect(() => {
-        setLoading(true)
-        if (status === "unauthenticated") {
-            setLoading(false)
-        }
-        else if(status === "authenticated") {
-            router.push(searchParams.callback || "/");
-        }
-    }, [status]);
-
-    if (isLoading) return (
-        <section className='container py-16 h-screen gap-3 flex justify-center items-center'>
-        <AiOutlineLoading3Quarters size={28} className='animate-spin' />
-            <p className='text-base'>Loading...</p>
-        </section>
-    )
-
     return (
-        <section className="container">
-            {/* {JSON.stringify(session, null, 2)} */}
-            <div className="flex flex-col items-center justify-center mx-auto mt-8">
+        <section className="container pb-16 flex justify-center items-center">
+            <div className="flex flex-col items-center justify-center mx-auto mt-8 w-full">
                 <div className="w-full md:bg-light md:shadow rounded-lg md:mt-0 sm:max-w-md xl:p-0">
                     <LoadingOverlay visible={overlayLoading} overlayProps={{ blur: 2 }} loader={<></>} />
                     <div className="space-y-4 md:space-y-6 sm:p-8 px-4 py-8">

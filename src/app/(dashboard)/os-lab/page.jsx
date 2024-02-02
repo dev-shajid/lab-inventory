@@ -12,10 +12,3 @@ export default function Lab1() {
     </section>
   );
 }
-
-const userDetails = {
-  fullName: "Md. Aminul Islam Khadem",
-  email: "khadem1986@gmail.com",
-  phoneNumber: "01878715150",
-  designation: "Lab Assistant",
-}

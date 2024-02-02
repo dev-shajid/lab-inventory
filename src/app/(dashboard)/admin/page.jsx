@@ -1,18 +1,69 @@
-// import { getAllUser } from "@/helper/api";
-import HandleItemRequest from "./HandleItemRequest";
+'use client'
+
+import { useEffect, useState } from "react";
 import HandleNewUserRequest from "./HandleNewUserRequest";
 import HandleUserRequest from "./HandleUserRequest";
-import getUserSession from "@/helper/getUserSession";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export default async function Admin() {
-  const session = await getUserSession()
-  
+  const [isLoading, setIsLoading] = useState(true)
+  const [newUsers, setNewUsers] = useState([])
+  const [users, setUsers] = useState([])
+
+  const getUsers = () => {
+    setIsLoading(true)
+    fetch('https://lab-inventory.vercel.app/api/user', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+    })
+      .then(res => res.json())
+      .then(data => {
+        setUsers(data)
+      })
+      .finally(() => setIsLoading(false))
+  }
+
+  const getNewUserRequest = () => {
+    setIsLoading(true)
+    fetch('https://lab-inventory.vercel.app/api/user/newUser', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+    })
+      .then(res => res.json())
+      .then(data => {
+        setNewUsers(data)
+      })
+      .finally(() => setIsLoading(false))
+  }
+
+  useEffect(() => {
+    getUsers()
+    getNewUserRequest()
+  }, [])
+
   return (
-    <section className="container space-y-8">
-      {/* <pre>{JSON.stringify(session, null, 2)}</pre> */}
-      <HandleNewUserRequest />
-      <HandleUserRequest />
-      {/* <HandleItemRequest /> */}
-    </section>
+    <>
+      {
+
+        isLoading ?
+          <section className='container py-16 h-screen gap-3 flex justify-center items-center'>
+            <AiOutlineLoading3Quarters size={28} className='animate-spin' />
+            <p className='text-base'>Loading...</p>
+          </section> :
+          (
+            <section className="container space-y-8">
+              <HandleNewUserRequest users={newUsers} getNewUserRequest={getNewUserRequest} />
+              <HandleUserRequest users={users} getUsers={getUsers} />
+            </section>
+
+          )
+      }
+    </>
   );
 }

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 
 export default function InfoTable({ role, lab }) {
-    const [userDetails, setUserDetails] = useState()
+    const [userDetails, setUserDetails] = useState({})
 
     const getRequestItems = () => {
         // setIsLoading(true
@@ -28,7 +28,7 @@ export default function InfoTable({ role, lab }) {
     }, [])
 
 
-    if(!userDetails?.name) return <></>
+    if (!userDetails?.name) return <></>
     return (
         <div className=''>
             <div className='title'>Info</div>

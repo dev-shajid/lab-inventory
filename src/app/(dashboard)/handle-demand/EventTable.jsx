@@ -56,7 +56,7 @@ export default function EventTable() {
         getRequestItems()
     }, [refetchItems])
 
-    if (user?.role != 'manager') router.push('/')
+    // if (user?.role != 'manager') router.push('/')
     return (
         <>
             {

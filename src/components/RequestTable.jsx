@@ -29,7 +29,7 @@ export default function RequestTable({ lab, role }) {
     useEffect(() => {
         getRequestItems()
     }, [])
-    console.log(user.role, role)
+
     if (user.role != role || (user.role == 'asistant' && user.lab != lab)) return <></>
     return (
         <>

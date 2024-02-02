@@ -29,11 +29,16 @@ export default function ManagerAction() {
                 'Content-Type': 'application/json'
             },
         })
-            .then(res => res.json())
+            .then(res => {
+                console.log(res)
+                return res.json()
+            })
             .then(data => {
+                console.log(data)
                 setItems(data)
                 setFilterLists(data)
             })
+            .catch(error => console.log(error))
     }
 
     useEffect(() => {
@@ -212,8 +217,6 @@ export default function ManagerAction() {
                         <span className="text-gray-500 text-xs font-medium">Total {filterLists.length} items</span>
                     </div>
                 </div>
-
-                {/* <Products products={items} /> */}
                 <Products products={filterLists} />
             </div>
             <LoadingOverlay visible={overlayLoading} overlayProps={{ blur: 2 }} loader={<></>} />
@@ -221,146 +224,3 @@ export default function ManagerAction() {
         </>
     );
 }
-
-
-
-const products = [
-    {
-        image: '/os/1.JPG',
-        name: 'Ethernet cable',
-        description: 'This is a very long text that describes the item.',
-        available: 12,
-        damaged: 3,
-    },
-    {
-        image: '/os/2.JPG',
-        name: 'UPS',
-        description: 'This is a very long text that describes the item.',
-        available: 12,
-        damaged: 3,
-    },
-    {
-        image: '/os/3.JPG',
-        name: 'CPU',
-        description: 'This is a very long text that describes the item.',
-        available: 12,
-        damaged: 3,
-    },
-    {
-        image: '/os/4.JPG',
-        name: 'Monitor',
-        description: 'This is a very long text that describes the item.',
-        available: 12,
-        damaged: 3,
-    },
-    {
-        image: '/os/5.JPG',
-        name: 'Mouse',
-        description: 'This is a very long text that describes the item.',
-        available: 12,
-        damaged: 3,
-    },
-    {
-        image: '/os/6.JPG',
-        name: 'Keyboard',
-        description: 'This is a very long text that describes the item.',
-        available: 12,
-        damaged: 3,
-    },
-    {
-        image: '/os/7.JPG',
-        name: 'Gpu',
-        description: 'This is a very long text that describes the item.',
-        available: 12,
-        damaged: 3,
-    },
-    {
-        image: '/os/8.JPG',
-        name: 'Projector',
-        description: 'This is a very long text that describes the item.',
-        available: 12,
-        damaged: 3,
-    },
-    {
-        image: '/os/9.JPG',
-        name: 'Multiplug',
-        description: 'This is a very long text that describes the item.',
-        available: 12,
-        damaged: 3,
-    },
-    {
-        image: '/micro/3.jpg',
-        name: 'Breadboard',
-        description: 'This is a very long text that describes the item.',
-        available: 12,
-        damaged: 3,
-    },
-    {
-        image: '/micro/8.JPG',
-        name: 'Transistor',
-        description: 'This is a very long text that describes the item.',
-        available: 12,
-        damaged: 3,
-    },
-    {
-        image: '/micro/7.JPG',
-        name: 'Capacitor',
-        description: 'This is a very long text that describes the item.',
-        available: 12,
-        damaged: 3,
-    },
-    {
-        image: '/micro/2.JPG',
-        name: 'Resister',
-        description: 'This is a very long text that describes the item.',
-        available: 12,
-        damaged: 3,
-    },
-    {
-        image: '/micro/6.JPG',
-        name: 'Wire',
-        description: 'This is a very long text that describes the item.',
-        available: 12,
-        damaged: 3,
-    },
-    {
-        image: '/micro/1.WEBP',
-        name: 'IC',
-        description: 'This is a very long text that describes the item.',
-        available: 12,
-        damaged: 3,
-    },
-    {
-        image: '/micro/5.JPG',
-        name: 'Seven Segment Display',
-        description: 'This is a very long text that describes the item.',
-        available: 12,
-        damaged: 3,
-    },
-    {
-        image: '/lab1/pc.jpeg',
-        name: 'PC',
-        description: 'This is a very long text that describes the item.',
-        available: 12,
-        damaged: 3,
-    },
-    {
-        image: '/lab1/ups.png',
-        name: 'UPS',
-        description: 'This is a very long text that describes the item.',
-        available: 15,
-        damaged: 2,
-    },
-]
-
-export const animals = [
-    { label: 'monkey', value: 'Monkey' },
-    { label: 'snake', value: 'Snake' },
-    { label: 'lion', value: 'Lion' },
-    { label: 'tiger', value: 'Tiger' },
-    { label: 'bird', value: 'Bird' },
-    { label: 'fish', value: 'Fish' },
-    { label: 'elephant', value: 'Elephant' },
-    { label: 'cat', value: 'Cat' },
-    { label: 'rabbit', value: 'Rabbit' }
-]

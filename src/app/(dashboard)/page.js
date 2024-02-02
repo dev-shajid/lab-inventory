@@ -1,14 +1,14 @@
+'use client'
+
 import BlurImage from "@/components/BlurImage";
 import Profile from "@/components/Profile";
-import getUserSession from "@/helper/getUserSession";
-import { AiFillEdit } from "react-icons/ai";
+import { useUserContext } from "@/context/ContextProvider";
 
 export default async function Home() {
-  const session = await getUserSession()
+  const {user} = useUserContext()
   return (
     <section className="container space-y-6">
-      {/* <pre>{JSON.stringify(session, null, 2)}</pre> */}
-      <div className="title text-center">Welcome, 👋 {session?.user?.name}</div>
+      <div className="title text-center">Welcome, 👋 {user?.name}</div>
 
 
       <div className="bg-white p-4 rounded-md border border-blight-1">
