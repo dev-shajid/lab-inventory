@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import Sidebar, { apiLogout } from './Sidebar'
+import Sidebar from './Sidebar'
 import { signOut, useSession } from 'next-auth/react'
 import { Loader } from '@mantine/core'
 import { useUserContext } from '@/context/ContextProvider'
@@ -14,12 +14,34 @@ export default function Layout({ children }) {
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter()
 
+    async function apiLogout() {
+        // let loadingPromise = toast.loading("Loading...")
+        setIsLoading(true)
+        try {
+            const res = await fetch('/api/auth/logout')
+            const data = await res.json()
+            if (res.status == 200) {
+                router.push('/signin')
+                // toast.success(data.message || "Logout Successfully!", { id: loadingPromise })
+                // dispatch({ type: 'REMOVE_USER' })
+            } else {
+                // toast.error(data?.error || "Some error arised", { id: loadingPromise })
+            }
+        } catch (error) {
+            console.log(error)
+        }
+        finally {
+            setIsLoading(false)
+        }
+    }
+
     async function apiAuthUser() {
         // let loadingPromise = toast.loading("Loading...")
         try {
             setIsLoading(true)
             const res = await fetch('/api/auth/authUser')
             const data = await res.json()
+            console.log({ res, data })
             if (res.status == 200) {
                 // console.log(data)
                 // toast.success(data.message || "Authorized Succesfully!", { id: loadingPromise })

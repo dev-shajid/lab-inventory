@@ -6,36 +6,42 @@ export default async function middleware(req) {
         let path = req?.nextUrl?.pathname
         let token = req?.cookies?.get('token')?.value || ''
         // console.log({token, path})
-        
+
         let decode = token ? await verifyToken(token) : null
-    
+
         if (path?.startsWith('/signin') || path?.startsWith('/signup')) {
-            if (decode) {
+            if (decode?._id) {
+                return NextResponse.redirect(new URL('/', req.url))
+            }
+            let response = NextResponse.next()
+            return response
+        }
+        else {
+            if (!decode || !decode?._id) {
+                let response = NextResponse.redirect(new URL(`/signin?callback=${req.nextUrl.pathname}`, req.url))
+                response?.cookies?.set('token', '', {
+                    // httpOnly: true,
+                    expires: new Date(0)
+                })
+                return response
+            }
+            else if (path?.startsWith('/handle-demand')) {
+                if (decode?.role == 'manager') {
+                    return NextResponse.next()
+                }
+                return NextResponse.redirect(new URL('/', req.url))
+            }
+            else if (path?.startsWith('/admin')) {
+                if (decode?.role == 'admin') {
+                    return NextResponse.next()
+                }
                 return NextResponse.redirect(new URL('/', req.url))
             }
             return NextResponse.next()
         }
-        else if (path?.startsWith('/handle-demand')) {
-            if (decode.role=='manager') {
-                return NextResponse.next()
-            }
-            return NextResponse.redirect(new URL('/', req.url))
-        }
-        else if (path?.startsWith('/admin')) {
-            if (decode.role=='admin') {
-                return NextResponse.next()
-            }
-            return NextResponse.redirect(new URL('/', req.url))
-        }
-        else {
-            if (!decode) {
-                return NextResponse.redirect(new URL(`/signin?callback=${req.nextUrl.pathname}`, req.url))
-            }
-            return NextResponse.next()
-        }
     } catch (error) {
-        console.log({error})
-        throw new Error("Hello Error" || error.message)
+        console.log({ error })
+        return NextResponse.json({ error: error.message }, { status: 400 })
     }
 }
 

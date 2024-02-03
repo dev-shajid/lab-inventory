@@ -11,7 +11,7 @@ export async function GET(req) {
 
         // console.log({decode})
 
-        if (!decode) throw new Error("Unauthorized user! sigin again")
+        if (!decode || !decode?._id) throw new Error("Unauthorized user! sigin again")
         const user = await User.findOne({ _id: decode._id, isVerified: true })
         return NextResponse.json({ message:"Authorized Succesfully!", user, success: true, }, { status: 200 })
     } catch (error) {
