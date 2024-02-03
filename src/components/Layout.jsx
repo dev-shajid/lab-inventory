@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import Sidebar from './Sidebar'
+import Sidebar, { apiLogout } from './Sidebar'
 import { signOut, useSession } from 'next-auth/react'
 import { Loader } from '@mantine/core'
 import { useUserContext } from '@/context/ContextProvider'
@@ -25,6 +25,7 @@ export default function Layout({ children }) {
                 // toast.success(data.message || "Authorized Succesfully!", { id: loadingPromise })
                 dispatch({ type: 'ADD_USER', payload: data.user })
             } else {
+                apiLogout()
                 // toast.error(data?.error || "Not authorized, sign in please!", { id: loadingPromise })
             }
         } catch (error) {

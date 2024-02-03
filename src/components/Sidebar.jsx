@@ -10,34 +10,34 @@ import { ActionIcon, Avatar, LoadingOverlay } from '@mantine/core'
 import { useUserContext } from '@/context/ContextProvider'
 import toast from 'react-hot-toast'
 
+export async function apiLogout() {
+    let loadingPromise = toast.loading("Loading...")
+    try {
+        setIsLoading(true)
+        const res = await fetch('/api/auth/logout')
+        const data = await res.json()
+        // console.log({res, data})
+        if (res.status == 200) {
+            router.push('/signin')
+            toast.success(data.message || "Logout Successfully!", { id: loadingPromise })
+            // dispatch({ type: 'REMOVE_USER' })
+        } else {
+            toast.error(data?.error || "Some error arised", { id: loadingPromise })
+        }
+    } catch (error) {
+        console.log(error)
+    }
+    finally {
+        setIsLoading(false)
+    }
+}
+
 export default function Sidebar({ authUser }) {
     const { dispatch, user } = useUserContext()
     const [isLoading, setIsLoading] = useState(false)
     const pathname = usePathname()
     const router = useRouter()
     const sidebarRef = useRef()
-
-    async function apiLogout() {
-        let loadingPromise = toast.loading("Loading...")
-        try {
-            setIsLoading(true)
-            const res = await fetch('/api/auth/logout')
-            const data = await res.json()
-            // console.log({res, data})
-            if (res.status == 200) {
-                router.push('/signin')
-                toast.success(data.message || "Logout Successfully!", { id: loadingPromise })
-                // dispatch({ type: 'REMOVE_USER' })
-            } else {
-                toast.error(data?.error || "Some error arised", { id: loadingPromise })
-            }
-        } catch (error) {
-            console.log(error)
-        }
-        finally {
-            setIsLoading(false)
-        }
-    }
 
     function openSidebar() {
         document.querySelector('body')?.classList.add('active_sidebar')
