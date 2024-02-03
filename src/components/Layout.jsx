@@ -14,27 +14,6 @@ export default function Layout({ children }) {
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter()
 
-    async function apiLogout() {
-        // let loadingPromise = toast.loading("Loading...")
-        setIsLoading(true)
-        try {
-            const res = await fetch('/api/auth/logout')
-            const data = await res.json()
-            if (res.status == 200) {
-                router.push('/signin')
-                // toast.success(data.message || "Logout Successfully!", { id: loadingPromise })
-                // dispatch({ type: 'REMOVE_USER' })
-            } else {
-                // toast.error(data?.error || "Some error arised", { id: loadingPromise })
-            }
-        } catch (error) {
-            console.log(error)
-        }
-        finally {
-            setIsLoading(false)
-        }
-    }
-
     async function apiAuthUser() {
         // let loadingPromise = toast.loading("Loading...")
         try {
@@ -47,7 +26,6 @@ export default function Layout({ children }) {
                 // toast.success(data.message || "Authorized Succesfully!", { id: loadingPromise })
                 dispatch({ type: 'ADD_USER', payload: data.user })
             } else {
-                apiLogout()
                 // toast.error(data?.error || "Not authorized, sign in please!", { id: loadingPromise })
             }
         } catch (error) {

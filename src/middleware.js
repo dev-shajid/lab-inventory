@@ -16,27 +16,20 @@ export default async function middleware(req) {
             let response = NextResponse.next()
             return response
         }
+        else if (path?.startsWith('/handle-demand')) {
+            if (decode?.role == 'manager') {
+                return NextResponse.next()
+            }
+            return NextResponse.redirect(new URL('/', req.url))
+        }
+        else if (path?.startsWith('/admin')) {
+            if (decode?.role == 'admin') {
+                return NextResponse.next()
+            }
+            return NextResponse.redirect(new URL('/', req.url))
+        }
         else {
-            if (!decode || !decode?._id) {
-                let response = NextResponse.redirect(new URL(`/signin?callback=${req.nextUrl.pathname}`, req.url))
-                response?.cookies?.set('token', '', {
-                    // httpOnly: true,
-                    expires: new Date(0)
-                })
-                return response
-            }
-            else if (path?.startsWith('/handle-demand')) {
-                if (decode?.role == 'manager') {
-                    return NextResponse.next()
-                }
-                return NextResponse.redirect(new URL('/', req.url))
-            }
-            else if (path?.startsWith('/admin')) {
-                if (decode?.role == 'admin') {
-                    return NextResponse.next()
-                }
-                return NextResponse.redirect(new URL('/', req.url))
-            }
+            if (!decode || !decode?._id) return NextResponse.redirect(new URL('/signin', req.url))
             return NextResponse.next()
         }
     } catch (error) {
