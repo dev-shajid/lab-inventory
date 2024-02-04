@@ -20,12 +20,13 @@ export default function Layout({ children }) {
             setIsLoading(true)
             const res = await fetch('/api/auth/authUser')
             const data = await res.json()
-            console.log({ res, data })
+            // console.log({ res, data })
             if (res.status == 200) {
-                // console.log(data)
+                console.log(data)
                 // toast.success(data.message || "Authorized Succesfully!", { id: loadingPromise })
                 dispatch({ type: 'ADD_USER', payload: data.user })
             } else {
+                router.push('/signin')
                 // toast.error(data?.error || "Not authorized, sign in please!", { id: loadingPromise })
             }
         } catch (error) {

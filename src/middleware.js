@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import verifyToken from "./lib/verifyToken";
+import { cookies } from "next/headers";
 
 export default async function middleware(req) {
     try {
@@ -29,7 +30,14 @@ export default async function middleware(req) {
             return NextResponse.redirect(new URL('/', req.url))
         }
         else {
-            if (!decode || !decode?._id) return NextResponse.redirect(new URL('/signin', req.url))
+            if (!decode || !decode?._id) {
+                let response=NextResponse.next();
+                response.cookies.set('token', '', {
+                    httpOnly: true, 
+                    expires: new Date(0)
+                })
+                return response
+            }
             return NextResponse.next()
         }
     } catch (error) {
