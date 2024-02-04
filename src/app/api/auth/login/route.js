@@ -39,7 +39,7 @@ export async function POST(req) {
             success: true,
         })
         response.cookies.set("token", token, {
-            httpOnly: true,
+            // httpOnly: true,
         })
         return response;
     } catch (error) {
