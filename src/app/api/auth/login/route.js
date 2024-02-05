@@ -53,7 +53,7 @@ export async function POST(req) {
 
 export async function sign(payload, secret) {
     const iat = Math.floor(Date.now() / 1000);
-    const exp = iat + 60* 60 * 24; // 24 * one hour
+    const exp = iat + 10; // 24 * one hour
 
     return new SignJWT({...payload})
         .setProtectedHeader({alg: 'HS256', typ: 'JWT'})
