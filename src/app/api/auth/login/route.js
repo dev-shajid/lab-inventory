@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import db from "@/lib/db";
+import { jwtVerify, SignJWT } from "jose";
 
 export async function POST(req) {
     try {
@@ -31,7 +32,8 @@ export async function POST(req) {
         }
 
         //create token
-        const token = jwt.sign(tokenData, process.env.SECRET, { expiresIn: '6d' });
+        // const token = jwt.sign(tokenData, process.env.SECRET, { expiresIn: '6d' });
+        let token=await sign(tokenData, process.env.SECRET)
 
         const response = NextResponse.json({
             message: "Login successful",
@@ -46,4 +48,17 @@ export async function POST(req) {
         // console.log(error)
         return NextResponse.json({ error: error.message }, { status: 400 })
     }
+}
+
+
+export async function sign(payload, secret) {
+    const iat = Math.floor(Date.now() / 1000);
+    const exp = iat + 60* 60 * 24; // 24 * one hour
+
+    return new SignJWT({...payload})
+        .setProtectedHeader({alg: 'HS256', typ: 'JWT'})
+        .setExpirationTime(exp)
+        .setIssuedAt(iat)
+        .setNotBefore(iat)
+        .sign(new TextEncoder().encode(secret));
 }

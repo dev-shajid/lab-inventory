@@ -31,11 +31,14 @@ export default async function middleware(req) {
         }
         else {
             if (!decode || !decode?._id) {
-                let response=NextResponse.next();
-                response.cookies.set('token', '', {
-                    httpOnly: true, 
-                    expires: new Date(0)
-                })
+            //     let response=NextResponse.next();
+            //     response.cookies.set('token', '', {
+            //         httpOnly: true, 
+            //         expires: new Date(0)
+            //     })
+            //     return response
+                let response = NextResponse.redirect(new URL('/signin', req.url))
+                response.cookies.delete('token')
                 return response
             }
             return NextResponse.next()

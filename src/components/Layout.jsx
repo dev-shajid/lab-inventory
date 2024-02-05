@@ -26,7 +26,7 @@ export default function Layout({ children }) {
                 // toast.success(data.message || "Authorized Succesfully!", { id: loadingPromise })
                 dispatch({ type: 'ADD_USER', payload: data.user })
             } else {
-                router.push('/signin')
+                // router.push('/signin')
                 // toast.error(data?.error || "Not authorized, sign in please!", { id: loadingPromise })
             }
         } catch (error) {
