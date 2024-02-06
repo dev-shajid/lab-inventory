@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(req) {
     try {
+        await db.connect()
         let token = req?.cookies?.get('token')?.value || ''
         let decode = token ? await verifyToken(token) : null
 
