@@ -9,12 +9,8 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 
 
 export default function HandleNewUserRequest({ getUsers, users }) {
-    const { refetchUserTable2, dispatch, user } = useUserContext()
+    const { dispatch, user } = useUserContext()
     const router = useRouter()
-
-    useEffect(() => {
-        getUsers()
-    }, [refetchUserTable2])
 
 
     if (user.role != 'admin') router.push('/')
@@ -159,25 +155,3 @@ export default function HandleNewUserRequest({ getUsers, users }) {
         </>
     );
 }
-
-
-const lists = [
-    {
-        name: "Md. Aminul Islam Khadem",
-        email: "khadem1986@gmail.com",
-        phone: "01878715150",
-        role: 'Lab Manager',
-    },
-    {
-        name: "Md. Aminul Islam Khadem",
-        email: "khadem1986@gmail.com",
-        phone: "01878715150",
-        role: 'Lab Asistant',
-    },
-    {
-        name: "Md. Aminul Islam Khadem",
-        email: "khadem1986@gmail.com",
-        phone: "01878715150",
-        role: 'Lab Asistant',
-    },
-]

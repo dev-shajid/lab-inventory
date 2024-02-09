@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import HandleNewUserRequest from "./HandleNewUserRequest";
 import HandleUserRequest from "./HandleUserRequest";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useUserContext } from "@/context/ContextProvider";
 
 export default async function Admin() {
+  const { refetchUserTable1, refetchUserTable2 } = useUserContext()
   const [isLoading, setIsLoading] = useState(true)
   const [newUsers, setNewUsers] = useState([])
   const [users, setUsers] = useState([])
@@ -43,9 +45,12 @@ export default async function Admin() {
   }
 
   useEffect(() => {
-    getUsers()
-    getNewUserRequest()
-  }, [])
+      getNewUserRequest()
+  }, [refetchUserTable1])
+
+  useEffect(() => {
+      getUsers()
+  }, [refetchUserTable2])
 
   return (
     <>

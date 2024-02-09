@@ -11,10 +11,6 @@ export default function HandleNewUserRequest({ getNewUserRequest, users }) {
     const { refetchUserTable1, dispatch, user } = useUserContext()
     const router = useRouter()
 
-    useEffect(() => {
-        getNewUserRequest()
-    }, [refetchUserTable1])
-
     if (user.role != 'admin') router.push('/')
     return (
         <>
