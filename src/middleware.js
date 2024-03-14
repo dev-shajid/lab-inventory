@@ -23,7 +23,7 @@ export default async function middleware(req) {
             }
             return NextResponse.redirect(new URL('/', req.url))
         }
-        else if (path?.startsWith('/admin')) {
+        else if (path?.startsWith('/admin') || path?.startsWith('/request-management-index')) {
             if (decode?.role == 'admin') {
                 return NextResponse.next()
             }
@@ -46,11 +46,10 @@ export default async function middleware(req) {
 export const config = {
     matcher: [
         '/',
-        '/admin',
+        '/admin', '/request-management-index',
         '/main-lab/:path*',
         '/os-lab', '/computer-lab', '/microprocessor-lab',
         '/handle-demand',
-        '/request-management-index',
         '/signin', '/signup',
     ]
 }
