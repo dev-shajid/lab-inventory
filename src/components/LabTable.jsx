@@ -424,7 +424,7 @@ export default function LabTable({ lab }) {
             </div>
             <ActionModal />
             <AddNewItemModal />
-            <Overlay isLoading={editLabItem.isPending || deleteLabItem.isPending || addLabItem.isPending || isLoading}/>
+            <Overlay isLoading={editLabItem.isPending || deleteLabItem.isPending || addLabItem.isPending}/>
         </div>
     );
 }
