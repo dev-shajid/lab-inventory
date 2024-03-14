@@ -11,45 +11,31 @@ import { useUserContext } from "@/context/ContextProvider";
 import { CiCamera } from "react-icons/ci";
 import useImageUpload from "@/components/useImageUpload";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import Overlay from "@/components/Overlay";
+import useApi from "@/lib/useApi";
+import Loading from "@/components/Loading";
 
 export default function ManagerAction() {
-    const [openedReqNewItemModal, { open: openReqNewItemModal, close: closeReqNewItemModal }] = useDisclosure(false);
     const [openedAddNewItemModal, { open: openAddNewItemModal, close: closeAddNewItemModal }] = useDisclosure(false);
     const [filterValue, setFilterValue] = useState("");
     const [filterLists, setFilterLists] = useState([]);
-    const [items, setItems] = useState([])
     const [overlayLoading, setOverlayLoading] = useState(false)
-    const { refetchUserTable1, dispatch, user } = useUserContext()
+    const { user } = useUserContext()
+    const router = useRouter()
 
-    const getAllItems = () => {
-        fetch('/api/item', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-        })
-            .then(res => {
-                console.log(res)
-                return res.json()
-            })
-            .then(data => {
-                console.log(data)
-                setItems(data)
-                setFilterLists(data)
-            })
-            .catch(error => console.log(error))
-    }
+    const { getAllItems, addItem } = useApi()
+    const { data: items, isLoading } = getAllItems({ role: 'manager' })
 
     useEffect(() => {
-        getAllItems()
-    }, [])
+        setFilterLists(items)
+    }, [items])
 
     const onSearchChange = (e) => {
         let value = e.target.value
         if (value) {
             setFilterValue(value);
-            setFilterLists(items.filter(item => item.name.toLocaleLowerCase().includes(value.toLocaleLowerCase())));
+            setFilterLists(items?.filter(item => item.name.toLocaleLowerCase().includes(value.toLocaleLowerCase())));
         } else {
             setFilterValue("");
             setFilterLists(items);
@@ -61,32 +47,22 @@ export default function ManagerAction() {
         const [addItemErrors, setAddItemErrors] = useState({})
 
         function handleSubmit(url, values) {
-            try {
-                let loadingPromise = toast.loading("Loading...")
-                formik.setFieldValue('image', url)
-                fetch('/api/item/addItem', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ ...values, image: url }),
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        setOverlayLoading(false)
-                        if (data) {
-                            toast.success("Item Added!", { id: loadingPromise })
-                            setItems((pre) => [data, ...pre])
-                            setFilterLists((pre) => [data, ...pre])
-                        }
-                        else toast.error("Error to uploading item!", { id: loadingPromise })
-                        closeAddNewItemModal()
-                    })
-            } catch (error) {
-                toast.error(error.message, { id: loadingPromise })
-                setOverlayLoading(false)
-            }
+            let loadingPromise = toast.loading("Loading...")
+            formik.setFieldValue('image', url)
+            addItem.mutate({ data: { ...values, image: url } }, {
+                onSuccess: (data) => {
+                    setOverlayLoading(false)
+                    toast.success("Item Added!", { id: loadingPromise })
+                    console.log(data)
+                    // setItems((pre) => [data, ...pre])
+                    // setFilterLists((pre) => [data, ...pre])
+                    closeAddNewItemModal()
+                },
+                onError: (e) => {
+                    console.log(e)
+                    toast.error(e?.message || "Fail to delete Transaction", { id: loadingPromise })
+                },
+            })
         }
 
         const formik = useFormik({
@@ -137,8 +113,6 @@ export default function ManagerAction() {
                                         )
                                     }
                                 </div>
-
-
                     }
                 </div>
                 <form
@@ -190,6 +164,9 @@ export default function ManagerAction() {
         )
     }
 
+    if (!user) router.push('/signin')
+
+    if (isLoading) return <Loading page />
     return (
         <>
             <div className="rounded-md space-y-3 overflow-x-auto max-w-full border border-blight-1 relative bg-white p-4">
@@ -203,7 +180,7 @@ export default function ManagerAction() {
                             value={filterValue}
                             onChange={onSearchChange}
                         />
-                        {user.role == 'manager' &&
+                        {user?.role == 'manager' &&
                             <Button
                                 size="xs"
                                 onClick={openAddNewItemModal}
@@ -214,12 +191,12 @@ export default function ManagerAction() {
                         }
                     </div>
                     <div className="flex">
-                        <span className="text-gray-500 text-xs font-medium">Total {filterLists.length} items</span>
+                        <span className="text-gray-500 text-xs font-medium">Total {filterLists?.length} items</span>
                     </div>
                 </div>
                 <Products products={filterLists} />
             </div>
-            <LoadingOverlay visible={overlayLoading} overlayProps={{ blur: 2 }} loader={<></>} />
+            <Overlay isLoading={overlayLoading || addItem.isPending} />
             <AddNewItemModal />
         </>
     );

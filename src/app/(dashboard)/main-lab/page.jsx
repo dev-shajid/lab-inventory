@@ -11,10 +11,3 @@ export default function MainInventory() {
         </section>
     );
 }
-
-const userDetails = {
-    fullName: "Shafiqul Islam",
-    email: "shafiqcuet1980@gmail.com",
-    phoneNumber: "8801670393288",
-    designation: "Lab Manager",
-}

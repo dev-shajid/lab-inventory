@@ -7,11 +7,15 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaCheck } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
-export default function HandleNewUserRequest({ getNewUserRequest, users }) {
-    const { refetchUserTable1, dispatch, user } = useUserContext()
+import useApi from "@/lib/useApi";
+
+export default function HandleNewUserRequest({ users }) {
+    const { user } = useUserContext()
+    const { deleteUser, verifyUser } = useApi()
     const router = useRouter()
 
-    if (user.role != 'admin') router.push('/')
+    // console.log(user)
+    if (user?.role != 'admin') router.push('/')
     return (
         <>
             {
@@ -46,23 +50,15 @@ export default function HandleNewUserRequest({ getNewUserRequest, users }) {
                                                         size="sm"
                                                         onClick={() => {
                                                             let loadingPromise = toast.loading("Loading...")
-                                                            fetch('/api/user/verifyUser', {
-                                                                method: 'POST',
-                                                                headers: {
-                                                                    'Accept': 'application/json',
-                                                                    'Content-Type': 'application/json'
+                                                            verifyUser.mutate({ id: item.id }, {
+                                                                onSuccess: () => {
+                                                                    toast.success("Verified Successfully!", { id: loadingPromise })
                                                                 },
-                                                                body: JSON.stringify(item._id)
+                                                                onError: (e) => {
+                                                                    console.log(e)
+                                                                    toast.error(e?.message || "Something is wrong!", { id: loadingPromise })
+                                                                },
                                                             })
-                                                                .then(res => res.json())
-                                                                .then(data => {
-                                                                    if (data) {
-                                                                        toast.success("Verified Successfully!", { id: loadingPromise })
-                                                                        dispatch({ type: 'Recfetch_Table_1' })
-                                                                    } else {
-                                                                        toast.error("Something is wrong!", { id: loadingPromise })
-                                                                    }
-                                                                })
                                                         }}
                                                     >
                                                         <FaCheck size={14} />
@@ -73,24 +69,15 @@ export default function HandleNewUserRequest({ getNewUserRequest, users }) {
                                                         size="sm"
                                                         onClick={() => {
                                                             let loadingPromise = toast.loading("Loading...")
-                                                            fetch('/api/user/deleteUser', {
-                                                                method: 'POST',
-                                                                headers: {
-                                                                    'Accept': 'application/json',
-                                                                    'Content-Type': 'application/json'
+                                                            deleteUser.mutate({ id: item.id }, {
+                                                                onSuccess: () => {
+                                                                    toast.success("Deleted Successfully!", { id: loadingPromise })
                                                                 },
-                                                                body: JSON.stringify(item._id)
+                                                                onError: (e) => {
+                                                                    console.log(e)
+                                                                    toast.error(e?.message || "Something is wrong!", { id: loadingPromise })
+                                                                },
                                                             })
-                                                                .then(res => {
-                                                                    res.json()
-                                                                    if (res.status == 200) {
-                                                                        setUsers(users.filter((val) => val._id !== item._id));
-                                                                        toast.success("Deleted Successfully!", { id: loadingPromise })
-                                                                    }
-                                                                    else {
-                                                                        toast.error("Something is wrong!", { id: loadingPromise })
-                                                                    }
-                                                                })
                                                         }}
                                                     >
                                                         <ImCross size={12} />

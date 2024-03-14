@@ -1,32 +1,12 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import useApi from '@/lib/useApi'
 
-export default function InfoTable({ role, lab }) {
-    const [userDetails, setUserDetails] = useState({})
+export default function InfoTable({ role, lab = '' }) {
 
-    const getRequestItems = () => {
-        // setIsLoading(true
-        fetch(`/api/info`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ role, lab: lab })
-        })
-            .then(res => res.json())
-            .then(data => {
-                // setIsLoading(false)
-                // console.log(data)
-                setUserDetails(data)
-            })
-    }
+    const { getUser } = useApi()
 
-    useEffect(() => {
-        getRequestItems()
-    }, [])
-
+    let { data: userDetails } = getUser({ role, lab })
 
     if (!userDetails?.name) return <></>
     return (

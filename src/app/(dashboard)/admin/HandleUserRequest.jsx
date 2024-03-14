@@ -3,17 +3,19 @@
 import { useUserContext } from "@/context/ContextProvider";
 import { ActionIcon, Menu } from "@mantine/core";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { HiOutlineDotsVertical } from "react-icons/hi";
+import useApi from "@/lib/useApi";
 
 
-export default function HandleNewUserRequest({ getUsers, users }) {
+export default function HandleNewUserRequest({ users, setUsers }) {
     const { dispatch, user } = useUserContext()
+    const { deleteUser, roleLabManager, roleLabAsistant } = useApi()
     const router = useRouter()
 
 
-    if (user.role != 'admin') router.push('/')
+    if (!user || !user?.role) router.push('/signin')
+    if (user?.role != 'admin') router.push('/')
     return (
         <>
             {
@@ -65,23 +67,15 @@ export default function HandleNewUserRequest({ getUsers, users }) {
                                                                             key={i}
                                                                             onClick={() => {
                                                                                 let loadingPromise = toast.loading("Loading...")
-                                                                                fetch('/api/user/roleLabAsistant', {
-                                                                                    method: 'POST',
-                                                                                    headers: {
-                                                                                        'Accept': 'application/json',
-                                                                                        'Content-Type': 'application/json'
+                                                                                roleLabAsistant.mutate({ id: item.id, lab }, {
+                                                                                    onSuccess: () => {
+                                                                                        toast.success("Role set Successfully!", { id: loadingPromise })
                                                                                     },
-                                                                                    body: JSON.stringify({ _id: item._id, lab })
+                                                                                    onError: (e) => {
+                                                                                        console.log(e)
+                                                                                        toast.error(e?.message || "Something is wrong!", { id: loadingPromise })
+                                                                                    },
                                                                                 })
-                                                                                    .then(res => res.json())
-                                                                                    .then(data => {
-                                                                                        if (data) {
-                                                                                            toast.success("Role set Successfully!", { id: loadingPromise })
-                                                                                            dispatch({ type: 'Recfetch_Table_2' })
-                                                                                        } else {
-                                                                                            toast.error("Something is wrong!", { id: loadingPromise })
-                                                                                        }
-                                                                                    })
                                                                             }}
                                                                         >
                                                                             Lab Asistant ({lab})
@@ -91,23 +85,15 @@ export default function HandleNewUserRequest({ getUsers, users }) {
                                                                 <Menu.Item
                                                                     onClick={() => {
                                                                         let loadingPromise = toast.loading("Loading...")
-                                                                        fetch('/api/user/roleLabManager', {
-                                                                            method: 'POST',
-                                                                            headers: {
-                                                                                'Accept': 'application/json',
-                                                                                'Content-Type': 'application/json'
+                                                                        roleLabManager.mutate({ id: item.id }, {
+                                                                            onSuccess: () => {
+                                                                                toast.success("Role set Successfully!", { id: loadingPromise })
                                                                             },
-                                                                            body: JSON.stringify({ _id: item._id })
+                                                                            onError: (e) => {
+                                                                                console.log(e)
+                                                                                toast.error(e?.message || "Something is wrong!", { id: loadingPromise })
+                                                                            },
                                                                         })
-                                                                            .then(res => res.json())
-                                                                            .then(data => {
-                                                                                if (data) {
-                                                                                    toast.success("Role set Successfully!", { id: loadingPromise })
-                                                                                    dispatch({ type: 'Recfetch_Table_2' })
-                                                                                } else {
-                                                                                    toast.error("Something is wrong!", { id: loadingPromise })
-                                                                                }
-                                                                            })
                                                                     }}
                                                                 >
                                                                     Lab Manager
@@ -117,24 +103,15 @@ export default function HandleNewUserRequest({ getUsers, users }) {
                                                                     color="red"
                                                                     onClick={() => {
                                                                         let loadingPromise = toast.loading("Loading...")
-                                                                        fetch('/api/user/deleteUser', {
-                                                                            method: 'POST',
-                                                                            headers: {
-                                                                                'Accept': 'application/json',
-                                                                                'Content-Type': 'application/json'
+                                                                        deleteUser.mutate({ id: item.id }, {
+                                                                            onSuccess: () => {
+                                                                                toast.success("Deleted Successfully!", { id: loadingPromise })
                                                                             },
-                                                                            body: JSON.stringify(item._id)
+                                                                            onError: (e) => {
+                                                                                console.log(e)
+                                                                                toast.error(e?.message || "Something is wrong!", { id: loadingPromise })
+                                                                            },
                                                                         })
-                                                                            .then(res => {
-                                                                                res.json()
-                                                                                if (res.status == 200) {
-                                                                                    setUsers(users.filter((val) => val._id !== item._id));
-                                                                                    toast.success("Deleted Successfully!", { id: loadingPromise })
-                                                                                }
-                                                                                else {
-                                                                                    toast.error("Something is wrong!", { id: loadingPromise })
-                                                                                }
-                                                                            })
                                                                     }}
                                                                 >
                                                                     Delete User

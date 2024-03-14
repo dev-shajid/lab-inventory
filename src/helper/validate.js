@@ -30,7 +30,7 @@ function nameVerify(errors, values){
 
 /** validate name */
 function availableVerify(errors, values){
-    if(!values.available){
+    if(values.damaged<0){
         errors.available = 'Available field is Required...!'
     }
 
@@ -39,7 +39,7 @@ function availableVerify(errors, values){
 
 /** validate name */
 function damagedVerify(errors, values){
-    if(!values.damaged){
+    if(values.damaged<0){
         errors.damaged = 'Damaged field is Required...!'
     }
 

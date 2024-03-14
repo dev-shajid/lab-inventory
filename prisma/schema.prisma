@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL") // MongoDB connection URL
+}
+
+model User {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  email      String   @unique
+  password   String
+  role       String?  @default("user")
+  lab        String?  @default("")
+  isVerified Boolean  @default(false)
+  phone      String?  @default("")
+  image      String?  @default("/images/avatar.png")
+  createdAt  DateTime @default(now())
+}
+
+model Request {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String   @default("")
+  available   Int?     @default(0)
+  lab         String?  @default("") // [null, 'os', 'computer', 'microprocessor']
+  damaged     Int?     @default(0)
+  amount      Int?     @default(0)
+  itemId      String
+  req_type    String?  @default("") // ['repair', 'restock', 'demand']
+  role        String?  @default("") // ['asistant', 'manager']
+  supply      Int?     @default(0)
+  status      String?  @default("p") // ['p', 'a', 'r']
+  seen        Boolean? @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Item {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String   @default("")
+  available   Int?     @default(0)
+  damaged     Int?     @default(0)
+  image       String?  @default("")
+  createdAt   DateTime @default(now())
+}
+
+model OsItem {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String   @default("")
+  available   Int?     @default(0)
+  damaged     Int?     @default(0)
+  image       String?  @default("")
+  createdAt   DateTime @default(now())
+}
+
+model ComputerItem {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String   @default("")
+  available   Int?     @default(0)
+  damaged     Int?     @default(0)
+  image       String?  @default("")
+  createdAt   DateTime @default(now())
+}
+
+model MicroprocessorItem {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String   @default("")
+  available   Int?     @default(0)
+  damaged     Int?     @default(0)
+  image       String?  @default("")
+  createdAt   DateTime @default(now())
+}

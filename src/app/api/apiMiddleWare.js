@@ -15,7 +15,7 @@ export const authAdminMiddlware = (handler) => {
         let user = await Auth(req)
         console.log({ user });
         console.log({ api: "Auth Middlware invoked..." });
-        if (!user || user.role != 'admin') return new Response(JSON.stringify({ message: "Not Authenticated...(only Admin)"}), {status: 400})
+        if (!user || user?.role != 'admin') return new Response(JSON.stringify({ message: "Not Authenticated...(only Admin)"}), {status: 400})
         return handler(req)
     }
 }

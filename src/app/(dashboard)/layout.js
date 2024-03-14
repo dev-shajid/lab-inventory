@@ -19,7 +19,7 @@ export default async function RootLayout({ children }) {
     <html lang="en">
       <body className={`${inter.className} w-full`}>
         <ContextProvider>
-          <MantineProvider>
+          <MantineProvider forceColorScheme="light">
             <Toaster
               position="top-center"
               reverseOrder={false}

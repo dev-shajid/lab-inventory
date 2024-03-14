@@ -5,12 +5,12 @@ import { Button, Modal, NumberInput, Select, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useUserContext } from "@/context/ContextProvider";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import useApi from "@/lib/useApi";
 
 export default function DemandItem({ item: selectedItem }) {
     const [openedReqNewItemModal, { open: openReqNewItemModal, close: closeReqNewItemModal }] = useDisclosure(false);
     const { user } = useUserContext()
-    const router = useRouter()
+    const { addRequest } = useApi()
 
     const ReqNewItemModal = () => {
         const [formValue, setFormValue] = useState({ name: selectedItem.name, description: selectedItem.description, available: selectedItem.available, lab: user?.lab, damaged: selectedItem.damaged, amount: undefined })
@@ -25,33 +25,23 @@ export default function DemandItem({ item: selectedItem }) {
             let loadingPromise = toast.loading("Loading...")
             let itemObj = {
                 ...formValue,
-                // ...selectedItem,
-                itemId: selectedItem._id,
+                itemId: selectedItem.id,
                 req_type: 'demand',
                 role: user?.role,
                 lab: user?.lab,
             }
-            // alert(JSON.stringify(itemObj, null, 2))
-            fetch('/api/request/addRequest', {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(itemObj)
-            })
-                .then(res => res.json())
-                .then(data => {
-                    // console.log(data)
-                    if (data) {
-                        toast.success("Succesfully sent request!", { id: loadingPromise })
-                        setFormValue({ name: '', description: '', available: '', damaged: '', amount: null })
-                        router.push('/main-lab')
-                        closeReqNewItemModal()
 
-                    } else {
-                        toast.error(data || "Some error arised", { id: loadingPromise })
-                    }
-                })
+            addRequest.mutate({ data: itemObj }, {
+                onSuccess: (data) => {
+                    toast.success("Succesfully sent request!", { id: loadingPromise })
+                    setFormValue({ name: '', description: '', available: '', damaged: '', amount: null })
+                    closeReqNewItemModal()
+                },
+                onError: (e) => {
+                    console.log(e)
+                    toast.error(e?.message || "Some error arised", { id: loadingPromise })
+                },
+            })
         }
 
         return (
@@ -112,7 +102,7 @@ export default function DemandItem({ item: selectedItem }) {
                         readOnly
                         disabled
                     />
-                    {selectedItem.id != 3 && <NumberInput
+                    {selectedItem.account != 3 && <NumberInput
                         min={0}
                         label="Amount"
                         name="amount"

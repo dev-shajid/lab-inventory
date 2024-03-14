@@ -2,40 +2,31 @@
 
 import React, { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import { ActionIcon, Autocomplete, Button, LoadingOverlay, Menu, Modal, NumberInput, TextInput } from "@mantine/core";
-import { useUserContext } from "@/context/ContextProvider";
+import { Button, LoadingOverlay, Menu, Modal, NumberInput, TextInput } from "@mantine/core";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import useApi from "@/lib/useApi";
+import Overlay from "@/components/Overlay";
 
-export default function ManagerAction({ item, setItem }) {
-    const [overlayLoading, setOverlay] = useState(false);
+export default function ManagerAction({ item }) {
     const [openedActionModal, { open: openActionModal, close: closeActionModal }] = useDisclosure(false);
     const [selectedItem, setSelectedItem] = useState(item)
-    const { user } = useUserContext()
     const router = useRouter()
+    const { addRequest, deleteItem, editItem } = useApi()
 
 
     const handleDelete = () => {
-        setOverlay(true)
         let loadingPromise = toast.loading("Loading...")
-        fetch('/api/item/delete', {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
+        deleteItem.mutate({ id: item.id }, {
+            onSuccess: (data) => {
+                toast.success("Succesfully Delted!", { id: loadingPromise })
+                router.push('/main-lab')
             },
-            body: JSON.stringify(item._id)
+            onError: (e) => {
+                console.log(e)
+                toast.error(e?.message || "Some error arised", { id: loadingPromise })
+            },
         })
-            .then(res => res.json())
-            .then(data => {
-                setOverlay(false)
-                if (data) {
-                    setItem(data)
-                    toast.success("Succesfully Delted!", { id: loadingPromise })
-                    router.push('/main-lab')
-                } else {
-                    toast.error(data || "Some error arised", { id: loadingPromise })
-                }
-            })
 
     }
 
@@ -43,84 +34,58 @@ export default function ManagerAction({ item, setItem }) {
         const [formValue, setFormValue] = useState({ name: selectedItem.name, description: selectedItem.description, available: selectedItem.available, damaged: selectedItem.damaged, amount: undefined })
 
         const handleChange = (value, name) => {
-            // console.log({value, name})
             setFormValue((prev) => ({ ...prev, [name]: value }))
         }
 
         const handleSubmit = (e) => {
-            setOverlay(true)
+            // setOverlay(true)
             let loadingPromise = toast.loading("Loading...")
             e.preventDefault()
             let itemObj = {
                 ...formValue,
-                itemId: item._id,
-                req_type: selectedItem?.id == 1 ? 'restock' : selectedItem?.id == 2 ? 'repair' : 'demand',
+                itemId: item.id,
+                req_type: selectedItem?.action == 1 ? 'restock' : selectedItem?.action == 2 ? 'repair' : 'demand',
                 role: 'manager',
                 lab: null,
             }
-            // alert(JSON.stringify(itemObj, null, 2))
-            fetch('/api/request/addRequest', {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
+
+            addRequest.mutate({ data: itemObj }, {
+                onSuccess: (data) => {
+                    toast.success("Succesfully sent request!", { id: loadingPromise })
+                    setFormValue({ name: '', description: '', available: '', damaged: '', amount: null })
+                    closeActionModal()
                 },
-                body: JSON.stringify(itemObj)
+                onError: (e) => {
+                    console.log(e)
+                    toast.error(e?.message || "Some error arised", { id: loadingPromise })
+                },
             })
-                .then(res => res.json())
-                .then(data => {
-                    setOverlay(false)
-                    // console.log(data)
-                    if (data) {
-                        toast.success("Succesfully sent request!", { id: loadingPromise })
-                        setFormValue({ name: '', description: '', available: '', damaged: '', amount: null })
-                        closeActionModal()
-                    } else {
-                        toast.error(data || "Some error arised", { id: loadingPromise })
-                    }
-                })
         }
 
         const handleEdit = (e) => {
-            setOverlay(true)
+            // setOverlay(true)
             let loadingPromise = toast.loading("Loading...")
             e.preventDefault()
             const { amount, ...i } = formValue
-            let itemObj = {
-                ...i,
-                _id: item._id,
-                role: user?.role,
-                // lab: user?.lab,
-            }
-            // alert(JSON.stringify(itemObj, null,2))
-            fetch('/api/item/edit', {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
+            editItem.mutate({ data: i, id: item.id }, {
+                onSuccess: (data) => {
+                    toast.success("Succesfully Edited!", { id: loadingPromise })
+                    setFormValue({ name: '', description: '', available: '', damaged: '', amount: null })
+                    closeActionModal()
                 },
-                body: JSON.stringify(itemObj)
+                onError: (e) => {
+                    console.log(e)
+                    toast.error(e?.message || "Some error arised", { id: loadingPromise })
+                },
             })
-                .then(res => res.json())
-                .then(data => {
-                    setOverlay(false)
-                    // console.log(data)
-                    if (data) {
-                        setItem(data)
-                        toast.success("Succesfully Edited!", { id: loadingPromise })
-                        setFormValue({ name: '', description: '', available: '', damaged: '', amount: null })
-                        closeActionModal()
-                    } else {
-                        toast.error(data || "Some error arised", { id: loadingPromise })
-                    }
-                })
 
         }
-
         return (
             <Modal opened={openedActionModal} onClose={closeActionModal} title={<div className="title mt-6">{selectedItem.title}</div>}>
 
                 <form
                     className="space-y-4"
-                    onSubmit={selectedItem.id ? handleSubmit : handleEdit}
+                    onSubmit={selectedItem.action ? handleSubmit : handleEdit}
                 >
                     <TextInput
                         label="Name"
@@ -154,7 +119,7 @@ export default function ManagerAction({ item, setItem }) {
                         required
                         value={formValue.damaged}
                     />
-                    {selectedItem.id && <NumberInput
+                    {selectedItem?.action ? <NumberInput
                         min={0}
                         label="Amount"
                         name="amount"
@@ -164,7 +129,7 @@ export default function ManagerAction({ item, setItem }) {
                         required
                         value={formValue.amount}
                     // error={errors.email}
-                    />}
+                    /> : null}
                     <div className="flex items-center justify-center gap-4">
                         <Button type="submit" fullWidth>Submit</Button>
                         <Button onClick={closeActionModal} fullWidth variant="outline" color="red">Cancel</Button>
@@ -175,9 +140,10 @@ export default function ManagerAction({ item, setItem }) {
         )
     }
 
+    if(!item) return <></>
     return (
         <>
-            <LoadingOverlay visible={overlayLoading} overlayProps={{ blur: 2 }} loader={<></>} />
+            <Overlay isLoading={addRequest.isPending || editItem.isPending || deleteItem.isPending} />
             <>
                 <Menu width={200} shadow="md">
                     <Menu.Target>
@@ -188,7 +154,7 @@ export default function ManagerAction({ item, setItem }) {
                         <Menu.Item
                             onClick={() => {
                                 openActionModal()
-                                setSelectedItem({ ...item, title: "Request for Restock", id: 1 })
+                                setSelectedItem({ ...item, title: "Request for Restock", action: 1 })
                             }}
                         >
                             Request For Restock
@@ -196,7 +162,7 @@ export default function ManagerAction({ item, setItem }) {
                         <Menu.Item
                             onClick={() => {
                                 openActionModal()
-                                setSelectedItem({ ...item, title: "Request for Repair", id: 2 })
+                                setSelectedItem({ ...item, title: "Request for Repair", action: 2 })
                             }}
                         >
                             Request For Repair
@@ -206,7 +172,7 @@ export default function ManagerAction({ item, setItem }) {
                             color="blue"
                             onClick={() => {
                                 openActionModal()
-                                setSelectedItem({ ...item, title: "Edit Item" })
+                                setSelectedItem({ ...item, title: "Edit Item", })
                             }}
                         >
                             Edit Item

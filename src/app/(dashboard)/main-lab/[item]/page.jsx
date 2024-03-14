@@ -5,29 +5,17 @@ import React, { useEffect, useState } from 'react'
 import DemandItem from './DemandItem'
 import ManagerAction from './ManagerAction';
 import { useUserContext } from '@/context/ContextProvider';
+import useApi from '@/lib/useApi';
+import Loading from '@/components/Loading';
 
 export default function Item({ params }) {
   const { user } = useUserContext()
-  const [item, setItem] = useState({})
+  const { getItem } = useApi()
 
-  const getItem = () => {
-    fetch('/api/item/getItem', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(params.item)
-    })
-      .then(res => res.json())
-      .then(data => {
-        setItem(data)
-      })
-  }
+  const { data: item, isLoading } = getItem({ id: params.item })
 
-  useEffect(() => {
-    getItem()
-  }, [])
-
+  if (isLoading) return <Loading page />
+  if(!item?.name) return <></>
   return (
     <section className='container'>
       <div className="card max-w-[800px] mx-auto space-y-4 bg-white rounded-md p-4 border border-blight-1">
@@ -43,7 +31,7 @@ export default function Item({ params }) {
             </div>
           </div>
           <div className='gap-4 flex'>
-            {user?.role == 'manager' && <ManagerAction item={item} setItem={setItem} />}
+            {user?.role == 'manager' && <ManagerAction item={item} setItem={'setItem'} />}
             {user?.role == 'asistant' && <DemandItem item={item} />}
           </div>
         </div>

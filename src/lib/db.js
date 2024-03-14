@@ -1,31 +1,13 @@
-import mongoose from 'mongoose';
+import { PrismaClient } from '@prisma/client'
 
-const connection = {};
-
-
-
-async function connect() {
-    if (connection.isConnected) {
-        return;
-    }
-    if (mongoose.connections.length > 0) {
-        connection.isConnected = mongoose.connections[0].readyState;
-        if (connection.isConnected === 1) {
-            return;
-        }
-        await mongoose.disconnect();
-    }
-    const db = await mongoose.connect(process.env.MONGODB_URL);
-    connection.isConnected = db.connections[0].readyState;
+const prismaClientSingleton = () => {
+  return new PrismaClient()
 }
 
-async function disconnect() {
-    if (connection.isConnected) {
-        if (process.env.NODE_ENV === 'production') {
-            await mongoose.disconnect();
-            connection.isConnected = false;
-        }
-    }
-}
-const db = { connect, disconnect };
-export default db;
+
+const prisma = globalThis.prisma ?? prismaClientSingleton()
+
+if (process.env.NODE_ENV !== 'production') globalThis.prisma = prisma
+
+const db=prisma
+export default db

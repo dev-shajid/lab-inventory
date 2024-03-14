@@ -11,6 +11,8 @@ import { CiCamera } from "react-icons/ci";
 import useImageUpload from "@/components/useImageUpload";
 import toast from "react-hot-toast";
 import { useUserContext } from "@/context/ContextProvider";
+import useApi from "@/lib/useApi";
+import Overlay from "./Overlay";
 
 export default function LabTable({ lab }) {
     const { user } = useUserContext()
@@ -19,50 +21,28 @@ export default function LabTable({ lab }) {
     const [selectedItem, setSelectedItem] = useState({})
     const [filterValue, setFilterValue] = useState("");
     const [filterLists, setFilterLists] = useState([]);
-    const [items, setItems] = useState([])
-    const [overlayLoading, setOverlayLoading] = useState(false)
-    const [refetchItems, setRefetchItems] = useState(0)
 
-    const getAllItems = () => {
-        fetch(`/api/${lab}`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-        })
-            .then(res => res.json())
-            .then(data => {
-                setItems(data)
-                setFilterLists(data)
-            })
+    const { getLabItems, editLabItem, addRequest, addLabItem, deleteLabItem } = useApi()
 
-    }
+    const { data: items, isLoading } = getLabItems({ lab })
 
     useEffect(() => {
-        getAllItems()
-    }, [refetchItems])
+        setFilterLists(items)
+    }, [items])
 
     const handleDelete = (id) => {
-        setOverlayLoading(true)
+        // setOverlayLoading(true)
         let loadingPromise = toast.loading("Loading...")
-        fetch(`/api/${lab}/delete`, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
+        deleteLabItem.mutate({ id, lab }, {
+            onSuccess: (data) => {
+                toast.success("Succesfully Delted!", { id: loadingPromise })
             },
-            body: JSON.stringify(id)
+            onError: (e) => {
+                console.log(e)
+                toast.error(e?.message || "Some error arised", { id: loadingPromise })
+            },
         })
-            .then(res => res.json())
-            .then(data => {
-                setOverlayLoading(false)
-                if (data) {
-                    setRefetchItems(e => e + 1)
-                    toast.success("Succesfully Delted!", { id: loadingPromise })
-                } else {
-                    toast.error(data || "Some error arised", { id: loadingPromise })
-                }
-            })
+
 
     }
 
@@ -86,25 +66,22 @@ export default function LabTable({ lab }) {
             let loadingPromise = toast.loading("Loading...")
             try {
                 formik.setFieldValue('image', url)
-                fetch(`/api/${lab}/addItem`, {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ ...values, image: url }),
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        setOverlayLoading(false)
-                        if (data) {
-                            toast.success("Item Added!", { id: loadingPromise })
-                            setItems((pre) => [data, ...pre])
-                        } else throw new Error("Some error arised!")
+                addLabItem.mutate({ data: { ...values, image: url }, lab }, {
+                    onSuccess: (data) => {
+                        toast.success("Item Added!", { id: loadingPromise })
+                        // setItems((pre) => [data, ...pre])
+                        // setFilterLists((pre) => [data, ...pre])
                         closeAddNewItemModal()
-                    })
+                    },
+                    onError: (e) => {
+                        console.log(e)
+                        toast.error(e?.message || "Some error arised", { id: loadingPromise })
+                    },
+                })
             } catch (error) {
                 toast.error(error.message, { id: loadingPromise })
+            }
+            finally {
                 setOverlayLoading(false)
             }
         }
@@ -219,81 +196,57 @@ export default function LabTable({ lab }) {
         }
 
         const handleSubmit = (e) => {
-            setOverlayLoading(true)
+            // setOverlayLoading(true)
             let loadingPromise = toast.loading("Loading...")
             e.preventDefault()
             let itemObj = {
                 // ...selectedItem,
                 ...formValue,
-                itemId: selectedItem._id,
-                req_type: selectedItem?.id == 1 ? 'restock' : selectedItem?.id == 2 ? 'repair' : 'demand',
+                itemId: selectedItem.id,
+                req_type: selectedItem?.action == 1 ? 'restock' : selectedItem?.action == 2 ? 'repair' : 'demand',
                 role: user?.role,
                 lab: user?.lab,
             }
-            // alert(JSON.stringify(itemObj, null, 2))
-            fetch('/api/request/addRequest', {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
+
+            addRequest.mutate({ data: itemObj }, {
+                onSuccess: () => {
+                    toast.success("Succesfully sent request!", { id: loadingPromise })
+                    setFormValue({ name: '', description: '', available: '', damaged: '', amount: null })
+                    closeActionModal()
                 },
-                body: JSON.stringify(itemObj)
+                onError: (e) => {
+                    console.log(e)
+                    toast.error(e?.message || "Some error arised", { id: loadingPromise })
+                },
             })
-                .then(res => res.json())
-                .then(data => {
-                    // console.log(data)
-                    setOverlayLoading(false)
-                    if (data) {
-                        toast.success("Succesfully sent request!", { id: loadingPromise })
-                        setFormValue({ name: '', description: '', available: '', damaged: '', amount: null })
-                        closeActionModal()
-                    } else {
-                        toast.error(data || "Some error arised", { id: loadingPromise })
-                    }
-                })
         }
 
 
         const handleEdit = (e) => {
-            setOverlayLoading(true)
+            // setOverlayLoading(true)
             let loadingPromise = toast.loading("Loading...")
             e.preventDefault()
             const { amount, ...i } = formValue
-            let itemObj = {
-                ...i,
-                _id: selectedItem._id,
-                role: user?.role,
-                // lab: user?.lab,
-            }
-            // alert(JSON.stringify(itemObj, null,2))
-            fetch(`/api/${lab}/edit`, {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
+            editLabItem.mutate({ data: i, id: selectedItem.id, lab }, {
+                onSuccess: () => {
+                    // setRefetchItems(e => e + 1)
+                    toast.success("Succesfully Edited!", { id: loadingPromise })
+                    setFormValue({ name: '', description: '', available: '', damaged: '', amount: null })
+                    closeActionModal()
                 },
-                body: JSON.stringify(itemObj)
+                onError: (e) => {
+                    console.log(e)
+                    toast.error(e?.message || "Some error arised", { id: loadingPromise })
+                },
             })
-                .then(res => res.json())
-                .then(data => {
-                    setOverlayLoading(false)
-                    // console.log(data)
-                    if (data) {
-                        setRefetchItems(e => e + 1)
-                        toast.success("Succesfully Edited!", { id: loadingPromise })
-                        setFormValue({ name: '', description: '', available: '', damaged: '', amount: null })
-                        closeActionModal()
-                    } else {
-                        toast.error(data || "Some error arised", { id: loadingPromise })
-                    }
-                })
 
         }
 
         return (
             <Modal opened={openedActionModal} onClose={closeActionModal} title={<div className="title mt-6">{selectedItem.title}</div>}>
-
                 <form
                     className="space-y-4"
-                    onSubmit={selectedItem.id ? handleSubmit : handleEdit}
+                    onSubmit={selectedItem.action ? handleSubmit : handleEdit}
                 >
                     <TextInput
                         label="Name"
@@ -329,7 +282,7 @@ export default function LabTable({ lab }) {
                         required
                         value={formValue.damaged}
                     />
-                    {selectedItem.id && <NumberInput
+                    {selectedItem?.action && <NumberInput
                         min={0}
                         label="Amount"
                         name="amount"
@@ -374,11 +327,11 @@ export default function LabTable({ lab }) {
                         }
                     </div>
                     <div className="flex">
-                        <span className="text-gray-500 text-xs font-medium">Total {filterLists.length} items</span>
+                        <span className="text-gray-500 text-xs font-medium">Total {filterLists?.length} items</span>
                     </div>
                 </div>
                 {
-                    filterLists.length ?
+                    filterLists?.length ?
                         <table className="w-full m-0 min-w-[400px] rounded-md overflow-hidden text-sm text-left rtl:text-right text-gray-600">
                             <thead className="text-xs text-gray-800 uppercase bg-gray-300">
                                 <tr>
@@ -426,7 +379,7 @@ export default function LabTable({ lab }) {
                                                             <Menu.Dropdown>
                                                                 <Menu.Item
                                                                     onClick={() => {
-                                                                        setSelectedItem({ ...item, title: "Request for Restock", id: 1 })
+                                                                        setSelectedItem({ ...item, title: "Request for Restock", action: 1 })
                                                                         openActionModal()
                                                                     }}
                                                                 >
@@ -435,7 +388,7 @@ export default function LabTable({ lab }) {
                                                                 <Menu.Item
                                                                     onClick={() => {
                                                                         openActionModal()
-                                                                        setSelectedItem({ ...item, title: "Request for Repair", id: 2 })
+                                                                        setSelectedItem({ ...item, title: "Request for Repair", action: 2 })
                                                                     }}
                                                                 >
                                                                     Request For Repair
@@ -445,14 +398,14 @@ export default function LabTable({ lab }) {
                                                                     color="blue"
                                                                     onClick={() => {
                                                                         openActionModal()
-                                                                        setSelectedItem({ ...item, title: "Edit", id: null })
+                                                                        setSelectedItem({ ...item, title: "Edit", action: null })
                                                                     }}
                                                                 >
                                                                     Edit Item
                                                                 </Menu.Item>
                                                                 <Menu.Item
                                                                     color="red"
-                                                                    onClick={() => handleDelete(item._id)}
+                                                                    onClick={() => handleDelete(item.id)}
                                                                 >
                                                                     Delete Item
                                                                 </Menu.Item>
@@ -471,7 +424,7 @@ export default function LabTable({ lab }) {
             </div>
             <ActionModal />
             <AddNewItemModal />
-            <LoadingOverlay visible={overlayLoading} overlayProps={{ blur: 2 }} loader={<></>} />
+            <Overlay isLoading={editLabItem.isPending || deleteLabItem.isPending || addLabItem.isPending || isLoading}/>
         </div>
     );
 }

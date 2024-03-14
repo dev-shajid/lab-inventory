@@ -9,6 +9,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { ActionIcon, Avatar, LoadingOverlay } from '@mantine/core'
 import { useUserContext } from '@/context/ContextProvider'
 import toast from 'react-hot-toast'
+import { Logout } from '../../action/api'
 
 
 export default function Sidebar({ authUser }) {
@@ -17,29 +18,28 @@ export default function Sidebar({ authUser }) {
     const pathname = usePathname()
     const router = useRouter()
     const sidebarRef = useRef()
-    
+
     async function apiLogout() {
         let loadingPromise = toast.loading("Loading...")
         try {
             setIsLoading(true)
-            const res = await fetch('/api/auth/logout')
-            const data = await res.json()
-            // console.log({res, data})
-            if (res.status == 200) {
+            const res = await Logout()
+            if (res) {
                 router.push('/signin')
-                toast.success(data.message || "Logout Successfully!", { id: loadingPromise })
-                // dispatch({ type: 'REMOVE_USER' })
+                toast.success("Logout Successfully!", { id: loadingPromise })
+                dispatch({ type: 'REMOVE_USER' })
             } else {
-                toast.error(data?.error || "Some error arised", { id: loadingPromise })
+                toast.error("Some error arised", { id: loadingPromise })
             }
         } catch (error) {
+            toast.error(error.message || "Some error arised", { id: loadingPromise })
             console.log(error)
         }
         finally {
             setIsLoading(false)
         }
     }
-    
+
     function openSidebar() {
         document.querySelector('body')?.classList.add('active_sidebar')
     }

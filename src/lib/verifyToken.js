@@ -12,7 +12,20 @@ export default async function verifyToken(token) {
         const verified = await jwtVerify(token, new TextEncoder().encode(getJwtSecretKey()))
         return verified.payload
     } catch (error) {
-        console.log({ Error: error.message })
+        console.log({ ErrorVerifyToken: error.message })
         return error.message
     }
+}
+
+
+export async function signToken(payload, secret) {
+    const iat = Math.floor(Date.now() / 1000);
+    const exp = iat + 60* 60 * 24; // 24 * one hour
+
+    return new SignJWT({...payload})
+        .setProtectedHeader({alg: 'HS256', typ: 'JWT'})
+        .setExpirationTime(exp)
+        .setIssuedAt(iat)
+        .setNotBefore(iat)
+        .sign(new TextEncoder().encode(secret));
 }

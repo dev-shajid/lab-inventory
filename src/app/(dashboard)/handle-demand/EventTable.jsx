@@ -8,59 +8,39 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { HiOutlineDotsVertical } from "react-icons/hi";
+import useApi from "@/lib/useApi";
 
 export default function EventTable() {
     const [opened, { open, close }] = useDisclosure(false);
-    const [isLoading, setIsLoading] = useState(true)
     const [refetchItems, setRefetchItems] = useState(0)
     const [items, setItems] = useState([])
     const [selectedItem, setSelectedItem] = useState({})
     const { user } = useUserContext()
-    const router = useRouter()
+    const { getManagerRequest, editManagerRequest } = useApi()
 
     const editRequestItems = (id, value) => {
-        setIsLoading(true)
-        fetch('/api/request/editManagerRequest', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+        editManagerRequest.mutate({ data: { id: id, status: value, supply: selectedItem?.supply || 0, available: selectedItem?.available - selectedItem?.supply } }, {
+            onSuccess: () => {
+                // toast.success("Deleted Transaction!", { id: loadingPromise })
             },
-            body: JSON.stringify({ _id: id, status: value, supply: selectedItem?.supply || 0, available: selectedItem?.available - selectedItem?.supply })
+            onError: (e) => {
+                console.log(e)
+                // toast.error(e?.message || "Fail to delete Transaction", { id: loadingPromise })
+            },
         })
-            .then(res => res.json())
-            .then(data => {
-                setIsLoading(false)
-                setRefetchItems(e => e + 1)
-            })
     }
 
-    const getRequestItems = () => {
-        setIsLoading(true)
-        fetch('/api/request/getManagerRequest', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-        })
-            .then(res => res.json())
-            .then(data => {
-                setIsLoading(false)
-                // console.log(data)
-                setItems(data)
-            })
-    }
+    let { data, isError, error, isLoading } = getManagerRequest
 
     useEffect(() => {
-        getRequestItems()
-    }, [refetchItems])
+        setItems(data)
+    }, [data])
 
-    // if (user?.role != 'manager') router.push('/')
+    if (isError) return <div>Error: {JSON.stringify(error, null, 2)}</div>
     return (
         <>
             {
-                isLoading ?
+                isLoading || editManagerRequest.isPending ?
                     <div className="flex justify-center items-center h-screen gap-4">
                         <AiOutlineLoading3Quarters size={30} className='animate-spin' />
                         <p className='text-xl'>Loading...</p>
@@ -140,7 +120,7 @@ export default function EventTable() {
                                                                                     </Menu.Item>
                                                                                     <Menu.Item
                                                                                         color="red"
-                                                                                        onClick={() => editRequestItems(item._id, 'r')}
+                                                                                        onClick={() => editRequestItems(item.id, 'r')}
                                                                                     >
                                                                                         Rejected
                                                                                     </Menu.Item>
@@ -280,7 +260,7 @@ export default function EventTable() {
                     e.preventDefault()
                     close()
                     // setSelectedItem(pre=>({...pre, available:pre.available-pre.supply}))
-                    editRequestItems(selectedItem._id, 'a')
+                    editRequestItems(selectedItem.id, 'a')
                 }}>
                     <NumberInput
                         label="Available"

@@ -6,12 +6,12 @@ export default async function middleware(req) {
     try {
         let path = req?.nextUrl?.pathname
         let token = req?.cookies?.get('token')?.value || ''
-        // console.log({token, path})
+        // console.log({ token, path })
 
         let decode = token ? await verifyToken(token) : null
 
         if (path?.startsWith('/signin') || path?.startsWith('/signup')) {
-            if (decode?._id) {
+            if (decode?.id) {
                 return NextResponse.redirect(new URL('/', req.url))
             }
             let response = NextResponse.next()
@@ -30,7 +30,7 @@ export default async function middleware(req) {
             return NextResponse.redirect(new URL('/', req.url))
         }
         else {
-            if (!decode || !decode?._id) {
+            if (!decode || !decode?.id) {
                 let response = NextResponse.redirect(new URL('/signin', req.url))
                 response.cookies.delete('token')
                 return response

@@ -8,7 +8,11 @@ import { useUserContext } from '@/context/ContextProvider'
 import { useRouter } from 'next/navigation'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import toast from 'react-hot-toast'
+import { GetAuthUser } from '../../action/api'
+import Loading from './Loading'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
+const queryClient = new QueryClient()
 export default function Layout({ children }) {
     const { dispatch, user } = useUserContext()
     const [isLoading, setIsLoading] = useState(true);
@@ -18,16 +22,14 @@ export default function Layout({ children }) {
         // let loadingPromise = toast.loading("Loading...")
         try {
             setIsLoading(true)
-            const res = await fetch('/api/auth/authUser')
-            const data = await res.json()
-            // console.log({ res, data })
-            if (res.status == 200) {
-                console.log(data)
+            const res = await GetAuthUser()
+            if (res.success) {
+                // console.log({ res })
                 // toast.success(data.message || "Authorized Succesfully!", { id: loadingPromise })
-                dispatch({ type: 'ADD_USER', payload: data.user })
+                dispatch({ type: 'ADD_USER', payload: res.user })
             } else {
                 // router.push('/signin')
-                // toast.error(data?.error || "Not authorized, sign in please!", { id: loadingPromise })
+                // toast.error(res?.error || "Not authorized, sign in please!", { id: loadingPromise })
             }
         } catch (error) {
             console.log(error)
@@ -41,21 +43,18 @@ export default function Layout({ children }) {
         if (!user) apiAuthUser()
     }, [])
 
-    if (isLoading) return (
-        <section className='container py-16 h-screen gap-3 flex justify-center items-center'>
-            <AiOutlineLoading3Quarters size={28} className='animate-spin' />
-            <p className='text-base'>Loading...</p>
-        </section>
-    )
+    if (isLoading) return <Loading page />
 
     return (
         <>
-            <main className="bg-light min-h-[100vh] flex md:flex-row flex-col md:gap-y-0 gap-y-4 w-full relative">
-                <Sidebar />
-                <div className="flex-1 max-w-full overflow-hidden">
-                    {children}
-                </div>
-            </main>
+            <QueryClientProvider client={queryClient}>
+                <main className="bg-light min-h-[100dvh] flex md:flex-row flex-col md:gap-y-0 gap-y-4 w-full relative">
+                    <Sidebar />
+                    <div className="flex-1 max-w-full overflow-hidden">
+                        {children}
+                    </div>
+                </main>
+            </QueryClientProvider>
         </>
     )
 }

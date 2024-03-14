@@ -2,39 +2,26 @@
 
 import { useUserContext } from '@/context/ContextProvider'
 import moment from 'moment'
+import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import useApi from '@/lib/useApi'
 
 export default function RequestTable({ lab, role }) {
-    const [items, setItems] = useState([])
     const { user } = useUserContext()
-
-    const getRequestItems = () => {
-        // setIsLoading(true)
-        fetch('/api/request', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ lab, role })
-        })
-            .then(res => res.json())
-            .then(data => {
-                // setIsLoading(false)
-                // console.log(data)
-                setItems(data)
-            })
-    }
-
-    useEffect(() => {
-        getRequestItems()
-    }, [])
-
-    if (user.role != role || (user.role == 'asistant' && user.lab != lab)) return <></>
+    const router = useRouter()
+    
+    
+    if (!user || !user?.role) router.push('/signin')
+    if (!user || user?.role != role || (user?.role == 'asistant' && user?.lab != lab)) return <></>
+    
+    const {getRequestItems} = useApi()
+    const {data:items} = getRequestItems({lab, role})
+    
+    if(!items) return <></>
     return (
         <>
             {
-                items.length ?
+                items?.length ?
                     <div className="">
                         <div className="title">Previous Request</div>
                         <div className="event_table overflow-x-auto max-w-fulls mx-auto rounded-md ">

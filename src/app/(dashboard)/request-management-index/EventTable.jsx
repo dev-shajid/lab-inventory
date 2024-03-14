@@ -1,72 +1,46 @@
 'use client'
 
 import { useUserContext } from "@/context/ContextProvider";
-import { ActionIcon, Button, Menu, Modal, NumberInput, Select } from "@mantine/core";
+import { ActionIcon, Button, Menu, Modal, NumberInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import moment from "moment";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { HiOutlineDotsVertical } from "react-icons/hi";
+import Loading from "@/components/Loading";
+import useApi from "@/lib/useApi";
 
 export default function EventTable() {
     const [opened, { open, close }] = useDisclosure(false);
-    const [isLoading, setIsLoading] = useState(true)
-    const [refetchItems, setRefetchItems] = useState(0)
     const [items, setItems] = useState([])
     const [selectedItem, setSelectedItem] = useState({})
     const { user } = useUserContext()
-    const router = useRouter()
+    const { getAdminRequest, editAdminRequest } = useApi()
 
     const editRequestItems = (id, value) => {
-        setIsLoading(true)
-        fetch('/api/request/editAdminRequest', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+        editAdminRequest.mutate({ data: { id: id, status: value, supply: selectedItem?.supply || 0, available: selectedItem?.available - selectedItem?.supply } }, {
+            onSuccess: () => {
+                // toast.success("Deleted Transaction!", { id: loadingPromise })
             },
-            body: JSON.stringify({ _id: id, status: value, supply: selectedItem?.supply || 0, available: selectedItem?.available - selectedItem?.supply })
+            onError: (e) => {
+                console.log(e)
+                // toast.error(e?.message || "Fail to delete Transaction", { id: loadingPromise })
+            },
         })
-            .then(res => res.json())
-            .then(data => {
-                setIsLoading(false)
-                setRefetchItems(e => e + 1)
-            })
     }
 
-    const getRequestItems = () => {
-        setIsLoading(true)
-        fetch('/api/request/getAdminRequest', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-        })
-            .then(res => res.json())
-            .then(data => {
-                setIsLoading(false)
-                // console.log(data)
-                setItems(data)
-            })
-    }
+    let { data, isError, error, isLoading } = getAdminRequest
 
     useEffect(() => {
-        getRequestItems()
-    }, [refetchItems])
+        setItems(data)
+    }, [data])
 
-    if (user?.role != 'admin') router.push('/')
-
+    if (isError) return <div>Error: {JSON.stringify(error, null, 2)}</div>
     return (
         <>
             {/* {JSON.stringify(items,null,2)} */}
             {
-                isLoading ?
-                    <div className="flex justify-center items-center h-screen gap-4">
-                        <AiOutlineLoading3Quarters size={30} className='animate-spin' />
-                        <p className='text-xl'>Loading...</p>
-                    </div> :
+                isLoading || editAdminRequest.isPending ?
+                    <Loading page /> :
                     (
                         items?.length ?
                             <div className="space-y-8">
@@ -138,7 +112,7 @@ export default function EventTable() {
                                                                                     </Menu.Item>
                                                                                     <Menu.Item
                                                                                         color="red"
-                                                                                        onClick={() => editRequestItems(item._id, 'r')}
+                                                                                        onClick={() => editRequestItems(item.id, 'r')}
                                                                                     >
                                                                                         Rejected
                                                                                     </Menu.Item>
@@ -274,7 +248,7 @@ export default function EventTable() {
                     e.preventDefault()
                     close()
                     // setSelectedItem(pre=>({...pre, available:pre.available-pre.supply}))
-                    editRequestItems(selectedItem._id, 'a')
+                    editRequestItems(selectedItem.id, 'a')
                 }}>
                     <NumberInput
                         label="Available"

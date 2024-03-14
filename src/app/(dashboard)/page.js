@@ -4,7 +4,7 @@ import BlurImage from "@/components/BlurImage";
 import Profile from "@/components/Profile";
 import { useUserContext } from "@/context/ContextProvider";
 
-export default async function Home() {
+export default function Home() {
   const {user} = useUserContext()
   return (
     <section className="container space-y-6">

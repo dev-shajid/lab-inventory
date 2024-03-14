@@ -1,21 +1,22 @@
-import User from "@/models/User";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import db from "@/lib/db";
 import { jwtVerify, SignJWT } from "jose";
+import db from "@/lib/db";
 
 export async function POST(req) {
     try {
-        await db.connect()
         const { email, password: pass } = await req.json()
         // console.log({email,pass})
 
-        const existUser = await User.findOne({ email })
-        const { password, ...user }=existUser._doc
+        // await db.connect()
+        // const curr = await User.findOne({email})
+        const curr = await db.user.findFirst({where:{email}})
+        if (!curr) throw new Error("User does not exist")
+
+        const { password, ...user } = curr
         // console.log({password,user})
-        if (!user) throw new Error("User does not exist")
-        // console.log("user exists");
+
 
 
         //check if pass is correct
@@ -25,7 +26,7 @@ export async function POST(req) {
 
         //create token data
         const tokenData = {
-            _id: user._id,
+            id: user.id,
             name: user.name,
             email: user.email,
             role: user.role
@@ -45,7 +46,7 @@ export async function POST(req) {
         })
         return response;
     } catch (error) {
-        // console.log(error)
+        console.log({Login_Error: error.message})
         return NextResponse.json({ error: error.message }, { status: 400 })
     }
 }
