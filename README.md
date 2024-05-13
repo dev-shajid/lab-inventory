@@ -1,16 +1,16 @@
-# Expense Management System
+# Lab Management System
 
 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
-    <a href="https://expense-management2.vercel.app/">
+    <a target='_blank' href="https://lab-inventory.vercel.app/">
         <img src="./public/ss1.png" alt="Logo">
     </a>
-    <a href="https://expense-management2.vercel.app/">
+    <a target='_blank' href="https://lab-inventory.vercel.app/">
         <img src="./public/ss2.png" alt="Logo">
     </a>
-    <a href="https://expense-management2.vercel.app/">
+    <a target='_blank' href="https://lab-inventory.vercel.app/">
         <img src="./public/ss3.png" alt="Logo">
     </a>
-    <a href="https://expense-management2.vercel.app/">
+    <a target='_blank' href="https://lab-inventory.vercel.app/">
         <img src="./public/ss4.png" alt="Logo">
     </a>
 </div>
