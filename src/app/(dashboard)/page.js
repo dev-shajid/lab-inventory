@@ -5,7 +5,7 @@ import Profile from "@/components/Profile";
 import { useUserContext } from "@/context/ContextProvider";
 
 export default function Home() {
-  const {user} = useUserContext()
+  const { user } = useUserContext()
   return (
     <section className="container space-y-6">
       <div className="title text-center">Welcome, 👋 {user?.name}</div>
@@ -22,9 +22,6 @@ export default function Home() {
           </div>
           <div className="text">
             Chittagong University of Engineering & Technology (Bengali: চট্টগ্রাম প্রকৌশল ও প্রযুক্তি বিশ্ববিদ্যালয়), commonly referred to as CUET, is a public engineering and technological research university in Bangladesh located in Raozan Upazila under Chittagong District. Established in 1968 as Engineering College, Chittagong and gained autonomous graduate school status in 2003, this university is a state funded institution, maintaining special emphasis on teaching and research of engineering, technology, architecture and planning under five faculties and seventeen academic departments.
-          </div>
-          <div className="font-medium text-gray-500 text-xs">
-              Developed By- Mehedi Hasan Jony, Mohammad Fayez Ullah, Arat Ibne Golam Mowla
           </div>
         </div>
       </div>
